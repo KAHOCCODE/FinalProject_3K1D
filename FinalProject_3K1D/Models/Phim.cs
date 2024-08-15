@@ -30,4 +30,30 @@ public partial class Phim
     public virtual ICollection<LichChieu> LichChieus { get; set; } = new List<LichChieu>();
 
     public virtual ICollection<TheLoai> IdTheLoais { get; set; } = new List<TheLoai>();
+    public string TenTheoLoai
+    {
+        get
+        {
+            string tenTheLoai = "";
+            foreach (var theLoai in IdTheLoais)
+            {
+                tenTheLoai += theLoai.TenTheLoai + ", ";
+            }
+
+            return tenTheLoai;
+        }
+    }
+    public string GioChieu
+    {
+        get
+        {
+            string gioChieu = "";
+            foreach (var lichChieu in LichChieus)
+            {
+                gioChieu += lichChieu.GioChieu.ToString("dd/MM/yyyy") + ", ";
+            }
+
+            return gioChieu;
+        }
+    }
 }
