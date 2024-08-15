@@ -56,4 +56,20 @@ public partial class Phim
             return gioChieu;
         }
     }
+    //từ idphim của bảnh phim lấy idlichchieu từ bảng lichchieu sau đó dùng idlichchieu để lấy dữ liệu id phongchieu và sau đó lấy tenphong
+    public string TenPhong
+    {
+        get
+        {
+            string tenPhong = "";
+            foreach (var lichChieu in LichChieus)
+            {
+                tenPhong += lichChieu.IdPhongChieuNavigation.TenPhong + ", ";
+            }
+
+            return tenPhong;
+        }
+    }
+
+
 }

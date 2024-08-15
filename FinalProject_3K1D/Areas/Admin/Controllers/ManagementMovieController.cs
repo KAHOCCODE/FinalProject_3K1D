@@ -126,6 +126,66 @@ namespace _3K1D_Final.Areas.Admin.Controllers
 
             return View(movie);
         }
+        //edit phim
+        public IActionResult Edit(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                TempData["ErrorMessage"] = "ID phim không hợp lệ!";
+                return RedirectToAction("Index");
+            }
+
+            var movie = _context.Phims.Find(id);
+            if (movie == null)
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy phim!";
+                return RedirectToAction("Index");
+            }
+
+            return View(movie);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Phim phim)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _context.Phims.Update(phim);
+                    _context.SaveChanges();
+
+                    TempData["SuccessMessage"] = "Phim đã được cập nhật thành công!";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Lỗi khi cập nhật phim: {ex.Message}";
+            }
+
+            return View(phim);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

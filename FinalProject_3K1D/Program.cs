@@ -1,4 +1,5 @@
 using FinalProject_3K1D.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<QlrapPhimContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("QLRapPhim")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Data Source=LAPTOP-3DO1R46N\\ACERSERVER;Initial Catalog=QLRapPhim;Integrated Security=True;Trust Server Certificate=True")));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/AccountKH/Login";
+        options.AccessDeniedPath = "/AccessDenied";
+    });
 
 var app = builder.Build();
 
@@ -31,6 +39,10 @@ app.UseEndpoints(endpoints =>
       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
     );
 });
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",
