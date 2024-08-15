@@ -1,0 +1,80 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    var startDate = ViewData["StartDate"] as DateTime?;
+    var endDate = ViewData["EndDate"] as DateTime?;
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    <h1>Doanh Thu Theo Thời Gian</h1>
+
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="startDate" class="form-label">Ngày Bắt Đầu:</label>
+                <input type="date" id="startDate" name="startDate" class="form-control" value="@startDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="endDate" class="form-label">Ngày Kết Thúc:</label>
+                <input type="date" id="endDate" name="endDate" class="form-control" value="@endDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-4 mb-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Lọc</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="mb-4">
+        <canvas id="revenueChart" width="400" height="200"></canvas>
+    </div>
+
+    <h2>Danh Sách Doanh Thu</h2>
+
+    <div class="mb-3">
+        <a href="@Url.Action("ExportToExcel", new { startDate, endDate })" class="btn btn-success">Xuất Excel</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Ngày</th>
+                <th>Tổng Doanh Thu</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                    <td>@item.TotalRevenue.ToString("C2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('revenueChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(Json.Serialize(Model.Select(d => d.Date.ToString("yyyy-MM-dd")))),
+            datasets: [{
+                label: 'Tổng Doanh Thu',
+                data: @Html.Raw(Json.Serialize(Model.Select(d => d.TotalRevenue))),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>

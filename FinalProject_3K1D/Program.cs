@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<QlrapPhimContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Data Source=LAPTOP-3DO1R46N\\ACERSERVER;Initial Catalog=QLRapPhim;Integrated Security=True;Trust Server Certificate=True")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("QLRapPhim")));
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

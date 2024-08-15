@@ -44,7 +44,7 @@ namespace FinalProject_3K1D.Controllers
                 }
                 else
                 {
-                    if (khachhang.PassKh == model.PassKh)
+                    if (khachhang.PassKh != model.PassKh)
                     {
                         ModelState.AddModelError("", "Mật khẩu không đúng");
                         return View();
@@ -69,7 +69,7 @@ namespace FinalProject_3K1D.Controllers
                         }
                         else
                         {
-                            return RedirectToAction("_Home");
+                            return RedirectToAction("index");
                         }
                     }
                 }
