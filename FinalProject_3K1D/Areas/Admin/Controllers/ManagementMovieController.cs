@@ -74,6 +74,56 @@ namespace _3K1D_Final.Areas.Admin.Controllers
             }
             return "P01";
         }
+        //delete phim
+        [HttpPost]
+        public IActionResult Delete(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                TempData["ErrorMessage"] = "ID phim không hợp lệ!";
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                var movie = _context.Phims.Find(id);
+                if (movie != null)
+                {
+                    _context.Phims.Remove(movie);
+                    _context.SaveChanges();
+                    TempData["SuccessMessage"] = "Phim đã được xóa thành công!";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Không tìm thấy phim cần xóa!";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Lỗi khi xóa phim: {ex.Message}";
+            }
+
+            return RedirectToAction("Index");
+        }
+        public IActionResult Detail(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                TempData["ErrorMessage"] = "ID phim không hợp lệ!";
+                return RedirectToAction("Index");
+            }
+
+            var movie = _context.Phims.Find(id);
+            if (movie == null)
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy phim!";
+                return RedirectToAction("Index");
+            }
+
+            return View(movie);
+        }
+
+
 
 
     }
