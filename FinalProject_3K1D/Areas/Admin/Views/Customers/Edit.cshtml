@@ -1,0 +1,138 @@
+﻿@model FinalProject_3K1D.Models.KhachHang
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    @* <h1 class="mb-4 text-center text-primary">@ViewData["Title"]</h1> *@
+
+    <div class="card border-0 shadow-lg rounded-3">
+        <div class="card-header" style="background-color: #fed713; color: black;">
+            <h4 class="mb-0 text-center">Edit KhachHang</h4>
+        </div>
+        <div class="card-body p-4">
+            <form id="editForm" asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <input type="hidden" asp-for="IdKhachHang" />
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="HoTen" class="form-control border-warning" id="floatingHoTen" placeholder="Full Name" />
+                            <label for="floatingHoTen">Họ Tên</label>
+                            <span asp-validation-for="HoTen" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="NgaySinh" type="date" class="form-control border-warning" id="floatingNgaySinh" />
+                            <label for="floatingNgaySinh">Ngày Sinh</label>
+                            <span asp-validation-for="NgaySinh" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="DiaChi" class="form-control border-warning" id="floatingDiaChi" placeholder="Address" />
+                            <label for="floatingDiaChi">Địa Chỉ</label>
+                            <span asp-validation-for="DiaChi" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Sdt" class="form-control border-warning" id="floatingSdt" placeholder="Phone Number" />
+                            <label for="floatingSdt">Số Điện Thoại</label>
+                            <span asp-validation-for="Sdt" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Cccd" class="form-control border-warning" id="floatingCccd" placeholder="ID Card Number" />
+                            <label for="floatingCccd">CCCD</label>
+                            <span asp-validation-for="Cccd" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="DienTichLuy" class="form-control border-warning" id="floatingDienTichLuy" placeholder="Area" readonly />
+                            <label for="floatingDienTichLuy">Điểm Tích Lũy</label>
+                            <span asp-validation-for="DienTichLuy" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" type="email" class="form-control border-warning" id="floatingEmail" placeholder="Email" />
+                            <label for="floatingEmail">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="UserKh" class="form-control border-warning" id="floatingUserKh" placeholder="Username" />
+                            <label for="floatingUserKh">Username</label>
+                            <span asp-validation-for="UserKh" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="PassKh" type="password" class="form-control border-warning" id="floatingPassKh" placeholder="Password" />
+                            <label for="floatingPassKh">Password</label>
+                            <span asp-validation-for="PassKh" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn" style="background-color: #fed713; color: black;" id="editButton">Save</button>
+                    <a class="btn btn-secondary ms-3" asp-action="Index">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.getElementById('editButton').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const form = document.getElementById('editForm');
+        const formData = new FormData(form);
+
+        // Example validation: Check if all fields are filled (customize as needed)
+        let isValid = true;
+        formData.forEach((value, key) => {
+            if (!value) {
+                isValid = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please fill out all fields.'
+                });
+            }
+        });
+
+        if (isValid) {
+            // Simulate successful submission
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Customer edited successfully!'
+            }).then(() => {
+                form.submit(); // Submit the form after showing the success message
+            });
+        }
+    });
+</script>

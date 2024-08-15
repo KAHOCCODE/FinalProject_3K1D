@@ -30,4 +30,46 @@ public partial class Phim
     public virtual ICollection<LichChieu> LichChieus { get; set; } = new List<LichChieu>();
 
     public virtual ICollection<TheLoai> IdTheLoais { get; set; } = new List<TheLoai>();
+    public string TenTheoLoai
+    {
+        get
+        {
+            string tenTheLoai = "";
+            foreach (var theLoai in IdTheLoais)
+            {
+                tenTheLoai += theLoai.TenTheLoai + ", ";
+            }
+
+            return tenTheLoai;
+        }
+    }
+    public string GioChieu
+    {
+        get
+        {
+            string gioChieu = "";
+            foreach (var lichChieu in LichChieus)
+            {
+                gioChieu += lichChieu.GioChieu.ToString("dd/MM/yyyy") + ", ";
+            }
+
+            return gioChieu;
+        }
+    }
+    //từ idphim của bảnh phim lấy idlichchieu từ bảng lichchieu sau đó dùng idlichchieu để lấy dữ liệu id phongchieu và sau đó lấy tenphong
+    public string TenPhong
+    {
+        get
+        {
+            string tenPhong = "";
+            foreach (var lichChieu in LichChieus)
+            {
+                tenPhong += lichChieu.IdPhongChieuNavigation.TenPhong + ", ";
+            }
+
+            return tenPhong;
+        }
+    }
+
+
 }

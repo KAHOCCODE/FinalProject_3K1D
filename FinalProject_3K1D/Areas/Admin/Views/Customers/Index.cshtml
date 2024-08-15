@@ -1,0 +1,54 @@
+﻿@model IEnumerable<FinalProject_3K1D.Models.KhachHang>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Customer List";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center text-primary mb-4">@ViewData["Title"]</h1>
+
+    <div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-success" asp-action="Create"><i class="fas fa-plus"></i> Create New</a>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-warning">
+                        <tr>
+                            <th class="text-center">@Html.DisplayNameFor(model => model.HoTen)</th>
+                            <th class="text-center">@Html.DisplayNameFor(model => model.NgaySinh)</th>
+                            <th class="text-center">@Html.DisplayNameFor(model => model.Sdt)</th>
+                            <th class="text-center">@Html.DisplayNameFor(model => model.Email)</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.HoTen)</td>
+                                <td class="align-middle text-center">@item.NgaySinh?.ToString("dd/MM/yyyy")</td>
+                                <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.Sdt)</td>
+                                <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.Email)</td>
+                                <td class="align-middle text-center">
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-warning btn-sm mx-1" asp-action="Edit" asp-route-id="@item.IdKhachHang"><i class="fas fa-edit"></i> Edit</a>
+                                        <a class="btn btn-info btn-sm mx-1" asp-action="Details" asp-route-id="@item.IdKhachHang"><i class="fas fa-info-circle"></i> Details</a>
+                                        <a class="btn btn-danger btn-sm mx-1" asp-action="Delete" asp-route-id="@item.IdKhachHang"><i class="fas fa-trash"></i> Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
