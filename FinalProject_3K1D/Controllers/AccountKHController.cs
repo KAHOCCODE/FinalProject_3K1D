@@ -29,6 +29,7 @@ namespace FinalProject_3K1D.Controllers
             ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginKH model, string? ReturnUrl)
         {
@@ -39,42 +40,42 @@ namespace FinalProject_3K1D.Controllers
                 if (khachhang == null)
                 {
                     ModelState.AddModelError("", "Tài khoản không tồn tại");
+                    return View();
                 }
                 else
                 {
                     if (khachhang.PassKh == model.PassKh)
                     {
                         ModelState.AddModelError("", "Mật khẩu không đúng");
+                        return View();
                     }
                     else
-                    { 
+                    {
                         var claims = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Name, khachhang.HoTen),
-                            new Claim(ClaimTypes.Email, khachhang.Email),   
-                            
-                            //claim -role động
-                            new Claim(ClaimTypes.Role, "KhachHang")
-                        };
+                            {
+                                new Claim(ClaimTypes.Name, khachhang.HoTen),
+                                new Claim(ClaimTypes.Email, khachhang.Email ?? string.Empty),   
+                                
+                                //claim -role động
+                                new Claim(ClaimTypes.Role, "KhachHang")
+                            };
                         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                         await HttpContext.SignInAsync(claimsPrincipal);
-                        if(Url.IsLocalUrl(ReturnUrl))
+                        if (Url.IsLocalUrl(ReturnUrl))
                         {
                             return Redirect(ReturnUrl);
                         }
                         else
-                            {
+                        {
                             return RedirectToAction("_Home");
                         }
-
+                    }
                 }
-                return View();
             }
-
-            #endregion
-
+            return View();
         }
+        #endregion
     }
 }
