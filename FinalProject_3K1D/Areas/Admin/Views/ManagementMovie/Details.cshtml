@@ -1,0 +1,59 @@
+﻿@model FinalProject_3K1D.Models.Phim
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Chi tiết phim</h1>
+<div class="card-body">
+    <dl class="row">
+        <dt class="col-sm-3">ID Phim</dt>
+        <dd class="col-sm-9">@Model.IdPhim</dd>
+
+        <dt class="col-sm-3">Tên Phim</dt>
+        <dd class="col-sm-9">@Model.TenPhim</dd>
+
+        <dt class="col-sm-3">Mô Tả</dt>
+        <dd class="col-sm-9">@Model.MoTa</dd>
+
+        <dt class="col-sm-3">Thời Lượng</dt>
+        <dd class="col-sm-9">@Model.ThoiLuong</dd>
+
+        <dt class="col-sm-3">Ngày Khởi Chiếu</dt>
+        <dd class="col-sm-9">@Model.NgayKhoiChieu.ToShortDateString()</dd>
+
+        <dt class="col-sm-3">Ngày Kết Thúc</dt>
+        <dd class="col-sm-9">@Model.NgayKetThuc.ToShortDateString()</dd>
+
+        <dt class="col-sm-3">Quốc Gia Sản Xuất</dt>
+        <dd class="col-sm-9">@Model.QuocGiaSanXuat</dd>
+
+        <dt class="col-sm-3">Đạo Diễn</dt>
+        <dd class="col-sm-9">@Model.DaoDien</dd>
+
+        <dt class="col-sm-3">Năm SX</dt>
+        <dd class="col-sm-9">@Model.NamSx</dd>
+
+        <dt class="col-sm-3">Định Dạng Phim</dt>
+        <dd class="col-sm-9">@Model.DinhDangPhim</dd>
+
+        <dt class="col-sm-3">Áp Phích</dt>
+        <dd class="col-sm-9">
+            @if (!string.IsNullOrEmpty(Model.ApPhich))
+            {
+                <img src="@Url.Content("~/image/ApPhich/" + Model.ApPhich)" alt="Poster" style="max-height: 300px;" />
+            }
+            else
+            {
+                <span>Chưa có ảnh</span>
+            }
+        </dd>
+    </dl>
+</div>
+
+ <div class="card-footer">
+        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.IdPhim">Edit</a>
+        <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+ </div>
+</div>
