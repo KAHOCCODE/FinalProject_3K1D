@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,11 +68,10 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                     TempData["SuccessMessage"] = "Khách hàng đã được thêm thành công!";
                     return RedirectToAction("Index");
                 }
-                catch (Exception ex)
+                catch
                 {
-                    // Log the exception details here
-                    Console.WriteLine($"Error creating customer: {ex.Message}");
-                    ModelState.AddModelError("", "An error occurred while saving the customer.");
+                    // Handle exception here
+                    return View(khachHang);
                 }
             }
             return View(khachHang);
@@ -181,7 +180,5 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         {
             return _context.KhachHangs.Any(e => e.IdKhachHang == id);
         }
-
-        
     }
-}
+    }
