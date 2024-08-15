@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<FinalProject_3K1D.Models.Phim>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewBag.Title = "Index";
@@ -25,6 +26,7 @@
                 <th>Đạo Diễn</th>
                 <th>Năm SX</th>
                 <th>Định Dạng Phim</th>
+                <th>Áp Phích</th> <!-- New column for poster -->
                 <th>Actions</th>
             </tr>
         </thead>
@@ -43,9 +45,19 @@
                     <td>@item.NamSx</td>
                     <td>@item.DinhDangPhim</td>
                     <td>
+                        @if (!string.IsNullOrEmpty(item.ApPhich))
+                        {
+                            <img src="@Url.Content("~/image/ApPhich/" + item.ApPhich)" alt="Poster" style="max-height: 100px; max-width: 100px;" />
+                        }
+                        else
+                        {
+                            <span>Chưa có ảnh</span>
+                        }
+                    </td>
+                    <td>
                         <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.IdPhim">Edit</a>
                         <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.IdPhim">Details</a>
-                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.IdPhim">Delete</a>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="@item.IdPhim" data-name="@item.TenPhim">Delete</button>
                     </td>
                 </tr>
             }
@@ -53,7 +65,32 @@
     </table>
 </div>
 <p>
-    <a class="btn btn-primary" href="/Admin/ManagementMovie/MoviesEnd">Phim đã hết lịch chiếu</a>
+    <a class="btn btn-primary" asp-action="MoviesEnd">Phim đã hết lịch chiếu</a>
 </p>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const movieId = this.getAttribute('data-id');
+                const movieName = this.getAttribute('data-name');
 
-
+                Swal.fire({
+                    title: 'Bạn có chắc chắn muốn xóa không?',
+                    text: `Phim "${movieName}" sẽ bị xóa.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có, xóa!',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect to delete action
+                        window.location.href = '@Url.Action("Delete", "Phim")/' + movieId;
+                    }
+                });
+            });
+        });
+    });
+</script>
