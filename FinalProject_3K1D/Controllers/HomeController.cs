@@ -1,5 +1,6 @@
 using FinalProject_3K1D.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace FinalProject_3K1D.Controllers
@@ -27,6 +28,17 @@ namespace FinalProject_3K1D.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        public IActionResult Detail()
+        {
+            var id = Request.Query["id"].ToString();
+            using (var db = new QlrapPhimContext())
+            {
+                var phim = db.Phims
+                    .Include(p => p.IdTheLoais)
+                    .FirstOrDefault(p => p.IdPhim == id);
+                return View(phim);
+            }
         }
     }
 }
