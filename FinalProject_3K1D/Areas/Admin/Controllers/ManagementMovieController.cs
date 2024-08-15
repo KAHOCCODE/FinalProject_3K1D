@@ -126,7 +126,8 @@ namespace _3K1D_Final.Areas.Admin.Controllers
 
             return View(movie);
         }
-        //edit phim
+
+        // GET: Admin/ManagementMovie/Edit/5
         public IActionResult Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -145,50 +146,48 @@ namespace _3K1D_Final.Areas.Admin.Controllers
             return View(movie);
         }
 
+        // POST: Admin/ManagementMovie/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Phim phim)
+        public async Task<IActionResult> Edit(string id, Phim phim, IFormFile apPhich)
         {
-            try
+            if (id != phim.IdPhim)
             {
-                if (ModelState.IsValid)
+                TempData["ErrorMessage"] = "ID phim không hợp lệ!";
+                return RedirectToAction("Index");
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    _context.Phims.Update(phim);
-                    _context.SaveChanges();
+                    // Handle the file upload
+                    if (apPhich != null && apPhich.Length > 0)
+                    {
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/ApPhich", apPhich.FileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await apPhich.CopyToAsync(stream);
+                        }
+
+                        phim.ApPhich = apPhich.FileName; // Save the filename or path to your database
+                    }
+
+                    _context.Update(phim);
+                    await _context.SaveChangesAsync();
 
                     TempData["SuccessMessage"] = "Phim đã được cập nhật thành công!";
-                    return RedirectToAction("Index");
                 }
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"Lỗi khi cập nhật phim: {ex.Message}";
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = $"Lỗi khi cập nhật phim: {ex.Message}";
+                }
+
+                return RedirectToAction(nameof(Index));
             }
 
             return View(phim);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
