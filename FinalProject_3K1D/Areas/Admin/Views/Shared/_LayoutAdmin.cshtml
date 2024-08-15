@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="../../LayoutAdmin/assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../LayoutAdmin/assets/images/favicon.ico" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
     <div class="container-scroller">
@@ -274,6 +276,19 @@
     <script src="../../LayoutAdmin/assets/js/off-canvas.js"></script>
     <script src="../../LayoutAdmin/assets/js/hoverable-collapse.js"></script>
     <script src="../../LayoutAdmin/assets/js/misc.js"></script>
+    <!--thêm ipa quốc gia -->
+    <script>
+        $(document).ready(function () {
+            $.getJSON("https://restcountries.com/v3.1/all", function (data) {
+                var countries = data.map(function (country) {
+                    return `<option value="${country.cca3}">${country.name.common}</option>`;
+                });
+                $('#QuocGiaSanXuat').append(countries);
+            });
+        });
+    </script>
+
+
     <!-- endinject -->
     <!-- Custom js for this page -->
     <!-- End custom js for this page -->
