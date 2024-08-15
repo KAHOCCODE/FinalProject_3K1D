@@ -40,29 +40,33 @@ namespace _3K1D_Final.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Phim phim)
+        public async Task<IActionResult> Create(Phim phim, IFormFile apPhich)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                // Handle the file upload
+                if (apPhich != null && apPhich.Length > 0)
                 {
-                    phim.IdPhim = GeneratePhimId(); // Generate IdPhim
-                    _context.Phims.Add(phim);
-                    _context.SaveChanges();
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/image/ApPhich", apPhich.FileName);
 
-                    // Store success message in TempData
-                    TempData["SuccessMessage"] = "Phim đã được thêm thành công!";
-                    return RedirectToAction("Index");
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await apPhich.CopyToAsync(stream);
+                    }
+
+                    phim.ApPhich = apPhich.FileName; // Save the filename or path to your database
                 }
-            }
-            catch (Exception ex)
-            {
-                // Store error message in TempData
-                TempData["ErrorMessage"] = $"Lỗi khi thêm phim: {ex.Message}";
+
+                // Save the movie to the database
+                _context.Add(phim);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
             }
 
             return View(phim);
         }
+
         private string GeneratePhimId()
         {
             // Logic to generate the next IdPhim based on the last IdPhim in the database
