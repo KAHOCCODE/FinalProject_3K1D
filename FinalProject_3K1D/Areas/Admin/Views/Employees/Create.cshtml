@@ -1,0 +1,150 @@
+﻿@model FinalProject_3K1D.Models.NhanVien
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var nextId = ViewData["NextId"] as string;
+}
+
+<div class="container mt-4">
+    <div class="card border-0 shadow-lg rounded-3">
+        <div class="card-header" style="background-color: #b66dff; color: white;">
+            <h4 class="mb-0 text-center">Create New Employee</h4>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="row g-3">
+                    <!-- Employee ID -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="IdNhanVien" class="form-control border-primary" id="floatingIdNhanVien" placeholder="ID" readonly value="@nextId"/>
+                            <label for="floatingIdNhanVien">Employee ID</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="IdNhanVien"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="HoTen" class="form-control border-primary" id="floatingHoTen" placeholder="Full Name" />
+                            <label for="floatingHoTen">Full Name</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="HoTen"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="NgaySinh" type="date" class="form-control border-primary" id="floatingNgaySinh" />
+                            <label for="floatingNgaySinh">Date of Birth</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="NgaySinh"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="DiaChi" class="form-control border-primary" id="floatingDiaChi" placeholder="Address" />
+                            <label for="floatingDiaChi">Address</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="DiaChi"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Sdt" class="form-control border-primary" id="floatingSdt" placeholder="Phone Number" />
+                            <label for="floatingSdt">Phone Number</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="Sdt"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image URL -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="HinhAnh" class="form-control border-primary" id="floatingHinhAnh" placeholder="Image URL" />
+                            <label for="floatingHinhAnh">Image URL</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="HinhAnh"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" type="email" class="form-control border-primary" id="floatingEmail" placeholder="Email" />
+                            <label for="floatingEmail">Email</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="Email"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="UserNv" class="form-control border-primary" id="floatingUserNv" placeholder="Username" />
+                            <label for="floatingUserNv">Username</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="UserNv"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="PassNv" type="password" class="form-control border-primary" id="floatingPassNv" placeholder="Password" />
+                            <label for="floatingPassNv">Password</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="PassNv"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <select asp-for="IdChucVu" class="form-select border-primary" id="floatingIdChucVu" asp-items="@(ViewData["IdChucVu"] as SelectList)">
+                                <option value="">Select Role</option>
+                            </select>
+                            <label for="floatingIdChucVu">Role</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="IdChucVu"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <select asp-for="IdRap" class="form-select border-primary" id="floatingIdRap" asp-items="@(ViewData["IdRap"] as SelectList)">
+                                <option value="">Select Theater</option>
+                            </select>
+                            <label for="floatingIdRap">Theater</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="IdRap"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn" style="background-color: #b66dff; color: white;">Create</button>
+                    <a class="btn btn-secondary ms-3" asp-action="Index">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
