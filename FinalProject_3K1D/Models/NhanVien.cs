@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace FinalProject_3K1D.Models;
 
@@ -26,8 +27,10 @@ public partial class NhanVien
     public string? IdRap { get; set; }
 
     public int? IdChucVu { get; set; }
+    [DisplayName("Chức vụ")]
 
     public virtual ChucVu? IdChucVuNavigation { get; set; }
+    [DisplayName("Rạp")]
 
     public virtual Rap? IdRapNavigation { get; set; }
 }
