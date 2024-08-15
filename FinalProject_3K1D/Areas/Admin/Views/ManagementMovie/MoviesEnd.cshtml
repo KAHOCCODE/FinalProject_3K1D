@@ -1,0 +1,50 @@
+﻿@model IEnumerable<_3K1D_Final.Models.Phim>
+
+@{
+    ViewData["Title"] = "MoviesEnd";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Danh sách phim đã hết lịch chiếu</h1>
+
+<div style="overflow-x: auto;">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID Phim</th>
+                <th>Tên Phim</th>
+                <th>Mô Tả</th>
+                <th>Thời Lượng</th>
+                <th>Ngày Khởi Chiếu</th>
+                <th>Ngày Kết Thúc</th>
+                <th>Quốc Gia Sản Xuất</th>
+                <th>Đạo Diễn</th>
+                <th>Năm SX</th>
+                <th>Định Dạng Phim</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdPhim</td>
+                    <td>@item.TenPhim</td>
+                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@item.MoTa</td>
+                    <td>@item.ThoiLuong</td>
+                    <td>@item.NgayKhoiChieu.ToShortDateString()</td>
+                    <td>@item.NgayKetThuc.ToShortDateString()</td>
+                    <td>@item.QuocGiaSanXuat</td>
+                    <td>@item.DaoDien</td>
+                    <td>@item.NamSx</td>
+                    <td>@item.DinhDangPhim</td>
+                    <td>
+                        
+                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.IdPhim">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
