@@ -33,6 +33,8 @@ public partial class QlrapPhimContext : DbContext
 
     public virtual DbSet<Ve> Ves { get; set; }
 
+    public virtual DbSet<KhuyenMai> KhuyenMais { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=DESKTOP-3TRF427\\HOANGKA;Initial Catalog=QLRapPhim;Integrated Security=True;Trust Server Certificate=True");
@@ -303,7 +305,29 @@ public partial class QlrapPhimContext : DbContext
                 .HasForeignKey(d => d.IdLichChieu)
                 .HasConstraintName("FK_Ve_LichChieu");
         });
+        modelBuilder.Entity<KhuyenMai>(entity =>
+        {
+            entity.HasKey(e => e.IdKhuyenMai);
 
+            entity.ToTable("KhuyenMai");
+
+            entity.Property(e => e.IdKhuyenMai)
+                .ValueGeneratedNever()
+                .HasColumnName("idKhuyenMai");
+
+            entity.Property(e => e.TenKhuyenMai)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.Property(e => e.GiaTri)
+                .HasColumnType("money");
+
+            entity.Property(e => e.NgayBatDau)
+                .HasColumnType("datetime");
+
+            entity.Property(e => e.NgayKetThuc)
+                .HasColumnType("datetime");
+        });
         OnModelCreatingPartial(modelBuilder);
     }
 
