@@ -1,58 +1,79 @@
 ﻿@model IEnumerable<FinalProject_3K1D.Models.Phim>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "MoviesEnd";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Danh sách phim đã hết lịch chiếu</h1>
+<h1 class="text-center text-primary mb-4">@ViewData["Title"]</h1>
 
-<div style="overflow-x: auto;">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID Phim</th>
-                <th>Tên Phim</th>
-                <th>Mô Tả</th>
-                <th>Thời Lượng</th>
-                <th>Ngày Khởi Chiếu</th>
-                <th>Ngày Kết Thúc</th>
-                <th>Quốc Gia Sản Xuất</th>
-                <th>Đạo Diễn</th>
-                <th>Năm SX</th>
-                <th>Định Dạng Phim</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.IdPhim</td>
-                    <td>@item.TenPhim</td>
-                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@item.MoTa</td>
-                    <td>@item.ThoiLuong</td>
-                    <td>@item.NgayKhoiChieu.ToShortDateString()</td>
-                    <td>@item.NgayKetThuc.ToShortDateString()</td>
-                    <td>@item.QuocGiaSanXuat</td>
-                    <td>@item.DaoDien</td>
-                    <td>@item.NamSx</td>
-                    <td>@item.DinhDangPhim</td>
-                    <td>
-                        <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.IdPhim">Edit</a>
-                        <form asp-action="Delete" asp-route-id="@item.IdPhim" method="post" style="display:inline;">
-                            <input type="hidden" name="id" value="@item.IdPhim" />
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="card shadow-lg border-0 rounded-3">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-warning">
+                    <tr>
+                        <th class="text-center">@Html.DisplayNameFor(model => model.IdPhim)</th>
+                        <th class="text-center">@Html.DisplayNameFor(model => model.TenPhim)</th>
+                        <th class="text-center">@Html.DisplayNameFor(model => model.MoTa)</th>
+                        <th class="text-center">@Html.DisplayNameFor(model => model.ThoiLuong)</th>
+                        <th class="text-center">@Html.DisplayNameFor(model => model.NgayKhoiChieu)</th>
+                        <th class="text-center">@Html.DisplayNameFor(model => model.NgayKetThuc)</th>
+                        <th class="text-center">@Html.DisplayNameFor(model => model.QuocGiaSanXuat)</th>
+                        <th class="text-center">@Html.DisplayNameFor(model => model.DaoDien)</th>
+                        <th class="text-center">@Html.DisplayNameFor(model => model.NamSx)</th>
+                        <th class="text-center">@Html.DisplayNameFor(model => model.DinhDangPhim)</th>
+                        <th class="text-center">Áp Phích</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.IdPhim)</td>
+                            <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.TenPhim)</td>
+                            <td class="align-middle text-center" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@Html.DisplayFor(modelItem => item.MoTa)</td>
+                            <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.ThoiLuong)</td>
+                            <td class="align-middle text-center">@item.NgayKhoiChieu.ToShortDateString()</td>
+                            <td class="align-middle text-center">@item.NgayKetThuc.ToShortDateString()</td>
+                            <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.QuocGiaSanXuat)</td>
+                            <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.DaoDien)</td>
+                            <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.NamSx)</td>
+                            <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.DinhDangPhim)</td>
+                            <td class="align-middle text-center">
+                                @if (!string.IsNullOrEmpty(item.ApPhich))
+                                {
+                                    <img src="@Url.Content("~/image/ApPhich/" + item.ApPhich)" alt="Poster" style="max-height: 100px; max-width: 100px;" />
+                                }
+                                else
+                                {
+                                    <span>Chưa có ảnh</span>
+                                }
+                            </td>
+                            <td class="align-middle text-center">
+                                <form asp-action="Delete" asp-route-id="@item.IdPhim" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.IdPhim" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    @if (Model.Any())
+                    {
+                        <tr>
+                            <td colspan="12" class="text-center text-danger">Không có phim nào để hiển thị.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-<div class="mb-3">
-    <a class="btn btn-primary" asp-action="Index">Quay lại</a>
-</div>
+
+<a href="javascript:history.back()" class="btn btn-secondary mt-3">Quay về</a>
+
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
