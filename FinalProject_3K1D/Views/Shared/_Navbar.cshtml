@@ -1,0 +1,27 @@
+﻿@* _Navbar.cshtml *@
+<div class="nav-container">
+    <nav>
+        <div class="container">
+            <div class="logo">
+                <h1><img src="\image\logo.png" alt="Logo" width="235" height="48" class="d-inline-block align-top"></h1>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search movies ...">
+                <button><i class="fa fa-search"></i></button>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#"><i class="fas fa-gift"></i> Promotions</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn"><i class="fas fa-film"></i> Movies</a>
+                    <div class="dropdown-content">
+                        <a href="#">Phim Đang Chiếu</a>
+                        <a href="#">Phim Sắp Chiếu</a>
+                    </div>
+                </li>
+                <li><a href="#"><i class="fas fa-utensils"></i> Foods & Drinks</a></li>
+                <li><a href="#"><i class="fas fa-phone-alt"></i> Contact</a></li>
+                <li><a asp-controller="Account" asp-action="Login"><i class="fas fa-user"></i> Login/Signup</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>

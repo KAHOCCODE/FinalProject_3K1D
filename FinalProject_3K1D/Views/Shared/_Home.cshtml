@@ -1,0 +1,239 @@
+﻿@model IEnumerable<Phim>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Movies Website</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        @Html.Partial("_Navbar")
+    </header>
+    <!-- Main Content -->
+    <div class="container">
+        @RenderBody()
+    </div>
+
+    <!-- Movie Carousel -->
+    <!-- Background Container for Movie Carousel -->
+    <!-- Movie Carousel -->
+    <!-- Movie Carousel -->
+    <div class="carousel-background">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <!-- Slides will be added dynamically here -->
+            </div>
+            <!-- Swiper Pagination -->
+            <div class="swiper-pagination"></div>
+            <!-- Swiper Navigation -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+            <script>
+                const swiper = new Swiper('.mySwiper', {
+                    loop: true, // Loop slides
+                    autoplay: {
+                        delay: 3000, // Slide change delay in milliseconds
+                        disableOnInteraction: false, // Autoplay will not stop on user interactions
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+
+                // Array of slide data
+                const slides = [
+                    {
+                        title: "Death on the Nile",
+                        image: "/images/background.jpg", // Ensure this path is correct
+                        stars: 4.5,
+                        genres: ["Action", "Drama", "4K"],
+                        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit...",
+                        trailerText: "Watch the trailer"
+                    },
+                    {
+                        title: "Another Movie",
+                        image: "/images/Thor.jpg", // Ensure this path is correct
+                        stars: 5,
+                        genres: ["Adventure", "Fantasy", "HD"],
+                        description: "Another movie description goes here...",
+                        trailerText: "Watch the trailer"
+                    }
+                    // Add more slide objects here
+                ];
+
+                // Add slides to Swiper
+                slides.forEach(slide => {
+                    const slideHTML = `
+                            <div class="swiper-slide">
+                                <div class="image">
+                                    <div class="black">
+                                        <h1>${slide.title}</h1>
+                                        <div class="star">
+                                            ${Array.from({ length: 5 }, (_, i) => `
+                                                <i class="fa-solid fa-star${i < Math.floor(slide.stars) ? '' : '-half-stroke'}"></i>
+                                            `).join('')}
+                                        </div>
+                                        <p>${slide.description}</p>
+                                        <div class="genre">
+                                            ${slide.genres.map(genre => `<a href="#" class="category">${genre}</a>`).join('')}
+                                        </div>
+                                        <div class="watch">
+                                            <i class="fa-solid fa-play"></i>
+                                            <p>${slide.trailerText}</p>
+                                        </div>
+                                    </div>
+                                    <img src="${slide.image}" alt="${slide.title}">
+                                </div>
+                            </div>
+                        `;
+                    swiper.appendSlide(slideHTML);
+                });
+            </script>
+        </div>
+    </div>
+    </div>
+    <!-- Popular Movies Section -->
+    <div class="second">
+        <div class="latest">
+            <h1>Popular Movies</h1>
+            <div class="box">
+                <div class="card">
+                    <div class="details">
+                        <div class="left">
+                            <!--name-->
+                            <p class="name">Gajaman</p>
+                            <div class="date_quality">
+                                <!--Dinh dạng phim-->
+                                <p class="quality">HD</p>
+                                <<!--năm sane=r xuất-->
+                                <p class="date">2023</p>
+                            </div>
+                            <p class="category">Animation/Comedy</p>
+                            <div class="info">
+                                <div class="rate">
+                                    <i class="fa-solid fa-star"></i>
+                                    <p>9.2</p>
+                                </div>
+                                <div class="time">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <!--thời gian-->
+                                    <p>120min</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <!-- Ticket Booking -->
+                            <div class="ticket-booking">
+                                <i class="fa-solid fa-ticket"></i>
+                                <a href="/Home/Detail?id=P01">Đặt vé</a>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--hình-->
+                    <
+                    <img src="~/images/gajaman.jpg" alt="Gajaman">
+
+                </div>
+                <!-- More Cards with different movies -->
+            </div>
+            </a>
+        </div>
+
+    </div>
+    <!-- test-->
+    <!-- Upcoming Movies Section -->
+    <div class="upcoming">
+        <div class="movies_box">
+            <h1>Upcoming Movies</h1>
+            <div class="box">
+                <div class="card">
+                    <div class="details">
+                        <div class="left">
+                            <p class="name">Plane</p>
+                            <div class="date_quality">
+                                <p class="quality">HD</p>
+                                <p class="date">2023</p>
+                            </div>
+                            <p class="category">Action/Thriller</p>
+                            <div class="info">
+                                <div class="time">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <p>120min</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <!-- Ticket Booking -->
+                            <div class="ticket-booking">
+                                <i class="fa-solid fa-ticket"></i>
+                                <span>Đặt vé</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <img src="~/images/plane.jpg" alt="Plane">
+                </div>
+                <!-- More Cards with different upcoming movies -->
+            </div>
+        </div>
+    </div>
+
+    <!-- World Best TV Show Section -->
+    <div class="show">
+        <div class="tv_show">
+            <h1>Movies Now Showing</h1>
+            <div class="box">
+                <div class="card">
+                    <div class="details">
+                        <div class="left">
+                            <p class="name">Money Heist</p>
+                            <div class="date_quality">
+                                <p class="quality">HD</p>
+                                <p class="date">2017</p>
+                            </div>
+                            <p class="category">Thriller</p>
+                            <div class="info">
+                                <div class="rate">
+                                    <i class="fa-solid fa-star"></i>
+                                    <p>8.2</p>
+                                </div>
+                                <div class="time">
+                                    <i class="fa-regular fa-clock"></i>
+                                    <p>120min</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <!-- Ticket Booking -->
+                            <div class="ticket-booking">
+                                <i class="fa-solid fa-ticket"></i>
+                                <span>Đặt vé</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <img src="~/images/money_heist.jpg" alt="Money Heist">
+                </div>
+                <!-- More Cards with different TV shows -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
