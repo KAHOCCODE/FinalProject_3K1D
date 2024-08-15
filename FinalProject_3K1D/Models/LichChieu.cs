@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 
 namespace FinalProject_3K1D.Models;
 
@@ -22,4 +23,27 @@ public partial class LichChieu
     public virtual PhongChieu IdPhongChieuNavigation { get; set; } = null!;
 
     public virtual ICollection<Ve> Ves { get; set; } = new List<Ve>();
+    public string PhimName
+    {
+        get
+        {
+            if (IdPhimNavigation != null)
+            {
+                return IdPhimNavigation.TenPhim;
+            }
+            return string.Empty;
+        }
+    }
+    public string TenPhong
+    {
+        get
+        {
+            if (IdPhongChieuNavigation != null)
+            {
+                return IdPhongChieuNavigation.TenPhong;
+            }
+            return string.Empty;
+        }
+    }
+    
 }
