@@ -54,14 +54,13 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         [Route("Admin/Customers/Create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HoTen,NgaySinh,DiaChi,Sdt,Cccd,Email,UserKh,PassKh")] KhachHang khachHang)
+        public async Task<IActionResult> Create([Bind("IdKhachHang,HoTen,NgaySinh,DiaChi,Sdt,Cccd,Email,UserKh,PassKh")] KhachHang khachHang)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    khachHang.IdKhachHang = GenerateKhachHangId();
-                    // Add the new customer to the database
+                    // IdKhachHang is already set from the form input
                     _context.KhachHangs.Add(khachHang);
                     await _context.SaveChangesAsync();
 
@@ -79,6 +78,18 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             return View(khachHang);
         }
 
+
+        private string GenerateKhachHangId()
+        {
+            // Logic to generate the next IdKhachHang based on the last IdKhachHang in the database
+            var lastCustomer = _context.KhachHangs.OrderByDescending(c => c.IdKhachHang).FirstOrDefault();
+            if (lastCustomer != null)
+            {
+                int nextId = int.Parse(lastCustomer.IdKhachHang.Substring(2)) + 1;
+                return $"KH{nextId:D3}";
+            }
+            return "KH01";
+        }
 
         [Route("Admin/Customers/Edit/{id}")]
         // GET: Admin/Customers/Edit/5
@@ -171,16 +182,6 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             return _context.KhachHangs.Any(e => e.IdKhachHang == id);
         }
 
-        private string GenerateKhachHangId()
-        {
-            // Logic to generate the next IdKhachHang based on the last IdKhachHang in the database
-            var lastCustomer = _context.KhachHangs.OrderByDescending(c => c.IdKhachHang).FirstOrDefault();
-            if (lastCustomer != null)
-            {
-                int nextId = int.Parse(lastCustomer.IdKhachHang.Substring(2)) + 1;
-                return $"KH{nextId:D3}";
-            }
-            return "KH01";
-        }
+        
     }
 }
