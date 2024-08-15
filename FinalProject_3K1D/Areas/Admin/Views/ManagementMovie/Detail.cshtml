@@ -10,41 +10,7 @@
 <hr />
 
 <div class="row">
-    <div class="col-md-6 p-3">
-        <dl class="row">
-            <dt class="col-sm-4">ID Phim:</dt>
-            <dd class="col-sm-8">@Model.IdPhim</dd>
-
-            <dt class="col-sm-4">Tên Phim:</dt>
-            <dd class="col-sm-8">@Model.TenPhim</dd>
-
-            <dt class="col-sm-4">Mô Tả:</dt>
-            <dd class="col-sm-8">@Model.MoTa</dd>
-
-            <dt class="col-sm-4">Thời Lượng:</dt>
-            <dd class="col-sm-8">@Model.ThoiLuong phút</dd>
-
-            <dt class="col-sm-4">Ngày Khởi Chiếu:</dt>
-            <dd class="col-sm-8">@Model.NgayKhoiChieu.ToShortDateString()</dd>
-
-            <dt class="col-sm-4">Ngày Kết Thúc:</dt>
-            <dd class="col-sm-8">@Model.NgayKetThuc.ToShortDateString()</dd>
-
-            <dt class="col-sm-4">Quốc Gia Sản Xuất:</dt>
-            <dd class="col-sm-8">@Model.QuocGiaSanXuat</dd>
-
-            <dt class="col-sm-4">Đạo Diễn:</dt>
-            <dd class="col-sm-8">@Model.DaoDien</dd>
-
-            <dt class="col-sm-4">Năm Sản Xuất:</dt>
-            <dd class="col-sm-8">@Model.NamSx</dd>
-
-            <dt class="col-sm-4">Định Dạng Phim:</dt>
-            <dd class="col-sm-8">@Model.DinhDangPhim</dd>
-        </dl>
-    </div>
-
-    <div class="col-md-6 p-3 d-flex justify-content-center align-items-center">
+    <div class="col-md-4 d-flex justify-content-center align-items-center p-3">
         @if (!string.IsNullOrEmpty(Model.ApPhich))
         {
             <img src="@Url.Content("~/image/ApPhich/" + Model.ApPhich)" alt="Poster" class="img-fluid" style="max-height: 500px; max-width: 100%;" />
@@ -53,6 +19,39 @@
         {
             <p>Chưa có áp phích</p>
         }
+    </div>
+
+    <div class="col-md-8 p-3">
+        <dl class="row">
+            <dt class="col-sm-3">Tên Phim:</dt>
+            <dd class="col-sm-9">
+                <h2 class="fw-bold">@Model.TenPhim</h2>
+            </dd>
+
+            <dt class="col-sm-3">Mô Tả:</dt>
+            <dd class="col-sm-9">@Model.MoTa</dd>
+
+            <dt class="col-sm-3">Thời Lượng:</dt>
+            <dd class="col-sm-9">@Model.ThoiLuong phút</dd>
+
+            <dt class="col-sm-3">Ngày Khởi Chiếu:</dt>
+            <dd class="col-sm-9">@Model.NgayKhoiChieu.ToShortDateString()</dd>
+
+            <dt class="col-sm-3">Ngày Kết Thúc:</dt>
+            <dd class="col-sm-9">@Model.NgayKetThuc.ToShortDateString()</dd>
+
+            <dt class="col-sm-3">Quốc Gia Sản Xuất:</dt>
+            <dd class="col-sm-9">@Model.QuocGiaSanXuat</dd>
+
+            <dt class="col-sm-3">Đạo Diễn:</dt>
+            <dd class="col-sm-9">@Model.DaoDien</dd>
+
+            <dt class="col-sm-3">Năm Sản Xuất:</dt>
+            <dd class="col-sm-9">@Model.NamSx</dd>
+
+            <dt class="col-sm-3">Định Dạng Phim:</dt>
+            <dd class="col-sm-9">@Model.DinhDangPhim</dd>
+        </dl>
     </div>
 </div>
 
