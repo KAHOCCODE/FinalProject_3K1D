@@ -30,6 +30,14 @@ namespace _3K1D_Final.Areas.Admin.Controllers
                 .ToList();
             return View(movies);
         }
+        public IActionResult MoviesComing()
+        {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            var movies = _context.Phims
+                .Where(p => p.NgayKhoiChieu > today)
+                .ToList();
+            return View(movies);
+        }
 
         //thêm phim mới 
         public IActionResult Create()
