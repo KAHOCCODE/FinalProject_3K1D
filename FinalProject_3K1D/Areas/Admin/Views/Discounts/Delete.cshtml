@@ -1,0 +1,39 @@
+﻿@model FinalProject_3K1D.Models.KhuyenMai
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Delete Discount";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Delete Discount</h1>
+
+<h4>KhuyenMai</h4>
+<hr />
+<div>
+    <h4>Are you sure you want to delete this item?</h4>
+    <div class="form-group">
+        <label>Discount ID</label>
+        <p>@Model.IdKhuyenMai</p>
+    </div>
+    <div class="form-group">
+        <label>Name</label>
+        <p>@Model.TenKhuyenMai</p>
+    </div>
+    <div class="form-group">
+        <label>Value</label>
+        <p>@Model.GiaTri</p>
+    </div>
+    <div class="form-group">
+        <label>Start Date</label>
+        <p>@Model.NgayBatDau.ToShortDateString()</p>
+    </div>
+    <div class="form-group">
+        <label>End Date</label>
+        <p>@Model.NgayKetThuc.ToShortDateString()</p>
+    </div>
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="IdKhuyenMai" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

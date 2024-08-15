@@ -1,0 +1,37 @@
+﻿@model FinalProject_3K1D.Models.KhuyenMai
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Discount Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Discount Details</h1>
+
+<div>
+    <h4>KhuyenMai</h4>
+    <hr />
+    <div class="form-group">
+        <label>Discount ID</label>
+        <p>@Model.IdKhuyenMai</p>
+    </div>
+    <div class="form-group">
+        <label>Name</label>
+        <p>@Model.TenKhuyenMai</p>
+    </div>
+    <div class="form-group">
+        <label>Value</label>
+        <p>@Model.GiaTri</p>
+    </div>
+    <div class="form-group">
+        <label>Start Date</label>
+        <p>@Model.NgayBatDau.ToShortDateString()</p>
+    </div>
+    <div class="form-group">
+        <label>End Date</label>
+        <p>@Model.NgayKetThuc.ToShortDateString()</p>
+    </div>
+    <p>
+        <a asp-action="Edit" asp-route-id="@Model.IdKhuyenMai" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </p>
+</div>

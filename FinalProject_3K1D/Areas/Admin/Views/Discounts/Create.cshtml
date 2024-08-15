@@ -1,0 +1,31 @@
+﻿@model FinalProject_3K1D.Models.KhuyenMai
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Create Discount";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Create Discount</h1>
+
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label for="TenKhuyenMai" class="form-label">Discount Name</label>
+            <input type="text" class="form-control" id="TenKhuyenMai" name="TenKhuyenMai" required />
+        </div>
+        <div class="mb-3">
+            <label for="GiaTri" class="form-label">Discount Value</label>
+            <input type="number" class="form-control" id="GiaTri" name="GiaTri" step="0.01" required />
+        </div>
+        <div class="mb-3">
+            <label for="NgayBatDau" class="form-label">Start Date</label>
+            <input type="date" class="form-control" id="NgayBatDau" name="NgayBatDau" required />
+        </div>
+        <div class="mb-3">
+            <label for="NgayKetThuc" class="form-label">End Date</label>
+            <input type="date" class="form-control" id="NgayKetThuc" name="NgayKetThuc" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+    </form>
+</div>

@@ -1,0 +1,44 @@
+﻿@model IEnumerable<FinalProject_3K1D.Models.KhuyenMai>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Discounts";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Discounts</h1>
+
+    <div class="mb-3">
+        <a class="btn btn-primary" asp-action="Create">Create New</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Value</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col" style="width: 150px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.IdKhuyenMai</td>
+                    <td>@item.TenKhuyenMai</td>
+                    <td>@item.GiaTri.ToString("C")</td>
+                    <td>@item.NgayBatDau.ToShortDateString()</td>
+                    <td>@item.NgayKetThuc.ToShortDateString()</td>
+                    <td>
+                        <a class="btn btn-info btn-sm" asp-action="Edit" asp-route-id="@item.IdKhuyenMai">Edit</a>
+                        <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.IdKhuyenMai">Details</a>
+                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.IdKhuyenMai">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
