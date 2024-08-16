@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FinalProject_3K1D.Models;
 
@@ -18,14 +16,14 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         {
             _context = context;
         }
+
         [Route("Admin/Customers")]
-        // GET: Admin/Customers
         public async Task<IActionResult> Index()
         {
             return View(await _context.KhachHangs.ToListAsync());
         }
+
         [Route("Admin/Customers/Details/{id}")]
-        // GET: Admin/Customers/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -33,8 +31,7 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var khachHang = await _context.KhachHangs
-                .FirstOrDefaultAsync(m => m.IdKhachHang == id);
+            var khachHang = await _context.KhachHangs.FirstOrDefaultAsync(m => m.IdKhachHang == id);
             if (khachHang == null)
             {
                 return NotFound();
@@ -42,13 +39,20 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
 
             return View(khachHang);
         }
+
         [Route("Admin/Customers/Create")]
         // GET: Admin/Customers/Create
         public IActionResult Create()
         {
-            var nextId = GenerateKhachHangId();
-            ViewData["NextId"] = nextId;
-            return View();
+            var newCustomer = new KhachHang
+            {
+                IdKhachHang = GenerateCustomerId() // Generate ID here
+            };
+
+            // Đặt ID này vào ViewData để sử dụng trong View
+            ViewData["NextId"] = newCustomer.IdKhachHang;
+
+            return View(newCustomer);
         }
 
         [Route("Admin/Customers/Create")]
@@ -60,38 +64,30 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             {
                 try
                 {
-                    // IdKhachHang is already set from the form input
+                    // Kiểm tra lại xem khachHang.IdKhachHang đã có giá trị chưa
+                    if (string.IsNullOrEmpty(khachHang.IdKhachHang))
+                    {
+                        // Nếu chưa, tạo một mã mới
+                        khachHang.IdKhachHang = GenerateCustomerId();
+                    }
+
                     _context.KhachHangs.Add(khachHang);
                     await _context.SaveChangesAsync();
 
-                    // Store success message in TempData
+                    // Lưu thông báo thành công vào TempData
                     TempData["SuccessMessage"] = "Khách hàng đã được thêm thành công!";
                     return RedirectToAction("Index");
                 }
                 catch
                 {
-                    // Handle exception here
+                    // Xử lý lỗi tại đây
                     return View(khachHang);
                 }
             }
             return View(khachHang);
         }
 
-
-        private string GenerateKhachHangId()
-        {
-            // Logic to generate the next IdKhachHang based on the last IdKhachHang in the database
-            var lastCustomer = _context.KhachHangs.OrderByDescending(c => c.IdKhachHang).FirstOrDefault();
-            if (lastCustomer != null)
-            {
-                int nextId = int.Parse(lastCustomer.IdKhachHang.Substring(2)) + 1;
-                return $"KH{nextId:D3}";
-            }
-            return "KH01";
-        }
-
         [Route("Admin/Customers/Edit/{id}")]
-        // GET: Admin/Customers/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -107,9 +103,6 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             return View(khachHang);
         }
 
-        // POST: Admin/Customers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Route("Admin/Customers/Edit/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -142,8 +135,8 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             }
             return View(khachHang);
         }
+
         [Route("Admin/Customers/Delete/{id}")]
-        // GET: Admin/Customers/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -151,8 +144,7 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var khachHang = await _context.KhachHangs
-                .FirstOrDefaultAsync(m => m.IdKhachHang == id);
+            var khachHang = await _context.KhachHangs.FirstOrDefaultAsync(m => m.IdKhachHang == id);
             if (khachHang == null)
             {
                 return NotFound();
@@ -160,8 +152,8 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
 
             return View(khachHang);
         }
+
         [Route("Admin/Customers/Delete/{id}")]
-        // POST: Admin/Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
@@ -180,5 +172,32 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         {
             return _context.KhachHangs.Any(e => e.IdKhachHang == id);
         }
+
+        private string GenerateCustomerId()
+        {
+            // Tìm ID khách hàng cuối cùng trong cơ sở dữ liệu
+            var lastCustomer = _context.KhachHangs
+                .OrderByDescending(k => k.IdKhachHang)
+                .FirstOrDefault();
+
+            if (lastCustomer != null)
+            {
+                // Tăng giá trị ID cuối cùng lên 1
+                int nextIdNumber = int.Parse(lastCustomer.IdKhachHang.Substring(2)) + 1;
+                string nextId = $"KH{nextIdNumber:D4}";
+
+                // Đảm bảo ID là duy nhất
+                while (_context.KhachHangs.Any(k => k.IdKhachHang == nextId))
+                {
+                    nextIdNumber++;
+                    nextId = $"KH{nextIdNumber:D4}";
+                }
+
+                return nextId;
+            }
+            return "KH0001"; // ID bắt đầu nếu chưa có khách hàng nào trong cơ sở dữ liệu
+        }
+
     }
-    }
+}
+

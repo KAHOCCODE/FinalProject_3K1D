@@ -1,0 +1,190 @@
+﻿
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+        body {
+            background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient nền cho trang */
+            font-family: 'Poppins', sans-serif;
+        }
+
+
+        .movie-detail-page {
+            padding: 30px;
+            background: linear-gradient(to right, #ffffff, #b3e5fc); /* Gradient trắng và xanh bạc */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        .movie-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .movie-poster {
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 300px; /* Điều chỉnh kích thước tối đa */
+            height: auto; /* Giữ tỷ lệ hình ảnh */
+            margin-right: 20px; /* Khoảng cách giữa poster và thông tin phim */
+        }
+
+        .movie-info {
+            flex: 1; /* Cho phép phần thông tin phim mở rộng để chiếm không gian còn lại */
+            margin-left: 20px; /* Khoảng cách giữa poster và thông tin phim */
+        }
+
+            .movie-info h1 {
+                margin-bottom: 10px;
+                font-size: 2.5rem;
+                color: #333;
+                background: linear-gradient(to right, #ff5722, #ff9800); /* Gradient cho tiêu đề */
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: bold; /* Thêm thuộc tính in đậm */
+                padding: 5px 0;
+            }
+
+
+            .movie-info p {
+                font-size: 1.1rem;
+                color: #555;
+            }
+
+        .movie-description {
+            margin-bottom: 30px;
+        }
+
+            .movie-description h2 {
+                font-size: 2rem;
+                color: #fff;
+                background: linear-gradient(to right, #ff5722, #ff9800); /* Gradient cho tiêu đề mô tả */
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                border-bottom: 2px solid transparent;
+                padding-bottom: 10px;
+                margin-bottom: 15px;
+                font-weight: bold; /* Thêm thuộc tính in đậm */
+            }
+
+            .movie-description p {
+                font-size: 1.2rem;
+                line-height: 1.6;
+                color: #666;
+            }
+
+        .booking-section {
+            margin-top: 50px; /* Điều chỉnh khoảng cách với nội dung phía trên */
+        }
+
+            .booking-section h2 {
+                font-size: 1.8rem;
+                color: #fff;
+                background: linear-gradient(to right, #ff5722, #ff9800); /* Gradient cho tiêu đề đặt vé */
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 15px;
+                font-weight: bold; /* Thêm thuộc tính in đậm */
+            }
+
+            .booking-section p {
+                font-size: 1.1rem;
+                color: #555;
+            }
+
+        .btn-book {
+            background: linear-gradient(to right, #ff5722, #ff9800); /* Gradient cho nút đặt vé */
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+            .btn-book:hover {
+                background: linear-gradient(to right, #ab47bc, #8e24aa); /* Gradient khi hover */
+            }
+
+        .date-buttons, .time-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-date, .btn-time {
+            background: #ff5722;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+
+
+    </style>
+<h1>Danh sách phim được chiếu</h1>
+<div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-success" asp-action="Create"><i class="fas fa-plus"></i> Thêm lịch chiếu</a>
+    </div>
+ <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-warning">
+                        <tr>
+                            <th class="text-center">Mã lịch chiếu</th>
+                            <th class="text-center">Tên phim</th>
+                            <th class="text-center">Giờ chiếu</th>
+                            <th class="text-center">Thời lượng</th>
+                            <th class="text-center">Tên phòng</th>
+                            <th class="text-center">Ngày khởi chiếu</th>
+                            <th class="text-center">Ngày kết thúc</th>
+                            <th class="text-center">Định dạng phim</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                    @foreach (var lich in ViewBag.LichChieus)
+                    {
+                            <tr>
+                                <th class="text-center">@lich.IdLichChieu</th>
+                                <th>@lich.TenPhim</th>
+                                <th class="text-center">@lich.GioChieu</th>
+                                <th class="text-center">@lich.ThoiLuong</th>
+                                <th class="text-center">@lich.TenPhong</th>
+                                <th class="text-center">@lich.NgayKhoiChieu</th>
+                                <th class="text-center">@lich.NgayKetThuc</th>
+                                <th class="text-center">@lich.DinhDangPhim</th>
+                                <td class="align-middle text-center">
+                                </td>
+                                <td class="align-middle text-center">
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-warning btn-sm mx-1" asp-action="Edit" asp-route-id="@lich.IdLichChieu"><i class="fas fa-edit"></i> Edit</a>
+                                            <a class="btn btn-info btn-sm mx-1" asp-action="Details" asp-route-id="@lich.IdLichChieu"><i class="fas fa-info-circle"></i> Details</a>
+                                                <button class="btn btn-danger btn-sm btn-delete mx-1" data-id="@lich.IdLichChieu" data-name="@lich.IdLichChieu"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </td>
+
+                            </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+
+
+

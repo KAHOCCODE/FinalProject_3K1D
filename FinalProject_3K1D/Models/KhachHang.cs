@@ -5,6 +5,7 @@ namespace FinalProject_3K1D.Models;
 
 public partial class KhachHang
 {
+
     public string IdKhachHang { get; set; } = null!;
 
     public string HoTen { get; set; } = null!;
@@ -17,7 +18,7 @@ public partial class KhachHang
 
     public string? Cccd { get; set; }
 
-    public int? DienTichLuy { get; set; }
+    public int? DienTichLuy { get; set; } = 0;
 
     public string? Email { get; set; }
 
