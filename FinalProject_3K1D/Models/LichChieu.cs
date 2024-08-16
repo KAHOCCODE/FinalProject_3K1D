@@ -25,4 +25,11 @@ public partial class LichChieu
     public virtual PhongChieu IdPhongChieuNavigation { get; set; } = null!;
 
     public virtual ICollection<Ve> Ves { get; set; } = new List<Ve>();
+    //lấy tên phim
+    public string TenPhim => IdPhimNavigation?.TenPhim ?? "Không xác định";
+    //lấy tên phòng chiếu
+    public string TenPhong=> IdPhongChieuNavigation.TenPhong;
+    //lấy tên rạp
+    public string TenRap => IdRapNavigation?.TenRap ?? "Không xác định";
+
 }
