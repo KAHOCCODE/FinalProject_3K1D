@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FinalProject_3K1D.Models;
-using System.IO;
 
 namespace FinalProject_3K1D.Areas.Admin.Controllers
 {
@@ -19,14 +19,14 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             _context = context;
         }
 
-        [Route("Admin/Employees")]
+        // GET: Admin/Employees
         public async Task<IActionResult> Index()
         {
-            var employees = _context.NhanViens.Include(n => n.IdChucVuNavigation).Include(n => n.IdRapNavigation);
-            return View(await employees.ToListAsync());
+            var qlrapPhimContext = _context.NhanViens.Include(n => n.IdChucVuNavigation).Include(n => n.IdRapNavigation);
+            return View(await qlrapPhimContext.ToListAsync());
         }
 
-        [Route("Admin/Employees/Details/{id}")]
+        // GET: Admin/Employees/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -45,70 +45,52 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
 
             return View(nhanVien);
         }
-
-        [Route("Admin/Employees/Create")]
+        // GET: Admin/Employees/Create
         public IActionResult Create()
         {
-            var newEmployee = new NhanVien
-            {
-                IdNhanVien = GenerateEmployeeId() // Generate ID here
-            };
+            // Generate a new employee ID
+            var lastEmployee = _context.NhanViens.OrderByDescending(e => e.IdNhanVien).FirstOrDefault();
+            string newId = GenerateNewEmployeeId(lastEmployee?.IdNhanVien);
 
-            ViewData["IdChucVu"] = new SelectList(_context.ChucVus, "IdChucVu", "TenChucVu");
-            ViewData["IdRap"] = new SelectList(_context.Raps, "IdRap", "TenRap");
-            ViewData["NextId"] = newEmployee.IdNhanVien;
+            // Pass the new ID to the view
+            ViewBag.NewEmployeeId = newId;
 
-            return View(newEmployee);
+            ViewData["IdChucVu"] = new SelectList(_context.ChucVus, "IdChucVu", "TenChucVu"); // Display role names
+            ViewData["IdRap"] = new SelectList(_context.Raps, "IdRap", "TenRap"); // Display theater names
+            return View();
         }
 
-        [Route("Admin/Employees/Create")]
+        private string GenerateNewEmployeeId(string lastId)
+        {
+            if (lastId == null)
+            {
+                return "NV001"; // Starting ID
+            }
+
+            // Extract numeric part and increment
+            string prefix = "NV";
+            int number = int.Parse(lastId.Substring(prefix.Length)) + 1;
+            return prefix + number.ToString("D3"); // Format with leading zeros
+        }
+
+
+        // POST: Admin/Employees/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdNhanVien,HoTen,NgaySinh,DiaChi,Sdt,HinhAnh,Email,UserNv,PassNv,IdChucVu,IdRap")] NhanVien nhanVien)
+        public async Task<IActionResult> Create([Bind("IdNhanVien,HoTen,NgaySinh,DiaChi,Sdt,HinhAnh,Email,UserNv,PassNv,IdRap,IdChucVu")] NhanVien nhanVien)
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    if (string.IsNullOrEmpty(nhanVien.IdNhanVien))
-                    {
-                        nhanVien.IdNhanVien = GenerateEmployeeId();
-                    }
-
-                    // Save the uploaded image
-                    if (Request.Form.Files.Count > 0)
-                    {
-                        var file = Request.Form.Files[0];
-                        if (file.Length > 0 && (file.ContentType == "image/jpeg" || file.ContentType == "image/png"))
-                        {
-                            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
-
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(stream);
-                            }
-
-                            nhanVien.HinhAnh = fileName;
-                        }
-                    }
-
-                    _context.NhanViens.Add(nhanVien);
-                    await _context.SaveChangesAsync();
-
-                    TempData["SuccessMessage"] = "Employee created successfully!";
-                    return RedirectToAction(nameof(Index));
-                }
-                catch
-                {
-                    return View(nhanVien);
-                }
+                _context.Add(nhanVien);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             ViewData["IdChucVu"] = new SelectList(_context.ChucVus, "IdChucVu", "TenChucVu", nhanVien.IdChucVu);
             ViewData["IdRap"] = new SelectList(_context.Raps, "IdRap", "TenRap", nhanVien.IdRap);
             return View(nhanVien);
         }
-        [Route("Admin/Employees/Edit/{id}")]
+
+        // GET: Admin/Employees/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -116,7 +98,10 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var nhanVien = await _context.NhanViens.FindAsync(id);
+            var nhanVien = await _context.NhanViens
+                .Include(n => n.IdChucVuNavigation)
+                .Include(n => n.IdRapNavigation)
+                .FirstOrDefaultAsync(m => m.IdNhanVien == id);
             if (nhanVien == null)
             {
                 return NotFound();
@@ -127,10 +112,9 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             return View(nhanVien);
         }
 
-        [Route("Admin/Employees/Edit/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("IdNhanVien,HoTen,NgaySinh,DiaChi,Sdt,Email,UserNv,PassNv,IdRap,IdChucVu")] NhanVien nhanVien, IFormFile newImage)
+        public async Task<IActionResult> Edit(string id, [Bind("IdNhanVien,HoTen,NgaySinh,DiaChi,Sdt,HinhAnh,Email,UserNv,PassNv,IdRap,IdChucVu")] NhanVien nhanVien, IFormFile HinhAnhFile)
         {
             if (id != nhanVien.IdNhanVien)
             {
@@ -141,43 +125,30 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             {
                 try
                 {
-                    var existingEmployee = await _context.NhanViens.FindAsync(id);
-
-                    if (existingEmployee == null)
+                    // Check if a new image file is uploaded
+                    if (HinhAnhFile != null && HinhAnhFile.Length > 0)
                     {
-                        return NotFound();
-                    }
+                        // Create the directory if it does not exist
+                        var imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "~/wwwroot/images");
+                        if (!Directory.Exists(imagesDirectory))
+                        {
+                            Directory.CreateDirectory(imagesDirectory);
+                        }
 
-                    // Update only specific fields
-                    existingEmployee.HoTen = nhanVien.HoTen;
-                    existingEmployee.NgaySinh = nhanVien.NgaySinh;
-                    existingEmployee.DiaChi = nhanVien.DiaChi;
-                    existingEmployee.Sdt = nhanVien.Sdt;
-                    existingEmployee.Email = nhanVien.Email;
-                    existingEmployee.UserNv = nhanVien.UserNv;
-                    existingEmployee.PassNv = nhanVien.PassNv;
-                    existingEmployee.IdRap = nhanVien.IdRap;
-                    existingEmployee.IdChucVu = nhanVien.IdChucVu;
-
-                    // Handle image upload
-                    if (newImage != null && newImage.Length > 0 && (newImage.ContentType == "image/jpeg" || newImage.ContentType == "image/png"))
-                    {
-                        var fileName = $"{Guid.NewGuid()}{Path.GetExtension(newImage.FileName)}";
-                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+                        // Process the uploaded file
+                        var fileName = Path.GetFileName(HinhAnhFile.FileName); // Ensure no path traversal
+                        var filePath = Path.Combine(imagesDirectory, fileName);
 
                         using (var stream = new FileStream(filePath, FileMode.Create))
                         {
-                            await newImage.CopyToAsync(stream);
+                            await HinhAnhFile.CopyToAsync(stream);
                         }
 
-                        // Update image filename
-                        existingEmployee.HinhAnh = fileName;
+                        nhanVien.HinhAnh = fileName; // Set the image path relative to wwwroot
                     }
 
-                    _context.Update(existingEmployee);
+                    _context.Update(nhanVien);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Employee updated successfully!";
-                    return RedirectToAction(nameof(Details), new { id = nhanVien.IdNhanVien });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -190,15 +161,14 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                         throw;
                     }
                 }
+                return RedirectToAction(nameof(Index));
             }
-
             ViewData["IdChucVu"] = new SelectList(_context.ChucVus, "IdChucVu", "TenChucVu", nhanVien.IdChucVu);
             ViewData["IdRap"] = new SelectList(_context.Raps, "IdRap", "TenRap", nhanVien.IdRap);
             return View(nhanVien);
         }
 
-
-        [Route("Admin/Employees/Delete/{id}")]
+        // GET: Admin/Employees/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -218,7 +188,7 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             return View(nhanVien);
         }
 
-        [Route("Admin/Employees/Delete/{id}")]
+        // POST: Admin/Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
@@ -236,28 +206,6 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         private bool NhanVienExists(string id)
         {
             return _context.NhanViens.Any(e => e.IdNhanVien == id);
-        }
-
-        private string GenerateEmployeeId()
-        {
-            var lastEmployee = _context.NhanViens
-                .OrderByDescending(e => e.IdNhanVien)
-                .FirstOrDefault();
-
-            if (lastEmployee != null)
-            {
-                int nextIdNumber = int.Parse(lastEmployee.IdNhanVien.Substring(2)) + 1;
-                string nextId = $"NV{nextIdNumber:D4}";
-
-                while (_context.NhanViens.Any(e => e.IdNhanVien == nextId))
-                {
-                    nextIdNumber++;
-                    nextId = $"NV{nextIdNumber:D4}";
-                }
-
-                return nextId;
-            }
-            return "NV0001";
         }
     }
 }
