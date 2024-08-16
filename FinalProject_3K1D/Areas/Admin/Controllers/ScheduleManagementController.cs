@@ -39,21 +39,32 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         }
 
         // POST: /Admin/ScheduleManagement/Create
+        // POST: /Admin/ScheduleManagement/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("GioChieu,IdPhongChieu,GiaVe,IdPhim,IdRap")] LichChieu lichChieu)
         {
             if (ModelState.IsValid)
             {
-                lichChieu.IdLichChieu = GenerateNewIdLichChieu(); // Set new ID
+                // Generate a new ID for the LichChieu record
+                lichChieu.IdLichChieu = GenerateNewIdLichChieu();
+
+                // Add the new record to the database context
                 _context.Add(lichChieu);
+
+                // Save changes to the database
                 await _context.SaveChangesAsync();
+
+                // Redirect to the Index action after successful creation
                 return RedirectToAction(nameof(Index));
             }
+
+            // If model state is not valid, reload the dropdown lists and return the view
             ViewData["IdPhim"] = new SelectList(_context.Phims, "IdPhim", "TenPhim", lichChieu.IdPhim);
             ViewData["IdRap"] = new SelectList(_context.Raps, "IdRap", "TenRap", lichChieu.IdRap);
             return View(lichChieu);
         }
+
 
         // GET: /Admin/ScheduleManagement/GetPhongChieuByRap
         [HttpGet]
@@ -97,5 +108,68 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             // Ensure new ID has the correct format with prefix and zero-padding
             return "LC" + newNumber.ToString("D3"); // "D3" ensures 3-digit format
         }
+        // GET: /Admin/ScheduleManagement/Edit/{id}
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var lichChieu = await _context.LichChieus
+                .Include(l => l.IdPhimNavigation)
+                .Include(l => l.IdPhongChieuNavigation)
+                .FirstOrDefaultAsync(m => m.IdLichChieu == id);
+
+            if (lichChieu == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["idPhim"] = new SelectList(_context.Phims, "IdPhim", "TenPhim", lichChieu.IdPhim);
+            ViewData["idRap"] = new SelectList(_context.Raps, "IdRap", "TenRap", lichChieu.IdRap);
+            return View(lichChieu);
+        }
+
+        // POST: /Admin/ScheduleManagement/Edit/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, [Bind("IdLichChieu,GioChieu,IdPhongChieu,GiaVe,IdPhim,IdRap")] LichChieu lichChieu)
+        {
+            if (id != lichChieu.IdLichChieu)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(lichChieu);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!LichChieuExists(lichChieu.IdLichChieu))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["idPhim"] = new SelectList(_context.Phims, "IdPhim", "TenPhim", lichChieu.IdPhim);
+            ViewData["idRap"] = new SelectList(_context.Raps, "IdRap", "TenRap", lichChieu.IdRap);
+            return View(lichChieu);
+        }
+
+        private bool LichChieuExists(string id)
+        {
+            return _context.LichChieus.Any(e => e.IdLichChieu == id);
+        }
+
     }
 }
