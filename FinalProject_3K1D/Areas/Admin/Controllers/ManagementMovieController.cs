@@ -14,30 +14,54 @@ namespace _3K1D_Final.Areas.Admin.Controllers
             _context = context;
         }
         //danh sách các phim đang chiếu
-        public IActionResult Index()
-        {
-            var today =DateOnly.FromDateTime(DateTime.Now);
-            var movies = _context.Phims
-                .Where(p => p.NgayKhoiChieu <= today && p.NgayKetThuc >=today)
-                .ToList();
-            return View(movies);
-        }
-        public IActionResult MoviesEnd()
+        public IActionResult Index(string searchString)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
             var movies = _context.Phims
-                .Where(p => p.NgayKetThuc < today)
-                .ToList();
-            return View(movies);
+                .Where(p => p.NgayKhoiChieu <= today && p.NgayKetThuc >= today);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(p => p.TenPhim.Contains(searchString));
+            }
+
+            ViewData["SearchString"] = searchString;  // Chuyển giá trị searchString đến ViewData
+
+            return View(movies.ToList());
         }
-        public IActionResult MoviesComing()
+
+        public IActionResult MoviesEnd(string searchString)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
             var movies = _context.Phims
-                .Where(p => p.NgayKhoiChieu > today)
-                .ToList();
-            return View(movies);
+                .Where(p => p.NgayKetThuc < today);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(p => p.TenPhim.Contains(searchString));
+            }
+
+            ViewData["SearchString"] = searchString;  // Chuyển giá trị searchString đến ViewData
+
+            return View(movies.ToList());
         }
+
+        public IActionResult MoviesComing(string searchString)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            var movies = _context.Phims
+                .Where(p => p.NgayKhoiChieu > today);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(p => p.TenPhim.Contains(searchString));
+            }
+
+            ViewData["SearchString"] = searchString;  // Chuyển giá trị searchString đến ViewData
+
+            return View(movies.ToList());
+        }
+
 
         //thêm phim mới 
         public IActionResult Create()

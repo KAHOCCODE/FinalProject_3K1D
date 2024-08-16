@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ZXing;
+using ZXing.Common;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using FinalProject_3K1D.Models;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using ZXing.QrCode;
 
 namespace FinalProject_3K1D.Controllers
 {
@@ -20,19 +24,6 @@ namespace FinalProject_3K1D.Controllers
             return View(discounts);
         }
 
-        public IActionResult Claim(int id)
-        {
-            var discount = _context.KhuyenMais.FirstOrDefault(d => d.IdKhuyenMai == id);
-            if (discount == null)
-            {
-                return NotFound();
-            }
-
-            // Implement the logic for claiming the discount here
-
-            // For demonstration, we'll just redirect to the index view
-            return RedirectToAction("Index");
-        }
+       
     }
 }
-
