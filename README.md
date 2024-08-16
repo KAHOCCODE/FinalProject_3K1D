@@ -1,2 +1,2 @@
 # FinalProject_3K1D
-CÀI ĐẶT  EPPlus
+CÀI ĐẶT  EPPlus,ZXing.Net
