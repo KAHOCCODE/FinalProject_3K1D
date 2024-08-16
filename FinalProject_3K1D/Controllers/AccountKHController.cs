@@ -10,6 +10,8 @@ using FinalProject_3K1D.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
+using Microsoft.AspNetCore.Identity;
 
 namespace FinalProject_3K1D.Controllers
 {
@@ -124,56 +126,84 @@ public async Task<IActionResult> Register(RegisterKH model)
 
             if (ModelState.IsValid)
             {
-                // Tìm người dùng trong cơ sở dữ liệu dựa trên UserKh
-                var khachhang = _context.KhachHangs.SingleOrDefault(kh => kh.UserKh == model.UserKh);
-
-                if (khachhang == null)
+                if (model.Role == "KhachHang")
                 {
-                    ModelState.AddModelError("", "Tài khoản không tồn tại.");
-                    return View(model);
+                    // Login logic for customer
+                    var khachhang = _context.KhachHangs.SingleOrDefault(kh => kh.UserKh == model.UserKh);
+
+                    if (khachhang == null)
+                    {
+                        ModelState.AddModelError("", "Tài khoản không tồn tại.");
+                        return View(model);
+                    }
+
+                    if (khachhang.PassKh != model.PassKh)
+                    {
+                        ModelState.AddModelError("", "Mật khẩu không đúng.");
+                        return View(model);
+                    }
+
+                    var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, khachhang.HoTen),
+                new Claim(ClaimTypes.Email, khachhang.Email ?? string.Empty),
+                new Claim(ClaimTypes.Role, "KhachHang")
+            };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    await HttpContext.SignInAsync(claimsPrincipal);
+
+                    TempData["SuccessMessage"] = "Đăng nhập thành công!";
+                    return RedirectToAction("Index", "Home");
                 }
-
-                // So sánh mật khẩu người dùng với mật khẩu đã mã hóa trong cơ sở dữ liệu
-                if (khachhang.PassKh != model.PassKh)
+                else if (model.Role == "NhanVien")
                 {
-                    ModelState.AddModelError("", "Mật khẩu không đúng.");
-                    return View(model);
-                }
+                    // Login logic for employee
+                    var nhanvien = _context.NhanViens.SingleOrDefault(nv => nv.UserNv == model.UserKh);
 
-                // Tạo Claims cho người dùng
-                var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, khachhang.HoTen),
-            new Claim(ClaimTypes.Email, khachhang.Email ?? string.Empty),
-            new Claim(ClaimTypes.Role, "KhachHang")
-        };
+                    if (nhanvien == null)
+                    {
+                        ModelState.AddModelError("", "Tài khoản không tồn tại.");
+                        return View(model);
+                    }
 
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                    if (nhanvien.PassNv != model.PassKh)
+                    {
+                        ModelState.AddModelError("", "Mật khẩu không đúng.");
+                        return View(model);
+                    }
 
-                // Đăng nhập người dùng
-                await HttpContext.SignInAsync(claimsPrincipal);
+                    var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, nhanvien.HoTen),
+                new Claim(ClaimTypes.Email, nhanvien.Email ?? string.Empty),
+                new Claim(ClaimTypes.Role, "NhanVien")
+            };
 
-                // Thông báo đăng nhập thành công
-                TempData["SuccessMessage"] = "Đăng nhập thành công!";
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                // Chuyển hướng đến URL yêu cầu hoặc trang _Home
-                if (Url.IsLocalUrl(ReturnUrl))
-                {
-                    return Redirect(ReturnUrl);
-                }
-                else
-                {
-                    return RedirectToAction("Index", "_Home");
+                    await HttpContext.SignInAsync(claimsPrincipal);
+
+                    TempData["SuccessMessage"] = "Đăng nhập thành công!";
+                    return Redirect("/Admin");
                 }
             }
-
-            // Nếu có lỗi, quay lại trang đăng nhập với thông báo lỗi
             return View(model);
         }
+        #endregion
 
-
-
+        #region đăng xuất 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            TempData["SuccessMessage"] = "Đăng xuất thành công!";
+            return RedirectToAction("Index", "Home");
+        }
         #endregion
     }
 }
