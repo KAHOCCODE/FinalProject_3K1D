@@ -1,9 +1,21 @@
-﻿
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model FinalProject_3K1D.Models.LichChieu
 @{
-    ViewBag.Title = "Index";
+    Layout = null;
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
-<style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Phim</title>
+    <link rel="stylesheet" href="path/to/your/bootstrap.min.css">
+    <link rel="stylesheet" href="path/to/your/site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+
+    <style>
         body {
             background: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient nền cho trang */
             font-family: 'Poppins', sans-serif;
@@ -129,48 +141,41 @@
             transition: background-color 0.3s;
         }
 
+            .btn-date:hover, .btn-time:hover {
+                background: #e64a19;
+            }
 
+        .btn-selected {
+            background: #feb47b;
+        }
 
     </style>
-<h1>Danh sách phim được chiếu</h1>
-
-
-<div style="overflow-x: auto;">
-    <table class="table table-striped">
-        <tbody>
-           <body>
-                @foreach (var phim in ViewBag.LichChieus)
-                {
-
-                    <div class="container movie-detail-page">
-                        <div class="movie-header">
-                            <!-- Phần Poster Phim -->
-                            <img src="~/images/@phim.ApPhich" alt="@phim.ApPhich" class="movie-poster">
-                            <!-- Phần Thông Tin Phim -->
-                            <div class="movie-info">
-                                <h1>@phim.TenPhim</h1>
-                                <p><i class="fas fa-film"></i> <strong>Thể loại:</strong> @phim.TenTheoLoai</p>
-                                <p><i class="fas fa-user-tie"></i> <strong>Đạo diễn:</strong> @phim.DaoDien</p>
-                                <p><i class="fas fa-flag"></i> <strong>Quốc gia:</strong> @phim.QuocGiaSanXuat</p>
-                                <p><i class="fas fa-clock"></i> <strong>Thời lượng:</strong> @phim.ThoiLuong</p>
-                                <p><i class="fas fa-calendar-day"></i> <strong>Khởi chiếu:</strong>@phim.NgayKhoiChieu</p>
-                                <p><i class="fas fa-film"></i> <strong>Quốc gia:</strong>@phim.QuocGiaSanXuat</p>
-                                <p><i class="fas fa-film"></i> <strong>Giờ chiếu:</strong>@phim.GioChieu</p>
-                                <p><i class="fas fa-film"></i> <strong>Phòng chiếu:</strong>@phim.TenPhong</p>
-                                    <a href="/Admin/LichChieu/Create?id=@phim.IdPhim">
-                                    <button >Lich chiếu</button>
-                                </a>
-                            </div>
-                        </div>
-                   </div>
-
-                }        
-                </body>
-        </tbody>
-    </table>
-</div>
-
-
-
+    <div>
+        </head>
+        <body>
+            <div class="container movie-detail-page">
+                <div class="movie-header">
+                    <img src="~/images/@Model.IdPhimNavigation.ApPhich" alt="@Model.IdPhimNavigation.ApPhich" class="movie-poster">
+                    <!-- Phần Thông Tin Phim -->
+                    <div class="movie-info">
+                        <h1>@Model.TenPhim</h1>
+                        <p><i class="fas fa-film"></i> <strong>Thể loại:</strong> @Model.IdPhimNavigation.TenTheoLoai</p>
+                        <p><i class="fas fa-user-tie"></i> <strong>Đạo diễn:</strong> @Model.IdPhimNavigation.DaoDien</p>
+                        <p><i class="fas fa-flag"></i> <strong>Quốc gia:</strong> @Model.IdPhimNavigation.QuocGiaSanXuat</p>
+                        <p><i class="fas fa-clock"></i> <strong>Thời lượng:</strong> @Model.IdPhimNavigation.ThoiLuong</p>
+                        <p><i class="fas fa-calendar-day"></i> <strong>Khởi chiếu:</strong>@Model.IdPhimNavigation.NgayKhoiChieu</p>
+                        <p><i class="fas fa-calendar-day"></i> <strong>Giờ chiếu:</strong>@Model.GioChieu</p>
+                        <p><i class="fas fa-calendar-day"></i> <strong>Phòng chiếu:</strong>@Model.TenPhong</p>
+                    </div>
+                </div>
+                <!-- Phần Mô Tả Phim -->
+                <div class="movie-description">
+                    <h2>Mô Tả</h2>
+                    <p>@Model.IdPhimNavigation.MoTa</p>
+                </div>
+           </div>
+        </body>
+    </div>
+<script src="path/to/your/bootstrap.bundle.min.js"></script>
 
 
