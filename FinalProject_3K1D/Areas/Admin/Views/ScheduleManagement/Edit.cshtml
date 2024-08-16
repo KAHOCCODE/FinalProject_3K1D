@@ -96,7 +96,7 @@
     document.getElementById('editForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
 
-        const form = event.target;
+        const form = document.getElementById('editForm');
         const formData = new FormData(form);
 
         // Example validation: Check if all fields are filled (customize as needed)

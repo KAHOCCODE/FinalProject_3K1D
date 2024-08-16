@@ -137,5 +137,11 @@
                 <a asp-control="KhachHang" asp-action="QuenMatKhau" class="forgot-password-link">Forgot your password?</a>
             </div>
         </form>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
     </div>
 </div>
