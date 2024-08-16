@@ -16,16 +16,17 @@
             <form id="createForm" asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                <div class="row g-3">
+                <div class="row g-3" method="post">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="IdKhachHang" class="form-control border-primary" id="floatingIdKhachHang" placeholder="ID" readonly value="@ViewData["NextId"]" />
+                            <input asp-for="IdKhachHang" class="form-control border-primary" id="floatingIdKhachHang" placeholder="ID" readonly value="@Model.IdKhachHang" />
                             <label for="floatingIdKhachHang">Mã Khách Hàng</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="IdKhachHang"></span>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
@@ -69,7 +70,7 @@
 
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="Cccd" class="form-control border-primary" id="floatingCccd" placeholder="ID Card Number" />
+                            <input asp-for="Cccd" class="form-control border-primary" id="floatingCccd" placeholder="CCCD" />
                             <label for="floatingCccd">CCCD</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="Cccd"></span>
@@ -79,17 +80,7 @@
 
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="DienTichLuy" class="form-control border-primary" id="floatingDienTichLuy" placeholder="Area" readonly value="0" />
-                            <label for="floatingDienTichLuy">Điểm Tích Lũy</label>
-                            <div class="form-text text-danger">
-                                <span asp-validation-for="DienTichLuy"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input asp-for="Email" type="email" class="form-control border-primary" id="floatingEmail" placeholder="Email" />
+                            <input asp-for="Email" class="form-control border-primary" id="floatingEmail" placeholder="Email" />
                             <label for="floatingEmail">Email</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="Email"></span>
@@ -100,7 +91,7 @@
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="UserKh" class="form-control border-primary" id="floatingUserKh" placeholder="Username" />
-                            <label for="floatingUserKh">Username</label>
+                            <label for="floatingUserKh">UserKh</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="UserKh"></span>
                             </div>
@@ -110,17 +101,18 @@
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="PassKh" type="password" class="form-control border-primary" id="floatingPassKh" placeholder="Password" />
-                            <label for="floatingPassKh">Password</label>
+                            <label for="floatingPassKh">PassKh</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="PassKh"></span>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="d-flex justify-content-center mt-4">
-                        <button type="submit" class="btn" style="background-color: #b66dff; color: white;">Create</button>
-                        <a class="btn btn-secondary ms-3" asp-action="Index">Back to List</a>
+                    <button id="createButton" type="submit" class="btn" style="background-color: #b66dff; color: white;">Create</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
                 </div>
             </form>
         </div>
@@ -151,11 +143,11 @@
         });
 
         if (isValid) {
-            // Submit the form if valid (or simulate a successful submission)
+            // Simulate successful submission
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'Customer created successfully!'
+                text: 'Customer create successfully!'
             }).then(() => {
                 form.submit(); // Submit the form after showing the success message
             });
