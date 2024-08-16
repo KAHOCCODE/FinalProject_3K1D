@@ -1,0 +1,46 @@
+﻿@model IEnumerable<FinalProject_3K1D.Models.LichChieu>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Schedule Management";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Schedule Management</h2>
+
+<div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-success" asp-action="Create" asp-controller="ScheduleManagement" asp-area="Admin">
+        <i class="fas fa-plus"></i> Thêm Lịch Chiếu
+    </a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.DisplayName("IdLichChieu")</th>
+            <th>@Html.DisplayName("GioChieu")</th>
+            <th>@Html.DisplayName("TenPhim")</th>
+            <th>@Html.DisplayName("TenRap")</th>
+            <th>@Html.DisplayName("TenPhong")</th>
+            <th>@Html.DisplayName("GiaVe")</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.IdLichChieu</td>
+                <td>@item.GioChieu.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@item.IdPhimNavigation?.TenPhim</td>
+                <td>@item.IdPhongChieuNavigation?.IdRapNavigation?.TenRap</td>
+                <td>@item.IdPhongChieuNavigation?.TenPhong</td>
+                <td>@item.GiaVe</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = item.IdLichChieu })" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="@Url.Action("Details", new { id = item.IdLichChieu })" class="btn btn-info btn-sm">Details</a>
+                    <a href="@Url.Action("Delete", new { id = item.IdLichChieu })" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

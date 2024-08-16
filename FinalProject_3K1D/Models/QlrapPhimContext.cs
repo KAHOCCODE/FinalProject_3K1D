@@ -113,7 +113,6 @@ public partial class QlrapPhimContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("idPhongChieu");
-            entity.Property(e => e.TrangThai).HasDefaultValueSql("('0')");
 
             entity.HasOne(d => d.IdPhimNavigation).WithMany(p => p.LichChieus)
                 .HasForeignKey(d => d.IdPhim)
