@@ -1,0 +1,40 @@
+﻿@model FinalProject_3K1D.Models.LichChieu
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card border-0 shadow-lg rounded-3">
+        <div class="card-header bg-info text-white text-center">
+            <h4 class="mb-0">Lịch Chiếu Details</h4>
+        </div>
+        <div class="card-body p-4">
+            <dl class="row">
+                <dt class="col-sm-4">Mã Lịch Chiếu</dt>
+                <dd class="col-sm-8">@Model.IdLichChieu</dd>
+
+                <dt class="col-sm-4">Tên Phim</dt>
+                <dd class="col-sm-8">@Model.IdPhimNavigation.TenPhim</dd>
+
+                <dt class="col-sm-4">Giờ Chiếu</dt>
+                <dd class="col-sm-8">@Model.GioChieu.ToString("g")</dd>
+
+                <dt class="col-sm-4">Rạp</dt>
+                <dd class="col-sm-8">@Model.IdPhongChieuNavigation.IdRapNavigation.TenRap</dd>
+
+                <dt class="col-sm-4">Phòng Chiếu</dt>
+                <dd class="col-sm-8">@Model.IdPhongChieuNavigation.TenPhong</dd>
+
+                <dt class="col-sm-4">Giá Vé</dt>
+                <dd class="col-sm-8">@Model.GiaVe.ToString("C0")</dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <a asp-action="Edit" asp-route-id="@Model.IdLichChieu" class="btn btn-primary ms-2">Edit</a>
+        </div>
+    </div>
+</div>

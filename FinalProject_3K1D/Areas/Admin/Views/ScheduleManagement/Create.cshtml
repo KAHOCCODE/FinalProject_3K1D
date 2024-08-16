@@ -13,22 +13,29 @@
             <h4 class="mb-0 text-center">Create New Lịch Chiếu</h4>
         </div>
         <div class="card-body p-4">
-            <form id="createForm" asp-action="Create">
+            <form id="createForm" asp-action="Create" method="post">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                 <div class="row g-3">
-                    <!-- Cột bên trái -->
+                    <!-- Mã Lịch Chiếu -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="IdLichChieu" class="form-control border-primary" id="floatingIdLichChieu" placeholder="ID Lịch Chiếu" readonly value="@nextId" />
                             <label for="floatingIdLichChieu">Mã Lịch Chiếu</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="IdLichChieu"></span>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Rạp -->
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <select asp-for="IdRap" class="form-control border-primary" id="floatingIdRap">
                                 <option value="">Chọn Rạp...</option>
                                 @foreach (var rap in ViewData["idRap"] as IEnumerable<SelectListItem>)
                                 {
-                                    <option value="@rap.Value">@rap.Text</option>
+                                        <option value="@rap.Value">@rap.Text</option>
                                 }
                             </select>
                             <label for="floatingIdRap">Rạp</label>
@@ -36,6 +43,10 @@
                                 <span asp-validation-for="IdRap"></span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Giờ Chiếu -->
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="GioChieu" type="datetime-local" class="form-control border-primary" id="floatingGioChieu" />
                             <label for="floatingGioChieu">Giờ Chiếu</label>
@@ -45,14 +56,14 @@
                         </div>
                     </div>
 
-                    <!-- Cột bên phải -->
+                    <!-- Phim -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <select asp-for="IdPhim" class="form-control border-primary" id="floatingIdPhim">
                                 <option value="">Chọn Phim...</option>
                                 @foreach (var phim in ViewData["idPhim"] as IEnumerable<SelectListItem>)
                                 {
-                                    <option value="@phim.Value">@phim.Text</option>
+                                        <option value="@phim.Value">@phim.Text</option>
                                 }
                             </select>
                             <label for="floatingIdPhim">Phim</label>
@@ -60,6 +71,10 @@
                                 <span asp-validation-for="IdPhim"></span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Phòng Chiếu -->
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <select asp-for="IdPhongChieu" class="form-control border-primary" id="floatingIdPhongChieu">
                                 <option value="">Chọn Phòng Chiếu...</option>
@@ -69,6 +84,10 @@
                                 <span asp-validation-for="IdPhongChieu"></span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Giá Vé -->
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="GiaVe" type="number" min="0" class="form-control border-primary" id="floatingGiaVe" placeholder="Giá Vé" />
                             <label for="floatingGiaVe">Giá Vé</label>
@@ -80,8 +99,8 @@
                 </div>
 
                 <div class="d-flex justify-content-center mt-4">
-                    <button type="submit" class="btn" style="background-color: #b66dff; color: white;">Create</button>
-                     <a class="btn btn-secondary ms-3" asp-action="Index">Back to List</a>
+                    <button id="createButton" type="submit" class="btn" style="background-color: #b66dff; color: white;">Create</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
                 </div>
             </form>
         </div>
@@ -95,10 +114,9 @@
     document.getElementById('createForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
 
-        const form = event.target;
+        const form = document.getElementById('createForm');
         const formData = new FormData(form);
 
-        // Example validation: Check if all fields are filled (customize as needed)
         let isValid = true;
         formData.forEach((value, key) => {
             if (!value) {
@@ -112,7 +130,6 @@
         });
 
         if (isValid) {
-            // Submit the form if valid (or simulate a successful submission)
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
