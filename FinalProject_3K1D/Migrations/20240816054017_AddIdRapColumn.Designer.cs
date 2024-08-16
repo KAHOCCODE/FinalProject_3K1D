@@ -4,6 +4,7 @@ using FinalProject_3K1D.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalProject_3K1D.Migrations
 {
     [DbContext(typeof(QlrapPhimContext))]
-    partial class QlrapPhimContextModelSnapshot : ModelSnapshot
+    [Migration("20240816054017_AddIdRapColumn")]
+    partial class AddIdRapColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,6 +158,11 @@ namespace FinalProject_3K1D.Migrations
 
                     b.Property<string>("IdRapNavigationIdRap")
                         .HasColumnType("varchar(50)");
+
+                    b.Property<int>("TrangThai")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("('0')");
 
                     b.HasKey("IdLichChieu")
                         .HasName("PK__LichChie__A56F50C2523BC244");

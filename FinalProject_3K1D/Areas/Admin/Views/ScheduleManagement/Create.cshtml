@@ -10,21 +10,32 @@
 <div class="container mt-4">
     <div class="card border-0 shadow-lg rounded-3">
         <div class="card-header" style="background-color: #b66dff; color: white;">
-            <h4 class="mb-0 text-center">Create New Lich Chieu</h4>
+            <h4 class="mb-0 text-center">Create New Lịch Chiếu</h4>
         </div>
         <div class="card-body p-4">
             <form id="createForm" asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                 <div class="row g-3">
+                    <!-- Cột bên trái -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="IdLichChieu" class="form-control border-primary" id="floatingIdLichChieu" placeholder="ID Lich Chieu" readonly value="@nextId" />
+                            <input asp-for="IdLichChieu" class="form-control border-primary" id="floatingIdLichChieu" placeholder="ID Lịch Chiếu" readonly value="@nextId" />
                             <label for="floatingIdLichChieu">Mã Lịch Chiếu</label>
                         </div>
-                    </div>
-
-                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <select asp-for="IdRap" class="form-control border-primary" id="floatingIdRap">
+                                <option value="">Chọn Rạp...</option>
+                                @foreach (var rap in ViewData["idRap"] as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@rap.Value">@rap.Text</option>
+                                }
+                            </select>
+                            <label for="floatingIdRap">Rạp</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="IdRap"></span>
+                            </div>
+                        </div>
                         <div class="form-floating mb-3">
                             <input asp-for="GioChieu" type="datetime-local" class="form-control border-primary" id="floatingGioChieu" />
                             <label for="floatingGioChieu">Giờ Chiếu</label>
@@ -34,51 +45,35 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <select asp-for="IdPhongChieu" class="form-control border-primary" id="floatingIdPhongChieu">
-                                <option value="">Chọn Phòng Chiếu...</option>
-                                @* Populate options dynamically *@
-                            </select>
-                            <label for="floatingIdPhongChieu">Phòng Chiếu</label>
-                            <div class="form-text text-danger">
-                                <span asp-validation-for="IdPhongChieu"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input asp-for="GiaVe" type="number" min="0" class="form-control border-primary" id="floatingGiaVe" placeholder="Giá Vé" />
-                            <label for="floatingGiaVe">Giá Vé</label>
-                            <div class="form-text text-danger">
-                                <span asp-validation-for="GiaVe"></span>
-                            </div>
-                        </div>
-                    </div>
-
+                    <!-- Cột bên phải -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <select asp-for="IdPhim" class="form-control border-primary" id="floatingIdPhim">
                                 <option value="">Chọn Phim...</option>
-                                @* Populate options dynamically *@
+                                @foreach (var phim in ViewData["idPhim"] as IEnumerable<SelectListItem>)
+                                {
+                                    <option value="@phim.Value">@phim.Text</option>
+                                }
                             </select>
                             <label for="floatingIdPhim">Phim</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="IdPhim"></span>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <select asp-for="IdRap" class="form-control border-primary" id="floatingIdRap">
-                                <option value="">Chọn Rạp...</option>
-                                @* Populate options dynamically *@
+                            <select asp-for="IdPhongChieu" class="form-control border-primary" id="floatingIdPhongChieu">
+                                <option value="">Chọn Phòng Chiếu...</option>
                             </select>
-                            <label for="floatingIdRap">Rạp</label>
+                            <label for="floatingIdPhongChieu">Phòng Chiếu</label>
                             <div class="form-text text-danger">
-                                <span asp-validation-for="IdRap"></span>
+                                <span asp-validation-for="IdPhongChieu"></span>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="GiaVe" type="number" min="0" class="form-control border-primary" id="floatingGiaVe" placeholder="Giá Vé" />
+                            <label for="floatingGiaVe">Giá Vé</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="GiaVe"></span>
                             </div>
                         </div>
                     </div>
@@ -125,6 +120,26 @@
             }).then(() => {
                 form.submit(); // Submit the form after showing the success message
             });
+        }
+    });
+
+    document.getElementById('floatingIdRap').addEventListener('change', function () {
+        var selectedRapId = this.value;
+        if (selectedRapId) {
+            fetch(`/Admin/ScheduleManagement/GetPhongChieuByRap?idRap=${selectedRapId}`)
+                .then(response => response.json())
+                .then(data => {
+                    var phongChieuSelect = document.getElementById('floatingIdPhongChieu');
+                    phongChieuSelect.innerHTML = '<option value="">Chọn Phòng Chiếu...</option>';
+                    data.forEach(phongChieu => {
+                        var option = document.createElement('option');
+                        option.value = phongChieu.idPhongChieu;
+                        option.textContent = phongChieu.tenPhong;
+                        phongChieuSelect.appendChild(option);
+                    });
+                });
+        } else {
+            document.getElementById('floatingIdPhongChieu').innerHTML = '<option value="">Chọn Phòng Chiếu...</option>';
         }
     });
 </script>
