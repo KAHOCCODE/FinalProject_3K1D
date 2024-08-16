@@ -22,7 +22,13 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
 
         // GET: Admin/LichChieux
         
-
+        public IActionResult Index()
+        {
+            ViewBag.PhongChieus = _context.PhongChieus.ToList();
+            ViewBag.Phims = _context.Phims.ToList();
+            ViewBag.LichChieus = _context.LichChieus.ToList();
+            return View();
+        }
 
         // Trong Controller
 
