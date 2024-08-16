@@ -1,4 +1,4 @@
-﻿
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewBag.Title = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
@@ -135,41 +135,43 @@
 
 <div style="overflow-x: auto;">
     <table class="table table-striped">
-        <tbody>
-           <body>
-            <div class="container movie-detail-page">
-                <div class="movie-header">
-                            @if (@Model != null)
-                            {
-                <img src="~/images/@Model.ApPhich" alt="@Model.ApPhich" class="movie-poster">
-                            }
-                        <!-- Phần Thông Tin Phim -->
-                        <div class="movie-info">
-                            <h1>@Model.TenPhim</h1>
-                            <p><i class="fas fa-film"></i> <strong>Thể loại:</strong> @Model.TenTheoLoai</p>
-                            <p><i class="fas fa-user-tie"></i> <strong>Đạo diễn:</strong> @Model.DaoDien</p>
-                            <p><i class="fas fa-flag"></i> <strong>Quốc gia:</strong> @Model.QuocGiaSanXuat</p>
-                            <p><i class="fas fa-clock"></i> <strong>Thời lượng:</strong> @Model.ThoiLuong</p>
-                            <p><i class="fas fa-calendar-day"></i> <strong>Khởi chiếu:</strong>@Model.NgayKhoiChieu</p>
-                            @foreach (var phim in ViewBag.Phims)
-                        {
-                                <p><i class="fas fa-film"></i> <strong>Giờ chiếu:</strong>@phim.GioChieu</p>
-                                <p><i class="fas fa-film"></i> <strong>Phòng chiếu:</strong>@phim.TenPhong</p>  
-                        }
-                             <div class="form-group">
-                                <label for="gioChieu">Giờ chiếu:</label>
-                                <input type="text" class="form-control" id="gioChieu" name="gioChieu">
-                            </div>
-                            <div class="form-group">
-                                <label for="phongChieu">Phòng chiếu:</label>
-                                <input type="text" class="form-control" id="phongChieu" name="phongChieu">
-                            </div>
-                                <button type="submit" class="btn btn-primary">Đặt vé</button>
-                        </div>
-                    </div>
-               </div>
-             </body>
-        </tbody>
+
+        <form asp-action="Create" method="post">
+            <div class="form-group">
+                <label for="IdPhim">Tên Phim</label>
+                <select id="IdPhim" name="IdPhim" class="form-control" asp-items="ViewData["IdPhim"]">
+            <option value="">Chọn phim</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="IdPhongChieu">Phòng Chiếu</label>
+                <select id="IdPhongChieu" name="IdPhongChieu" class="form-control" asp-items="ViewData["IdPhongChieu"]">
+
+            <option value="">Chọn phòng</option>
+                 </select>
+            </div>
+
+            <div class="form-group">
+                <label for="GioChieu">Giờ Chiếu</label>
+                <input type="time" id="GioChieu" name="GioChieu" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="GiaVe">Giá Vé</label>
+                <input type="number" id="GiaVe" name="GiaVe" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="TrangThai">Trạng Thái</label>
+                <select id="TrangThai" name="TrangThai" class="form-control">
+                    <option value="1">Đang chiếu</option>
+                    <option value="0">Ngừng chiếu</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Tạo Lịch Chiếu</button>
+        </form>
     </table>
 </div>
 

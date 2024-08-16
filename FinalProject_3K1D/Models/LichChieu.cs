@@ -23,7 +23,7 @@ public partial class LichChieu
     public virtual PhongChieu IdPhongChieuNavigation { get; set; } = null!;
 
     public virtual ICollection<Ve> Ves { get; set; } = new List<Ve>();
-    public string PhimName
+    public string TenPhim
     {
         get
         {
@@ -45,5 +45,52 @@ public partial class LichChieu
             return string.Empty;
         }
     }
-    
+    public double ThoiLuong
+    {
+        get
+        {
+            if (IdPhimNavigation != null)
+            {
+                return IdPhimNavigation.ThoiLuong;
+            }
+            return 0;
+        }
+    }
+    public DateOnly NgayKhoiChieu
+    {
+        get
+        {
+            if (IdPhimNavigation != null)
+            {
+                return IdPhimNavigation.NgayKhoiChieu;
+            }
+            return default(DateOnly);
+        }
+    }
+    public DateOnly NgayKetThuc
+    {
+        get
+        {
+            if (IdPhimNavigation != null)
+            {
+                return IdPhimNavigation.NgayKetThuc;
+            }
+            else
+            {
+                return default(DateOnly);
+            }
+        }
+    }
+    public string DinhDangPhim
+    {
+        get
+        {
+            if (IdPhimNavigation != null)
+            {
+                return IdPhimNavigation.DinhDangPhim;
+            }
+            return string.Empty;
+        }
+    }
+
 }

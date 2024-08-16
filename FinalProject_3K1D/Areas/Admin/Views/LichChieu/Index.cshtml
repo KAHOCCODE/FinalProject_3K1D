@@ -1,4 +1,5 @@
 ﻿
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
@@ -133,42 +134,55 @@
 
     </style>
 <h1>Danh sách phim được chiếu</h1>
+<div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-success" asp-action="Create"><i class="fas fa-plus"></i> Thêm lịch chiếu</a>
+    </div>
+ <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-warning">
+                        <tr>
+                            <th class="text-center">Mã lịch chiếu</th>
+                            <th class="text-center">Tên phim</th>
+                            <th class="text-center">Giờ chiếu</th>
+                            <th class="text-center">Thời lượng</th>
+                            <th class="text-center">Tên phòng</th>
+                            <th class="text-center">Ngày khởi chiếu</th>
+                            <th class="text-center">Ngày kết thúc</th>
+                            <th class="text-center">Định dạng phim</th>
+                        </tr>
 
+                    </thead>
+                    <tbody>
+                    @foreach (var lich in ViewBag.LichChieus)
+                    {
+                            <tr>
+                                <th class="text-center">@lich.IdLichChieu</th>
+                                <th>@lich.TenPhim</th>
+                                <th class="text-center">@lich.GioChieu</th>
+                                <th class="text-center">@lich.ThoiLuong</th>
+                                <th class="text-center">@lich.TenPhong</th>
+                                <th class="text-center">@lich.NgayKhoiChieu</th>
+                                <th class="text-center">@lich.NgayKetThuc</th>
+                                <th class="text-center">@lich.DinhDangPhim</th>
+                                <td class="align-middle text-center">
+                                </td>
+                                <td class="align-middle text-center">
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-warning btn-sm mx-1" asp-action="Edit" asp-route-id="@lich.IdLichChieu"><i class="fas fa-edit"></i> Edit</a>
+                                            <a class="btn btn-info btn-sm mx-1" asp-action="Detail" asp-route-id="@lich.IdLichChieu"><i class="fas fa-info-circle"></i> Details</a>
+                                                <button class="btn btn-danger btn-sm btn-delete mx-1" data-id="@lich.IdLichChieu" data-name="@lich.IdLichChieu"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </td>
 
-<div style="overflow-x: auto;">
-    <table class="table table-striped">
-        <tbody>
-           <body>
-                        @foreach (var phim in ViewBag.Phims)
-                        {
-                           
-                <div class="container movie-detail-page">
-                    <div class="movie-header">
-                        <!-- Phần Poster Phim -->
-                        <img src="~/images/@phim.ApPhich" alt="@phim.ApPhich" class="movie-poster">
-                        <!-- Phần Thông Tin Phim -->
-                        <div class="movie-info">
-                            <h1>@phim.TenPhim</h1>
-                            <p><i class="fas fa-film"></i> <strong>Thể loại:</strong> @phim.TenTheoLoai</p>
-                            <p><i class="fas fa-user-tie"></i> <strong>Đạo diễn:</strong> @phim.DaoDien</p>
-                            <p><i class="fas fa-flag"></i> <strong>Quốc gia:</strong> @phim.QuocGiaSanXuat</p>
-                            <p><i class="fas fa-clock"></i> <strong>Thời lượng:</strong> @phim.ThoiLuong</p>
-                            <p><i class="fas fa-calendar-day"></i> <strong>Khởi chiếu:</strong>@phim.NgayKhoiChieu</p>
-                            <p><i class="fas fa-film"></i> <strong>Quốc gia:</strong>@phim.QuocGiaSanXuat</p>
-                            <p><i class="fas fa-film"></i> <strong>Giờ chiếu:</strong>@phim.GioChieu</p>
-                            <p><i class="fas fa-film"></i> <strong>Phòng chiếu:</strong>@phim.TenPhong</p>
-                                <a href="/Admin/LichChieu/Create?id=@phim.IdPhim">
-                                <button >Lich chiếu</button>
-                            </a>
-                        </div>
-                    </div>
-               </div>
-               
-                        }        
-                </body>
-        </tbody>
-    </table>
-</div>
+                            </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 
 

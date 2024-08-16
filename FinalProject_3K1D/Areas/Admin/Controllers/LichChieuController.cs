@@ -21,36 +21,29 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         
 
         // GET: Admin/LichChieux
-        public async Task<IActionResult> Index()
-        {
-            ViewBag.PhongChieus = _context.PhongChieus.ToList();
-            ViewBag.Phims = _context.Phims.ToList();
-            ViewBag.LichChieus = _context.LichChieus.ToList();
-
-            return View();
-        }
         
 
+
         // Trong Controller
-       
+
         // GET: Admin/LichChieux/Details/5
-        public async Task<IActionResult> Details(string id)
+
+        public IActionResult Detail(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "ID phim không hợp lệ!";
+                return RedirectToAction("Index");
             }
 
-            var lichChieu = await _context.LichChieus
-                .Include(l => l.IdPhimNavigation)
-                .Include(l => l.IdPhongChieuNavigation)
-                .FirstOrDefaultAsync(m => m.IdLichChieu == id);
-            if (lichChieu == null)
+            var movie = _context.LichChieus.Find(id);
+            if (movie == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Không tìm thấy phim!";
+                return RedirectToAction("Index");
             }
 
-            return View(lichChieu);
+            return View(movie);
         }
 
         // GET: Admin/LichChieux/Create
