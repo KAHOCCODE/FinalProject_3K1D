@@ -10,7 +10,7 @@
         margin: 0;
         padding: 0;
         font-family: 'Roboto', sans-serif;
-        background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); fixed;
+        background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364) fixed;
         background-size: cover;
         height: 100vh;
         display: flex;
@@ -41,10 +41,7 @@
         color: #fff;
         font-weight: bold;
         font-family: 'Roboto', sans-serif;
-
     }
-
-    
 
     .form-group {
         margin-bottom: 15px;
@@ -71,26 +68,24 @@
     .login-button {
         width: 100%;
         padding: 10px;
-        background-color: #FFC107; /* Default background color */
+        background-color: #FFC107;
         border: none;
         border-radius: 5px;
         color: #000;
         font-size: 16px;
         cursor: pointer;
         margin-bottom: 20px;
-        transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+        transition: background-color 0.3s, box-shadow 0.3s;
     }
 
         .login-button:hover {
-            background: linear-gradient(to right, #F57F17, #FF5722); /* Change to a different shade of yellow when hovered */
+            background: linear-gradient(to right, #F57F17, #FF5722);
         }
 
         .login-button:active {
-            background-color: #d39e00; /* Even lighter shade of yellow when button is pressed */
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow effect for a pressed look */
+            background-color: #d39e00;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
         }
-
-
 
     .extra-links {
         text-align: center;
@@ -103,7 +98,6 @@
         display: block;
         margin-top: 5px;
     }
-
 </style>
 
 <div class="login-container">
@@ -118,23 +112,32 @@
 
         <form asp-action="Login">
             <div class="form-group">
-                <label asp-for="@Model.UserKh" class="form-label"></label>
-                <input asp-for="@Model.UserKh" class="form-control" placeholder="username" />
-                <span asp-validation-for="@Model.UserKh" class="text-danger"></span>
+                <label asp-for="UserKh" class="form-label"></label>
+                <input asp-for="UserKh" class="form-control" placeholder="Username" />
+                <span asp-validation-for="UserKh" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.PassKh" class="form-label"></label>
-                <input asp-for="@Model.PassKh" class="form-control" placeholder="password" />
-                <span asp-validation-for="@Model.PassKh" class="text-danger"></span>
+                <label asp-for="PassKh" class="form-label"></label>
+                <input asp-for="PassKh" class="form-control" placeholder="Password" />
+                <span asp-validation-for="PassKh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Role" class="form-label"></label>
+                <select asp-for="Role" class="form-control">
+                    <option value="">Select Role</option>
+                    <option value="KhachHang">Customer</option>
+                    <option value="NhanVien">Employee</option>
+                </select>
+                <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group remember-me">
-                <input type="checkbox" id="remember" />
-                <label for="remember">Remember Me</label>
+                <input asp-for="RememberMe" type="checkbox" />
+                <label asp-for="RememberMe">Remember Me</label>
             </div>
             <button type="submit" class="btn login-button">Login</button>
             <div class="extra-links">
                 <a href="Register" class="sign-up-link">Don't have an account? Sign Up</a>
-                <a asp-control="KhachHang" asp-action="QuenMatKhau" class="forgot-password-link">Forgot your password?</a>
+                <a asp-controller="KhachHang" asp-action="QuenMatKhau" class="forgot-password-link">Forgot your password?</a>
             </div>
         </form>
         @if (TempData["SuccessMessage"] != null)
