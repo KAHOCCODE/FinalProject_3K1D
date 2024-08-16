@@ -16,6 +16,13 @@ namespace FinalProject_3K1D.Controllers
 
         public IActionResult Index()
         {
+            using (var db = new QlrapPhimContext())
+            {
+                var phims = db.Phims
+                    .Include(p => p.IdTheLoais)
+                    .ToList();
+                return View(phims);
+            }
             return View();
         }
 
@@ -38,6 +45,16 @@ namespace FinalProject_3K1D.Controllers
                     .Include(p => p.IdTheLoais)
                     .FirstOrDefault(p => p.IdPhim == id);
                 return View(phim);
+            }
+        }
+        public IActionResult _Home()
+        {
+            using (var db = new QlrapPhimContext())
+            {
+                var phims = db.Phims
+                    .Include(p => p.IdTheLoais)
+                    .ToList();
+                return View(phims);
             }
         }
     }
