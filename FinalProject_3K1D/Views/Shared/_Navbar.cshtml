@@ -20,8 +20,44 @@
                 </li>
                 <li><a href="#"><i class="fas fa-utensils"></i> Foods & Drinks</a></li>
                 <li><a href="#"><i class="fas fa-phone-alt"></i> Contact</a></li>
-                <li><a asp-controller="AccountKH" asp-action="Login"><i class="fas fa-user"></i> Login/Signup</a></li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <span>Chào, @User.Identity.Name!</span>
+                    <li><a href="#" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                }
+                else
+                {
+                    <li><a asp-controller="AccountKH" asp-action="Login"><i class="fas fa-user"></i> Login/Signup</a></li>
+                }
             </ul>
         </div>
     </nav>
 </div>
+
+<!-- SweetAlert2 JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var logoutButton = document.getElementById('logoutButton');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Bạn có chắc chắn?',
+                    text: 'Bạn muốn đăng xuất khỏi tài khoản của mình!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đăng xuất',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect to logout action
+                        window.location.href = '@Url.Action("Login", "AccountKH")';
+                    }
+                });
+            });
+        }
+    });
+</script>
