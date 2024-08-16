@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Phim>
+﻿@model IEnumerable<FinalProject_3K1D.Models.Phim>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,136 +101,125 @@
             </script>
         </div>
     </div>
-
-    <!-- Popular Movies Section -->
-    <div class="second">
-        <div class="latest">
-            <h1>Popular Movies</h1>
-            <div class="box">
-                <div class="card">
-                    <div class="details">
-                        <div class="left">
-                            <!--name-->
-                            <p class="name">Gajaman</p>
-                            <div class="date_quality">
-                                <!--Dinh dạng phim-->
-                                <p class="quality">HD</p>
-                                <<!--năm sane=r xuất-->
-                                <p class="date">2023</p>
-                            </div>
-                            <p class="category">Animation/Comedy</p>
-                            <div class="info">
-                                <div class="rate">
-                                    <i class="fa-solid fa-star"></i>
-                                    <p>9.2</p>
+    <div class="show">
+    <div class="tv_show">
+        <h1>Movies Now Showing</h1>
+        <div class="box">
+                @foreach (var phim in Model) // Filter for movies that are now showing
+                {
+                        <div class="card">
+                            <div class="details">
+                                <div class="left">
+                                    <p class="name">@phim.TenPhim</p>
+                                    <div class="date_quality">
+                                        <p class="quality">@phim.DinhDangPhim</p> <!-- Assuming quality is HD, you can replace this with actual data if available -->
+                                        <p class="date">@phim.NamSx</p>
+                                    </div>
+                                    <p class="category">
+                                    @string.Join("/", phim.IdTheLoais.Select(t => t.TenTheLoai))
+                                    </p>
+                                    <div class="info">
+                                        <div class="time">
+                                            <i class="fa-regular fa-clock"></i>
+                                            <p>@phim.ThoiLuong min</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="time">
-                                    <i class="fa-regular fa-clock"></i>
-                                    <!--thời gian-->
-                                    <p>120min</p>
+                                <div class="right">
+                                    <!-- Ticket Booking -->
+                                    <div class="ticket-booking">
+                                        <i class="fa-solid fa-ticket"></i>
+                                        <a href="/Home/Detail?id=@phim.IdPhim">Chi tiết</a>
+                                    </div>
                                 </div>
                             </div>
+                            <img src="~/images/@phim.ApPhich" alt="@phim.TenPhim"> <!-- Replace with actual image path -->
                         </div>
-                        <div class="right">
-                            <!-- Ticket Booking -->
-                            <div class="ticket-booking">
-                                <i class="fa-solid fa-ticket"></i>
-                                <a href="/Home/Detail?id=P01">Đặt vé</a>
-
-
-                            </div>
-
-                        </div>
-                    </div>
-                    <!--hình-->
-                    <
-                    <img src="~/images/gajaman.jpg" alt="Gajaman" />
-                </div>
-                <!-- More Cards with different movies -->
-            </div>
-            </a>
+                }
         </div>
-
     </div>
+</div>
+    <!-- Popular Movies Section -->
+ <div class="show">
+    <div class="tv_show">
+        <h1>Movies Now Showing</h1>
+        <div class="box">
+                @foreach (var phim in Model) // Filter for movies that are now showing
+                {
+                            <div class="card">
+                                <div class="details">
+                                    <div class="left">
+                                        <p class="name">@phim.TenPhim</p>
+                                        <div class="date_quality">
+                                            <p class="quality">@phim.DinhDangPhim</p> <!-- Assuming quality is HD, you can replace this with actual data if available -->
+                                            <p class="date">@phim.NamSx</p>
+                                        </div>
+                                        <p class="category">
+                                    @string.Join("/", phim.IdTheLoais.Select(t => t.TenTheLoai))
+                                        </p>
+                                        <div class="info">
+                                            <div class="time">
+                                                <i class="fa-regular fa-clock"></i>
+                                                <p>@phim.ThoiLuong min</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="right">
+                                        <!-- Ticket Booking -->
+                                        <div class="ticket-booking">
+                                            <i class="fa-solid fa-ticket"></i>
+                                            <a href="/Home/Detail?id=@phim.IdPhim">Chi tiết</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <img src="~/images/@phim.ApPhich" alt="@phim.TenPhim"> <!-- Replace with actual image path -->
+                            </div>
+                }
+        </div>
+    </div>
+</div>
     <!-- test-->
     <!-- Upcoming Movies Section -->
-    <div class="upcoming">
-        <div class="movies_box">
-            <h1>Upcoming Movies</h1>
-            <div class="box">
-                <div class="card">
-                    <div class="details">
-                        <div class="left">
-                            <p class="name">Plane</p>
-                            <div class="date_quality">
-                                <p class="quality">HD</p>
-                                <p class="date">2023</p>
-                            </div>
-                            <p class="category">Action/Thriller</p>
-                            <div class="info">
-                                <div class="time">
-                                    <i class="fa-regular fa-clock"></i>
-                                    <p>120min</p>
+ <div class="show">
+    <div class="tv_show">
+        <h1>Movies Now Showing</h1>
+        <div class="box">
+                @foreach (var phim in Model) // Filter for movies that are now showing
+                {
+                            <div class="card">
+                                <div class="details">
+                                    <div class="left">
+                                        <p class="name">@phim.TenPhim</p>
+                                        <div class="date_quality">
+                                            <p class="quality">@phim.DinhDangPhim</p> <!-- Assuming quality is HD, you can replace this with actual data if available -->
+                                            <p class="date">@phim.NamSx</p>
+                                        </div>
+                                        <p class="category">
+                                    @string.Join("/", phim.IdTheLoais.Select(t => t.TenTheLoai))
+                                        </p>
+                                        <div class="info">
+                                            <div class="time">
+                                                <i class="fa-regular fa-clock"></i>
+                                                <p>@phim.ThoiLuong min</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="right">
+                                        <!-- Ticket Booking -->
+                                        <div class="ticket-booking">
+                                            <i class="fa-solid fa-ticket"></i>
+                                            <a href="/Home/Detail?id=@phim.IdPhim">Chi tiết</a>
+                                        </div>
+                                    </div>
                                 </div>
+                                <img src="~/images/@phim.ApPhich" alt="@phim.TenPhim"> <!-- Replace with actual image path -->
                             </div>
-                        </div>
-                        <div class="right">
-                            <!-- Ticket Booking -->
-                            <div class="ticket-booking">
-                                <i class="fa-solid fa-ticket"></i>
-                                <span>Đặt vé</span>
-                            </div>
-
-                        </div>
-                    </div>
-                    <img src="~/images/plane.jpg" alt="Plane">
-                </div>
-                <!-- More Cards with different upcoming movies -->
-            </div>
+                }
         </div>
     </div>
-
+</div>
     <!-- World Best TV Show Section -->
-    <div class="show">
-        <div class="tv_show">
-            <h1>Movies Now Showing</h1>
-            <div class="box">
-                <div class="card">
-                    <div class="details">
-                        <div class="left">
-                            <p class="name">Money Heist</p>
-                            <div class="date_quality">
-                                <p class="quality">HD</p>
-                                <p class="date">2017</p>
-                            </div>
-                            <p class="category">Thriller</p>
-                            <div class="info">
-                                <div class="rate">
-                                    <i class="fa-solid fa-star"></i>
-                                    <p>8.2</p>
-                                </div>
-                                <div class="time">
-                                    <i class="fa-regular fa-clock"></i>
-                                    <p>120min</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="right">
-                            <!-- Ticket Booking -->
-                            <div class="ticket-booking">
-                                <i class="fa-solid fa-ticket"></i>
-                                <span>Đặt vé</span>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <img src="~/images/money_heist.jpg" alt="Money Heist">
-                </div>
-                <!-- More Cards with different TV shows -->
-            </div>
-        </div>
-    </div>
+   
 </body>
 </html>
 

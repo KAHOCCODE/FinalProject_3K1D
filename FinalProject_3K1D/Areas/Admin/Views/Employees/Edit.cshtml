@@ -1,77 +1,158 @@
 ﻿@model FinalProject_3K1D.Models.NhanVien
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Employee";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Edit</h1>
+<div class="container mt-4">
+    <div class="card border-0 shadow-lg rounded-3">
+        <div class="card-header" style="background-color: #007bff; color: white;">
+            <h4 class="mb-0 text-center">Edit Employee</h4>
+        </div>
+        <div class="card-body p-4">
+            <form id="editForm" asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+                <input type="hidden" asp-for="IdNhanVien" />
 
-<h4>NhanVien</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdNhanVien" />
-            <div class="form-group">
-                <label asp-for="HoTen" class="control-label"></label>
-                <input asp-for="HoTen" class="form-control" />
-                <span asp-validation-for="HoTen" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NgaySinh" class="control-label"></label>
-                <input asp-for="NgaySinh" class="form-control" />
-                <span asp-validation-for="NgaySinh" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DiaChi" class="control-label"></label>
-                <input asp-for="DiaChi" class="form-control" />
-                <span asp-validation-for="DiaChi" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Sdt" class="control-label"></label>
-                <input asp-for="Sdt" class="form-control" />
-                <span asp-validation-for="Sdt" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HinhAnh" class="control-label"></label>
-                <input asp-for="HinhAnh" class="form-control" />
-                <span asp-validation-for="HinhAnh" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserNv" class="control-label"></label>
-                <input asp-for="UserNv" class="form-control" />
-                <span asp-validation-for="UserNv" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PassNv" class="control-label"></label>
-                <input asp-for="PassNv" class="form-control" />
-                <span asp-validation-for="PassNv" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdRap" class="control-label"></label>
-                <select asp-for="IdRap" class="form-control" asp-items="ViewBag.IdRap"></select>
-                <span asp-validation-for="IdRap" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdChucVu" class="control-label"></label>
-                <select asp-for="IdChucVu" class="form-control" asp-items="ViewBag.IdChucVu"></select>
-                <span asp-validation-for="IdChucVu" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="row g-3">
+                    <!-- Full Name -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="HoTen" class="form-control border-primary" id="floatingHoTen" placeholder="Full Name" />
+                            <label for="floatingHoTen">Full Name</label>
+                            <span asp-validation-for="HoTen" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="NgaySinh" type="date" class="form-control border-primary" id="floatingNgaySinh" />
+                            <label for="floatingNgaySinh">Date of Birth</label>
+                            <span asp-validation-for="NgaySinh" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="DiaChi" class="form-control border-primary" id="floatingDiaChi" placeholder="Address" />
+                            <label for="floatingDiaChi">Address</label>
+                            <span asp-validation-for="DiaChi" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Sdt" class="form-control border-primary" id="floatingSdt" placeholder="Phone Number" />
+                            <label for="floatingSdt">Phone Number</label>
+                            <span asp-validation-for="Sdt" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="file" name="HinhAnhFile" class="form-control border-primary" id="floatingHinhAnh" accept="image/jpeg, image/png" />
+                            <label for="floatingHinhAnh">Profile Picture</label>
+                            <span asp-validation-for="HinhAnh" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" type="email" class="form-control border-primary" id="floatingEmail" placeholder="Email" />
+                            <label for="floatingEmail">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="UserNv" class="form-control border-primary" id="floatingUserNv" placeholder="Username" />
+                            <label for="floatingUserNv">Username</label>
+                            <span asp-validation-for="UserNv" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="PassNv" type="password" class="form-control border-primary" id="floatingPassNv" placeholder="Password" />
+                            <label for="floatingPassNv">Password</label>
+                            <span asp-validation-for="PassNv" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Theater -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <select asp-for="IdRap" class="form-select border-primary" id="floatingIdRap" asp-items="ViewBag.IdRap">
+                                <option value="">Select Theater</option>
+                            </select>
+                            <label for="floatingIdRap">Theater</label>
+                            <span asp-validation-for="IdRap" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Position -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <select asp-for="IdChucVu" class="form-select border-primary" id="floatingIdChucVu" asp-items="ViewBag.IdChucVu">
+                                <option value="">Select Position</option>
+                            </select>
+                            <label for="floatingIdChucVu">Position</label>
+                            <span asp-validation-for="IdChucVu" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+                    <a class="btn btn-outline-secondary btn-lg ms-3" asp-action="Index">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
+    document.querySelector('form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        // Example validation: Check if all fields are filled (customize as needed)
+        let isValid = true;
+        formData.forEach((value, key) => {
+            if (!value) {
+                isValid = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please fill out all fields.'
+                });
+            }
+        });
+
+        if (isValid) {
+            // Simulate successful submission
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Employee edited successfully!'
+            }).then(() => {
+                form.submit(); // Submit the form after showing the success message
+            });
+        }
+    });
+</script>

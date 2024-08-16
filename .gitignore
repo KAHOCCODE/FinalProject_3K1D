@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/FinalProject_3K1D/Areas/Admin/Controllers/EmployeesController.cs
