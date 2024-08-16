@@ -22,6 +22,56 @@ namespace FinalProject_3K1D.Controllers
             _context = context;
         }
 
+        #region
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        // POST: /AccountKH/Register
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterKH model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Check if the username already exists
+                var existingUser = await _context.KhachHangs
+                    .FirstOrDefaultAsync(kh => kh.UserKh == model.UserKH);
+
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError("UserKH", "Username already exists.");
+                    return View(model);
+                }
+
+                // Create new user and add to database
+                var newUser = new KhachHang
+                {
+                    HoTen = model.HoTen,
+                    NgaySinh = model.NgaySinh,
+                    Sdt = model.SDT,
+                    Cccd = model.CCCD,
+                    Email = model.Email,
+                    UserKh = model.UserKH,
+                    PassKh = model.PassKH // Ensure password is hashed in a real-world application
+                };
+
+                _context.KhachHangs.Add(newUser);
+                await _context.SaveChangesAsync();
+
+                // Redirect to login page or another page as needed
+                return RedirectToAction("Login", "AccountKH");
+            }
+
+            // If the model state is invalid, return to the register view with the model
+            return View(model);
+        }
+
+        #endregion
+
         #region Login in
         [HttpGet]
         public IActionResult Login(string? ReturnUrl)
