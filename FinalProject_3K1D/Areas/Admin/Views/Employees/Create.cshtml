@@ -13,80 +13,63 @@
             <h4 class="mb-0 text-center">Create New Employee</h4>
         </div>
         <div class="card-body p-4">
-            <form asp-action="Create">
+            <form id="createForm" asp-action="Create" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                 <div class="row g-3">
-                    <!-- Employee ID -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="IdNhanVien" class="form-control border-primary" id="floatingIdNhanVien" placeholder="ID" readonly value="@nextId"/>
-                            <label for="floatingIdNhanVien">Employee ID</label>
+                            <input asp-for="IdNhanVien" class="form-control border-primary" id="floatingIdNhanVien" placeholder="ID" readonly value="@Model.IdNhanVien" />
+                            <label for="floatingIdNhanVien">Mã Nhân Viên</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="IdNhanVien"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Full Name -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="HoTen" class="form-control border-primary" id="floatingHoTen" placeholder="Full Name" />
-                            <label for="floatingHoTen">Full Name</label>
+                            <input asp-for="HoTen" class="form-control border-primary" id="floatingHoTen" placeholder="Họ Tên" />
+                            <label for="floatingHoTen">Họ Tên</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="HoTen"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Date of Birth -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="NgaySinh" type="date" class="form-control border-primary" id="floatingNgaySinh" />
-                            <label for="floatingNgaySinh">Date of Birth</label>
+                            <input asp-for="NgaySinh" class="form-control border-primary" id="floatingNgaySinh" type="date" placeholder="Ngày Sinh" />
+                            <label for="floatingNgaySinh">Ngày Sinh</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="NgaySinh"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Address -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="DiaChi" class="form-control border-primary" id="floatingDiaChi" placeholder="Address" />
-                            <label for="floatingDiaChi">Address</label>
+                            <input asp-for="DiaChi" class="form-control border-primary" id="floatingDiaChi" placeholder="Địa Chỉ" />
+                            <label for="floatingDiaChi">Địa Chỉ</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="DiaChi"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Phone Number -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="Sdt" class="form-control border-primary" id="floatingSdt" placeholder="Phone Number" />
-                            <label for="floatingSdt">Phone Number</label>
+                            <input asp-for="Sdt" class="form-control border-primary" id="floatingSdt" placeholder="Số Điện Thoại" />
+                            <label for="floatingSdt">Số Điện Thoại</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="Sdt"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Image URL -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="HinhAnh" class="form-control border-primary" id="floatingHinhAnh" placeholder="Image URL" />
-                            <label for="floatingHinhAnh">Image URL</label>
-                            <div class="form-text text-danger">
-                                <span asp-validation-for="HinhAnh"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Email -->
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input asp-for="Email" type="email" class="form-control border-primary" id="floatingEmail" placeholder="Email" />
+                            <input asp-for="Email" class="form-control border-primary" id="floatingEmail" placeholder="Email" />
                             <label for="floatingEmail">Email</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="Email"></span>
@@ -94,22 +77,20 @@
                         </div>
                     </div>
 
-                    <!-- Username -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="UserNv" class="form-control border-primary" id="floatingUserNv" placeholder="Username" />
-                            <label for="floatingUserNv">Username</label>
+                            <input asp-for="UserNv" class="form-control border-primary" id="floatingUserNv" placeholder="Tên Đăng Nhập" />
+                            <label for="floatingUserNv">Tên Đăng Nhập</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="UserNv"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Password -->
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="PassNv" type="password" class="form-control border-primary" id="floatingPassNv" placeholder="Password" />
-                            <label for="floatingPassNv">Password</label>
+                            <input asp-for="PassNv" class="form-control border-primary" id="floatingPassNv" type="password" placeholder="Mật Khẩu" />
+                            <label for="floatingPassNv">Mật Khẩu</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="PassNv"></span>
                             </div>
@@ -117,11 +98,25 @@
                     </div>
 
                     <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label" for="fileUpload">Hình Ảnh</label>
+                            <input class="form-control" id="fileUpload" type="file" name="file" accept=".jpg,.jpeg,.png" />
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="HinhAnh"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <select asp-for="IdChucVu" class="form-select border-primary" id="floatingIdChucVu" asp-items="@(ViewData["IdChucVu"] as SelectList)">
-                                <option value="">Select Role</option>
+                            <select asp-for="IdChucVu" class="form-select" id="floatingIdChucVu">
+                                <option value="">Chọn Chức Vụ</option>
+                                @foreach (var item in (SelectList)ViewData["IdChucVu"])
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
                             </select>
-                            <label for="floatingIdChucVu">Role</label>
+                            <label for="floatingIdChucVu">Chức Vụ</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="IdChucVu"></span>
                             </div>
@@ -130,21 +125,63 @@
 
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <select asp-for="IdRap" class="form-select border-primary" id="floatingIdRap" asp-items="@(ViewData["IdRap"] as SelectList)">
-                                <option value="">Select Theater</option>
+                            <select asp-for="IdRap" class="form-select" id="floatingIdRap">
+                                <option value="">Chọn Rạp</option>
+                                @foreach (var item in (SelectList)ViewData["IdRap"])
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
                             </select>
-                            <label for="floatingIdRap">Theater</label>
+                            <label for="floatingIdRap">Rạp</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="IdRap"></span>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="d-flex justify-content-center mt-4">
-                    <button type="submit" class="btn" style="background-color: #b66dff; color: white;">Create</button>
-                    <a class="btn btn-secondary ms-3" asp-action="Index">Back to List</a>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-primary">Create Employee</button>
+                        <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            $('#createForm').on('submit', function (e) {
+                e.preventDefault();
+                const form = $(this);
+                const formData = new FormData(this);
+
+                $.ajax({
+                    type: form.attr('method'),
+                    url: form.attr('action'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Employee created successfully!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = '@Url.Action("Index")';
+                        });
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                        });
+                    }
+                });
+            });
+        });
+    </script>
