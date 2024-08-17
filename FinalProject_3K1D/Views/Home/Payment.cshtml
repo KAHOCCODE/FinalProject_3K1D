@@ -1,21 +1,27 @@
 ﻿@{
     ViewBag.Title = "Payment";
+    Layout = null;
 }
 
 <h2>Thông tin đặt vé</h2>
 
 <div>
     <p><strong>Mã phim:</strong> @ViewBag.MovieId</p>
-    <p><strong>Giờ chiếu đã chọn:</strong> 
-        @if (ViewBag.SelectedTimes != null)
-        {
-                <ul>
-                @foreach (var time in ViewBag.SelectedTimes)
-                {
-                            <li>@time</li>
-                }
-                </ul>
-        }
+    <p><strong>Giờ chiếu đã chọn:</strong>
+        <ul>
+            @foreach (var time in ViewBag.SelectedTimes)
+            {
+                    <li>@time</li>
+            }
+        </ul>
+    </p>
+    <p><strong>Ghế đã chọn:</strong>
+        <ul>
+            @foreach (var seat in ViewBag.SelectedSeats)
+            {
+                    <li>@seat</li>
+            }
+        </ul>
     </p>
 </div>
 

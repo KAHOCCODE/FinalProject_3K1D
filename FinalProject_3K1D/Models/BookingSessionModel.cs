@@ -2,7 +2,8 @@
 {
     public class BookingSessionModel
     {
-        public string MovieId { get; set; }
-        public List<string> SelectedTimes { get; set; }
+            public string MovieId { get; set; }
+            public List<string> SelectedTimes { get; set; }
+            public List<string> SelectedSeats { get; set; }
     }
 }
