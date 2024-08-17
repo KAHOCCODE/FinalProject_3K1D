@@ -85,18 +85,54 @@ public class HomeController : Controller
         }
         public IActionResult ChonGhe()
         {
-            ////lấy tên phim, giờ chiếu
-            //using (var db = new QlrapPhimContext())
-            //{
-            //    var phim = db.Phims
-            //        .FirstOrDefault(p => p.IdPhim == phimId.ToString());
-            //    ViewBag.TenPhim = phim.TenPhim;
-            //    ViewBag.GioChieu = gioChieu;
-            //}
+            var movieId = HttpContext.Session.GetString("MovieId");
+            var selectedTimesJson = HttpContext.Session.GetString("SelectedTimes");
 
+            if (string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(selectedTimesJson))
+            {
+                return RedirectToAction("Index", "Home"); // Chuyển hướng nếu thông tin không tồn tại trong session
+            }
+
+            var selectedTimes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(selectedTimesJson);
+
+            // Sử dụng movieId và selectedTimes trong logic của bạn
+            ViewBag.MovieId = movieId;
+            ViewBag.SelectedTimes = selectedTimes;
 
             return View();
 
         }
-}
+        [HttpPost]
+        public IActionResult SaveBookingSession([FromBody] BookingSessionModel model)
+        {
+            // Lưu idPhim vào session
+            HttpContext.Session.SetString("MovieId", model.MovieId);
+
+            // Lưu giờ chiếu đã chọn vào session (chuỗi JSON để lưu trữ mảng)
+            HttpContext.Session.SetString("SelectedTimes", Newtonsoft.Json.JsonConvert.SerializeObject(model.SelectedTimes));
+
+            return Json(new { success = true });
+        }
+
+        // Model để nhận dữ liệu từ client
+       public IActionResult Payment()
+    {
+        // Truy cập dữ liệu từ session
+        var movieId = HttpContext.Session.GetString("MovieId");
+        var selectedTimesJson = HttpContext.Session.GetString("SelectedTimes");
+
+        if (string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(selectedTimesJson))
+        {
+            return RedirectToAction("Index", "Home"); // Chuyển hướng nếu thông tin không tồn tại trong session
+        }
+
+        var selectedTimes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(selectedTimesJson);
+
+        // Sử dụng movieId và selectedTimes trong logic của bạn
+        ViewBag.MovieId = movieId;
+        ViewBag.SelectedTimes = selectedTimes;
+
+        return View();
+    }
+    }
 }

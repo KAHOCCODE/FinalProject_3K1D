@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Payment";
+}
+
+<h2>Thông tin đặt vé</h2>
+
+<div>
+    <p><strong>Mã phim:</strong> @ViewBag.MovieId</p>
+    <p><strong>Giờ chiếu đã chọn:</strong> 
+        @if (ViewBag.SelectedTimes != null)
+        {
+                <ul>
+                @foreach (var time in ViewBag.SelectedTimes)
+                {
+                            <li>@time</li>
+                }
+                </ul>
+        }
+    </p>
+</div>
+
+<!-- Thêm các phần tử thanh toán hoặc xác nhận khác -->
