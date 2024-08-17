@@ -183,14 +183,19 @@
                 </div>
                 <!-- Phần Đặt Vé -->
                  <div class="booking-section">
-                 <h2>Lịch Chiếu</h2>
-                <ul>
+                     <h2>Lịch Chiếu</h2>
+            <div class="time-buttons">
                 @foreach (var lichChieu in Model.LichChieus)
                 {
-                <li> @lichChieu.GioChieu</li>
+                <label class="btn-time">
+                    <input type="checkbox" name="selectedTimes" value="@lichChieu.GioChieu"> @lichChieu.GioChieu
+                </label>
                 }
+            @* <a href="/Home/Detail?id=@phim.IdPhim">Chi tiết</a>
+            } *@
+            </div>
                 </body>
-<a href="booking-page.html" class="btn-book">Đặt Vé Ngay <i class="fas fa-ticket-alt"></i></a>
+
 <script src="path/to/your/bootstrap.bundle.min.js"></script>
 
 

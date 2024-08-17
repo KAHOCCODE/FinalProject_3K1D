@@ -1,4 +1,4 @@
-using FinalProject_3K1D.Models;
+﻿using FinalProject_3K1D.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -43,6 +43,7 @@ namespace FinalProject_3K1D.Controllers
             {
                 var phim = db.Phims
                     .Include(p => p.IdTheLoais)
+                    .Include(p => p.LichChieus)
                     .FirstOrDefault(p => p.IdPhim == id);
                 return View(phim);
             }
@@ -57,5 +58,20 @@ namespace FinalProject_3K1D.Controllers
                 return View(phims);
             }
         }
-    }
+        public IActionResult ChonGhe()
+        {
+            ////lấy tên phim, giờ chiếu
+            //using (var db = new QlrapPhimContext())
+            //{
+            //    var phim = db.Phims
+            //        .FirstOrDefault(p => p.IdPhim == phimId.ToString());
+            //    ViewBag.TenPhim = phim.TenPhim;
+            //    ViewBag.GioChieu = gioChieu;
+            //}
+
+
+            return View();
+
+        }
+}
 }
