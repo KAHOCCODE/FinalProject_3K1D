@@ -5,7 +5,21 @@ using System.Diagnostics;
 
 namespace FinalProject_3K1D.Controllers
 {
-    public class HomeController : Controller
+    //sử dụng session (paste code này vào)
+//    var userName = HttpContext.Session.GetString("UserName");
+//    var userId = HttpContext.Session.GetString("UserId");
+//    var userRole = HttpContext.Session.GetString("UserRole");
+
+//    if (string.IsNullOrEmpty(userName))
+//    {
+//        return RedirectToAction("Login", "AccountKH");
+//}
+
+//ViewBag.UserName = userName;
+//ViewBag.UserRole = userRole;
+ // ví dụ xem ở detail
+    
+public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -38,6 +52,17 @@ namespace FinalProject_3K1D.Controllers
         }
         public IActionResult Detail()
         {
+            var userName = HttpContext.Session.GetString("UserName");
+            var userId = HttpContext.Session.GetString("UserId");
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                return RedirectToAction("Login", "AccountKH");
+            }
+
+            ViewBag.UserName = userName;
+            ViewBag.UserRole = userRole;
             var id = Request.Query["id"].ToString();
             using (var db = new QlrapPhimContext())
             {

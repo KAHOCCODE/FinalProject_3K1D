@@ -6,15 +6,27 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Thêm các dịch vụ vào container.
 builder.Services.AddControllersWithViews();
+
+// Cấu hình DbContext
 builder.Services.AddDbContext<QlrapPhimContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("QLRapPhim")));
 
+// Cấu hình xác thực Cookie
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/AccountKH/Login";
         options.AccessDeniedPath = "/AccessDenied";
     });
+
+// Cấu hình Session
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thời gian session tồn tại
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -28,6 +40,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+// Kích hoạt Session
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();

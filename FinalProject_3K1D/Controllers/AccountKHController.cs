@@ -148,7 +148,6 @@ namespace FinalProject_3K1D.Controllers
             ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginKH model, string? ReturnUrl)
@@ -173,6 +172,11 @@ namespace FinalProject_3K1D.Controllers
                         ModelState.AddModelError("", "Mật khẩu không đúng.");
                         return View(model);
                     }
+
+                    // Lưu thông tin vào session
+                    HttpContext.Session.SetString("UserName", khachhang.HoTen);
+                    HttpContext.Session.SetString("UserId", khachhang.IdKhachHang);
+                    HttpContext.Session.SetString("UserRole", "KhachHang");
 
                     var claims = new List<Claim>
             {
@@ -206,6 +210,11 @@ namespace FinalProject_3K1D.Controllers
                         return View(model);
                     }
 
+                    // Lưu thông tin vào session
+                    HttpContext.Session.SetString("UserName", nhanvien.HoTen);
+                    HttpContext.Session.SetString("UserId", nhanvien.IdNhanVien);
+                    HttpContext.Session.SetString("UserRole", "NhanVien");
+
                     var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, nhanvien.HoTen),
@@ -224,6 +233,7 @@ namespace FinalProject_3K1D.Controllers
             }
             return View(model);
         }
+
         #endregion
 
         #region đăng xuất 
