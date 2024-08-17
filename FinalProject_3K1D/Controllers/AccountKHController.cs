@@ -32,80 +32,111 @@ namespace FinalProject_3K1D.Controllers
             return View();
         }
 
-       [HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Register(RegisterKH model)
-{
-    if (ModelState.IsValid)
-    {
-        // Kiểm tra xem tên người dùng đã tồn tại chưa
-        var existingUser = await _context.KhachHangs
-            .FirstOrDefaultAsync(kh => kh.UserKh == model.UserKH);
-
-        if (existingUser != null)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterKH model)
         {
-            ModelState.AddModelError("UserKH", "Username already exists.");
-            return View(model);
-        }
-
-        // Tạo người dùng mới và thêm vào cơ sở dữ liệu
-        string newId = "KH01"; // Default ID if no users exist
-        var lastUser = await _context.KhachHangs
-            .OrderByDescending(kh => kh.IdKhachHang)
-            .FirstOrDefaultAsync();
-        
-        if (lastUser != null)
-        {
-            string lastId = lastUser.IdKhachHang;
-            if (lastId.Length > 2)
+            if (ModelState.IsValid)
             {
-                string lastIdPart = lastId.Substring(2);
-                if (int.TryParse(lastIdPart, out int lastIdNumber))
+                // Kiểm tra xem tên người dùng đã tồn tại chưa
+                var existingUser = await _context.KhachHangs
+                    .FirstOrDefaultAsync(kh => kh.UserKh == model.UserKH);
+
+                if (existingUser != null)
                 {
-                    newId = $"KH{(lastIdNumber + 1):D2}";
+                    ModelState.AddModelError("UserKH", "Username already exists.");
+                    return View(model);
                 }
-                else
+
+                // Kiểm tra xem SDT đã tồn tại chưa
+                var existingSdt = await _context.KhachHangs
+                    .FirstOrDefaultAsync(kh => kh.Sdt == model.SDT);
+
+                if (existingSdt != null)
                 {
-                    ModelState.AddModelError("", "Error generating ID.");
+                    ModelState.AddModelError("SDT", "Phone number already exists.");
+                    return View(model);
+                }
+
+                // Kiểm tra xem CCCD đã tồn tại chưa
+                var existingCccd = await _context.KhachHangs
+                    .FirstOrDefaultAsync(kh => kh.Cccd == model.CCCD);
+
+                if (existingCccd != null)
+                {
+                    ModelState.AddModelError("CCCD", "Identity card number already exists.");
+                    return View(model);
+                }
+
+                // Kiểm tra xem Email đã tồn tại chưa
+                var existingEmail = await _context.KhachHangs
+                    .FirstOrDefaultAsync(kh => kh.Email == model.Email);
+
+                if (existingEmail != null)
+                {
+                    ModelState.AddModelError("Email", "Email already exists.");
+                    return View(model);
+                }
+
+                // Tạo người dùng mới và thêm vào cơ sở dữ liệu
+                string newId = "KH01"; // Default ID if no users exist
+                var lastUser = await _context.KhachHangs
+                    .OrderByDescending(kh => kh.IdKhachHang)
+                    .FirstOrDefaultAsync();
+
+                if (lastUser != null)
+                {
+                    string lastId = lastUser.IdKhachHang;
+                    if (lastId.Length > 2)
+                    {
+                        string lastIdPart = lastId.Substring(2);
+                        if (int.TryParse(lastIdPart, out int lastIdNumber))
+                        {
+                            newId = $"KH{(lastIdNumber + 1):D2}";
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Error generating ID.");
+                            return View(model);
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Error generating ID: ID format is invalid.");
+                        return View(model);
+                    }
+                }
+
+                var newUser = new KhachHang
+                {
+                    IdKhachHang = newId,
+                    HoTen = model.HoTen,
+                    NgaySinh = model.NgaySinh,
+                    Sdt = model.SDT,
+                    Cccd = model.CCCD,
+                    Email = model.Email,
+                    UserKh = model.UserKH,
+                    PassKh = model.PassKH
+                };
+
+                try
+                {
+                    await _context.KhachHangs.AddAsync(newUser);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Registration successful! Please log in.";
+                    return RedirectToAction("Login", "AccountKH");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                    ModelState.AddModelError("", "An error occurred while saving the user. Please try again.");
                     return View(model);
                 }
             }
-            else
-            {
-                ModelState.AddModelError("", "Error generating ID: ID format is invalid.");
-                return View(model);
-            }
-        }
 
-        var newUser = new KhachHang
-        {
-            IdKhachHang = newId,
-            HoTen = model.HoTen,
-            NgaySinh = model.NgaySinh,
-            Sdt = model.SDT,
-            Cccd = model.CCCD,
-            Email = model.Email,
-            UserKh = model.UserKH,
-            PassKh = model.PassKH
-        };
-
-        try
-        {
-            await _context.KhachHangs.AddAsync(newUser);
-            await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Registration successful! Please log in.";
-            return RedirectToAction("Login", "AccountKH");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-            ModelState.AddModelError("", "An error occurred while saving the user. Please try again.");
             return View(model);
         }
-    }
 
-    return View(model);
-}
 
 
         #endregion
