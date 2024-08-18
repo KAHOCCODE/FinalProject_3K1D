@@ -72,6 +72,22 @@ public partial class Phim
             return tenPhong;
         }
     }
+    //lấy giá vé từ lich chiếu
+    public string GiaVe
+    {
+        get
+        {
+            string giaVe = "";
+            foreach (var lichChieu in LichChieus)
+            {
+                giaVe += lichChieu.GiaVe + ", ";
+            }
+
+            return giaVe;
+        }
+    }
+
+
 
 
 }

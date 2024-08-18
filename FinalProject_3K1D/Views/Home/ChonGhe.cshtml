@@ -1,6 +1,5 @@
 ﻿@{
     Layout = null;
-
 }
 <head>
     <meta charset="UTF-8">
@@ -47,39 +46,39 @@
             cursor: pointer;
         }
 
-            .seat:hover {
-                transform: scale(1.1);
-            }
+        .seat:hover {
+            transform: scale(1.1);
+        }
 
-            /* Màu sắc cho từng loại ghế */
-            .seat.vip {
-                background-color: #ff5722;
-            }
+        /* Seat color classes */
+        .seat.vip {
+            background-color: #ff5722;
+        }
 
-                .seat.vip:hover {
-                    background-color: #e64a19;
-                }
+        .seat.vip:hover {
+            background-color: #e64a19;
+        }
 
-            .seat.deluxe {
-                background-color: #00bcd4;
-            }
+        .seat.deluxe {
+            background-color: #00bcd4;
+        }
 
-                .seat.deluxe:hover {
-                    background-color: #00796b;
-                }
+        .seat.deluxe:hover {
+            background-color: #00796b;
+        }
 
-            .seat.standard {
-                background-color: #8bc34a;
-            }
+        .seat.standard {
+            background-color: #8bc34a;
+        }
 
-                .seat.standard:hover {
-                    background-color: #689f38;
-                }
+        .seat.standard:hover {
+            background-color: #689f38;
+        }
 
-            .seat.selected {
-                background-color: #ffeb3b; /* Màu vàng cho ghế được chọn */
-                color: #000; /* Màu chữ để dễ đọc hơn trên nền vàng */
-            }
+        .seat.selected {
+            background-color: #ffeb3b;
+            color: #000;
+        }
 
         .footer {
             background: linear-gradient(45deg, #333, #555);
@@ -94,29 +93,9 @@
             flex-direction: column;
         }
 
-        .info-panel {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 0 20px;
+        .info-panel p {
+            margin: 0;
         }
-
-            .info-panel p {
-                margin: 0;
-            }
-
-        .points-panel {
-            margin-top: 10px;
-            text-align: right;
-        }
-
-            .points-panel input[type="number"] {
-                width: 100px;
-                margin-left: 10px;
-                border-radius: 5px;
-                padding: 5px;
-            }
 
         .summary-panel {
             background: rgba(255, 255, 255, 0.1);
@@ -129,48 +108,38 @@
             align-items: flex-start;
         }
 
-            .summary-panel .summary-info {
-                flex: 1;
-            }
-
-                .summary-panel .summary-info p {
-                    margin: 5px 0;
-                }
-
-        .btn-container {
-            text-align: right;
-            margin-top: 10px;
+        .summary-info p {
+            margin: 5px 0;
         }
 
-            .btn-container .btn {
-                margin-left: 10px;
-                padding: 12px 30px;
-                font-size: 1.2em;
-                border-radius: 50px;
-                transition: background-color 0.3s, transform 0.2s;
-            }
+        .btn-container .btn {
+            margin-left: 10px;
+            padding: 12px 30px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
 
-            .btn-container .btn-pay {
-                background-color: #ff9800;
-                border-color: #ff9800;
-            }
+        .btn-container .btn-pay {
+            background-color: #ff9800;
+            border-color: #ff9800;
+        }
 
-                .btn-container .btn-pay:hover {
-                    background-color: #e65100;
-                    transform: scale(1.05);
-                }
+        .btn-container .btn-pay:hover {
+            background-color: #e65100;
+            transform: scale(1.05);
+        }
 
-            .btn-container .btn-cancel {
-                background-color: #f44336;
-                border-color: #f44336;
-            }
+        .btn-container .btn-cancel {
+            background-color: #f44336;
+            border-color: #f44336;
+        }
 
-                .btn-container .btn-cancel:hover {
-                    background-color: #c62828;
-                    transform: scale(1.05);
-                }
+        .btn-container .btn-cancel:hover {
+            background-color: #c62828;
+            transform: scale(1.05);
+        }
 
-        /* Phần chú thích */
         .legend-panel {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
@@ -209,87 +178,44 @@
         }
 
         .legend .booked {
-            background-color: #b0bec5; /* Màu xám nhạt */
-            color: #000; /* Màu chữ đen để dễ đọc hơn trên nền xám nhạt */
+            background-color: #b0bec5;
+            color: #000;
         }
-
     </style>
 </head>
 <body>
     <div class="container mt-4">
-        <!-- Panel Màn Hình -->
-        <div class="screen-panel">
-            Màn Hình
-        </div>
+        <div class="screen-panel">Màn Hình</div>
 
-        <!-- Panel Ghế -->
-        <div class="seats-panel">
-            <!-- Tạo Ghế Tự Động -->
-            <script>
-                const seatPanel = document.querySelector('.seats-panel');
-                const rows = 8;
-                const columns = 10;
-                const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        <div class="seats-panel"></div>
 
-                for (let i = 0; i < rows; i++) {
-                    for (let j = 0; j < columns; j++) {
-                        const seat = document.createElement('div');
-                        seat.classList.add('seat');
-
-                        // Thêm màu sắc cho từng hàng
-                        if (i === 0) {
-                            seat.classList.add('vip');
-                        } else if (i === 1 || i === 2) {
-                            seat.classList.add('deluxe');
-                        } else {
-                            seat.classList.add('standard');
-                        }
-
-                        seat.textContent = `${alphabet[i]}${j + 1}`;
-
-                        // Thêm sự kiện chọn ghế
-                        seat.addEventListener('click', () => {
-                            if (seat.classList.contains('selected')) {
-                                seat.classList.remove('selected');
-                            } else {
-                                seat.classList.add('selected');
-                            }
-                        });
-
-                        seatPanel.appendChild(seat);
-                    }
-                }
-            </script>
-        </div>
-
-        <!-- Panel Chú Thích -->
         <div class="legend-panel mt-4">
             <div class="legend">
                 <span class="vip">VIP</span>
                 <span class="deluxe">Deluxe</span>
                 <span class="standard">Standard</span>
-                <span class="selected">Ghế đang chọn </span>
+                <span class="selected">Ghế đang chọn</span>
                 <span class="booked">Ghế đã được đặt</span>
             </div>
         </div>
 
-        <!-- Footer -->
         <div class="footer mt-4">
             <div class="footer-content">
                 <div class="info-panel">
-                    <p><strong>Thông tin phim:</strong> Avengers: Endgame</p>
-                    <p><strong>Giờ Chiếu:</strong></p>
-                    <p><strong>Điểm tích lũy:</strong> 1000 điểm</p>
-                    <div class="points-panel">
-                        <label for="points"><strong>Sử dụng điểm tích lũy:</strong></label>
-                        <input type="number" id="points" min="0" max="1000" step="10" value="0">
-                    </div>
+                    <p><strong>Tên phim:</strong> @ViewBag.MovieName</p>
+                    <p><strong>Giờ Chiếu:</strong>
+                        @foreach (var time in ViewBag.SelectedTimes)
+                        {
+                            <li>@time</li>
+                        }
+                    </p>
+                    <p><strong>Mã ghế ngồi:</strong> <span id="selected-seat-ids"></span></p>
                 </div>
                 <div class="summary-panel">
                     <div class="summary-info">
-                        <p><strong>Tạm tính:</strong> 200.000 VNĐ</p>
-                        <p><strong>Giảm giá:</strong> </p>
-                        <p><strong>Tổng cộng:</strong> 200.000 VNĐ</p>
+                        <p><strong>Tạm tính:</strong> <span id="temp-price">0 VND</span></p>
+                        <p><strong>Giảm giá:</strong> <span id="discount">0 VND</span></p>
+                        <p><strong>Tổng cộng:</strong> <span id="total-price">0 VND</span></p>
                     </div>
                     <div class="btn-container">
                         <button type="button" class="btn btn-cancel">Hủy</button>
@@ -299,5 +225,92 @@
             </div>
         </div>
     </div>
+    <script>
+        const seatPanel = document.querySelector('.seats-panel');
+        const rows = 8;
+        const columns = 10;
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const selectedSeats = new Set(); // Store selected seat IDs
+        const ticketPrice = 100000; // Example ticket price (in VND)
+        let totalPrice = 0; // Variable to store the total price
+
+        // Function to update the total price display
+        function updateTotalPrice() {
+            const totalElement = document.querySelector('.summary-info p:last-child');
+            totalPrice = selectedSeats.size * ticketPrice;
+            totalElement.textContent = `Tổng cộng: ${totalPrice.toLocaleString()} VND`;
+        }
+
+        // Function to update the displayed selected seat IDs
+        function updateSelectedSeatDisplay() {
+            const selectedSeatIdsElement = document.getElementById('selected-seat-ids');
+            selectedSeatIdsElement.textContent = Array.from(selectedSeats).join(', ');
+
+            // Save selected seats to session via an API call
+            saveSelectedSeatsToSession(Array.from(selectedSeats));
+        }
+
+        // Function to save selected seat IDs to session
+        function saveSelectedSeatsToSession(seatIds) {
+            fetch('/Home/SaveSelectedSeats', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': '@Html.AntiForgeryToken()' // CSRF protection
+                },
+                body: JSON.stringify(seatIds)
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to save selected seats to session');
+                }
+                return response.json();
+            }).then(data => {
+                console.log('Selected seats saved to session:', data);
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+                const seat = document.createElement('div');
+                seat.classList.add('seat');
+
+                // Assign classes based on row (VIP, Deluxe, Standard)
+                if (i === 0) {
+                    seat.classList.add('vip');
+                } else if (i === 1 || i === 2) {
+                    seat.classList.add('deluxe');
+                } else {
+                    seat.classList.add('standard');
+                }
+
+                const seatId = `${alphabet[i]}${j + 1}`;
+                seat.textContent = seatId;
+
+                // Event listener for selecting a seat
+                seat.addEventListener('click', () => {
+                    if (seat.classList.contains('selected')) {
+                        seat.classList.remove('selected');
+                        selectedSeats.delete(seatId); // Remove seat ID from the selected seats
+                    } else {
+                        seat.classList.add('selected');
+                        selectedSeats.add(seatId); // Add seat ID to the selected seats
+                    }
+
+                    // Update total price and selected seat display
+                    updateTotalPrice();
+                    updateSelectedSeatDisplay();
+                });
+
+                seatPanel.appendChild(seat);
+            }
+        }
+
+        // Initial updates
+        updateTotalPrice();
+        updateSelectedSeatDisplay();
+    </script>
+    
 </body>
 </html>

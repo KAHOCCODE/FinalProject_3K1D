@@ -131,13 +131,26 @@ public class HomeController : Controller
 
             var selectedTimes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(selectedTimesJson);
 
-            // Use movieId, selectedTimes, and userId in your logic
-            ViewBag.MovieId = movieId;
-            ViewBag.SelectedTimes = selectedTimes;
-            ViewBag.UserId = userId; // Pass UserId to the view
+            // Fetch movie details using movieId
+            using (var db = new QlrapPhimContext())
+            {
+                var movie = db.Phims.FirstOrDefault(p => p.IdPhim == movieId);
+                if (movie == null)
+                {
+                    return RedirectToAction("Index", "Home"); // Redirect if movie not found
+                }
+
+                // Pass movie details to the view
+                ViewBag.MovieId = movieId;
+                ViewBag.SelectedTimes = selectedTimes;
+                ViewBag.UserId = userId;
+                ViewBag.MovieName = movie.TenPhim; // Pass TenPhim (movie name) to the view
+                ViewBag.TicketPrice = movie.GiaVe; // Ticket price
+            }
 
             return View();
         }
+
 
         public IActionResult Payment()
         {
