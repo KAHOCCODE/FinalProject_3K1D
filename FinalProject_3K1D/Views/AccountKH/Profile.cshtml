@@ -1,14 +1,16 @@
-﻿@{
+﻿@model FinalProject_3K1D.Models.KhachHang
+
+@{
     ViewData["Title"] = "Profile";
     Layout = null;
 }
-
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hồ Sơ Khách Hàng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         body {
             background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -26,43 +28,25 @@
             padding: 30px;
             box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.4);
             margin-bottom: 30px;
-            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
         }
 
-            .panel:hover {
-                transform: scale(1.02);
-                box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.5);
-            }
+        .edit-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #ff9800;
+        }
 
-            .panel h2 {
-                font-size: 2em;
-                margin-bottom: 20px;
-                color: #e0e0e0;
+            .edit-icon:hover {
+                color: #e65100;
             }
 
         .form-control, .btn {
             border-radius: 8px;
         }
-
-        .btn-save {
-            background-color: #4caf50;
-            border-color: #4caf50;
-            color: white;
-        }
-
-            .btn-save:hover {
-                background-color: #388e3c;
-            }
-
-        .btn-change-password {
-            background-color: #ff9800;
-            border-color: #ff9800;
-            color: white;
-        }
-
-            .btn-change-password:hover {
-                background-color: #e65100;
-            }
 
         .form-group {
             margin-bottom: 1.5rem;
@@ -90,79 +74,65 @@
             .panel-footer button {
                 margin: 0 10px;
             }
+
+        .form-control[readonly] {
+            background-color: #f5f5f5;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <!-- Panel Thông Tin Khách Hàng -->
         <div class="panel">
-            <h2>Profile</h2>
-            <form id="customer-info-form">
+            <i class="fas fa-edit edit-icon" id="edit-icon"></i>
+            <h2>Hồ Sơ Khách Hàng</h2>
+            <form id="customer-info-form" method="post" action="@Url.Action("UpdateProfile", "AccountKH")">
                 <div class="form-group">
                     <label for="fullName" class="form-label">Tên</label>
-                    <input type="text" class="form-control" id="fullName" placeholder="Nhập tên">
+                    <input type="text" name="HoTen" class="form-control" id="fullName" value="@Model.HoTen" readonly>
                 </div>
                 <div class="form-group">
                     <label for="dob" class="form-label">Ngày Sinh</label>
-                    <input type="date" class="form-control" id="dob">
+                    <input type="date" name="NgaySinh" class="form-control" id="dob" value="@Model.NgaySinh?.ToString("yyyy-MM-dd")" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="cccd" class="form-label">CCCD</label>
+                    <input type="text" name="Cccd" class="form-control" id="cccd" value="@Model.Cccd" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="address" class="form-label">Địa Chỉ</label>
+                    <input type="text" name="DiaChi" class="form-control" id="address" value="@Model.DiaChi" readonly>
                 </div>
                 <div class="form-group">
                     <label for="phone" class="form-label">Số Điện Thoại</label>
-                    <input type="text" class="form-control" id="phone" placeholder="Nhập số điện thoại">
+                    <input type="text" name="Sdt" class="form-control" id="phone" value="@Model.Sdt" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="points" class="form-label">Điểm Tích Lũy</label>
+                    <input type="text" class="form-control" id="points" value="@ViewBag.DiemTichLuy" readonly>
                 </div>
                 <div class="form-group">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Nhập email">
+                    <input type="email" name="Email" class="form-control" id="email" value="@Model.Email" readonly>
                 </div>
                 <div class="panel-footer">
-                    <button type="submit" class="btn btn-save">Lưu Thông Tin</button>
+                    <button type="submit" class="btn btn-primary">Cập Nhật</button>
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Hủy</a>
                 </div>
-            </form>
-        </div>
-
-        <!-- Panel Điểm Tích Lũy -->
-        <div class="panel">
-            <h2>Điểm Tích Lũy</h2>
-            <p class="points-info">Điểm Tích Lũy của bạn: <span id="points-value">0</span></p>
-        </div>
-
-        <!-- Panel Thay Đổi Mật Khẩu -->
-        <div class="panel">
-            <h2>Thay Đổi Mật Khẩu</h2>
-            <form id="change-password-form">
-                <div class="form-group">
-                    <label for="currentPassword" class="form-label">Mật Khẩu Hiện Tại</label>
-                    <input type="password" class="form-control" id="currentPassword" placeholder="Nhập mật khẩu hiện tại">
-                </div>
-                <div class="form-group">
-                    <label for="newPassword" class="form-label">Mật Khẩu Mới</label>
-                    <input type="password" class="form-control" id="newPassword" placeholder="Nhập mật khẩu mới">
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword" class="form-label">Xác Nhận Mật Khẩu Mới</label>
-                    <input type="password" class="form-control" id="confirmPassword" placeholder="Xác nhận mật khẩu mới">
-                </div>
-                <div class="panel-footer">
-                    <button type="submit" class="btn btn-change-password">Thay Đổi Mật Khẩu</button>
+                <div>
+                    <a href="@Url.Action("ChangePassword", "AccountKH")" class="btn btn-warning">Đổi Mật Khẩu</a>
                 </div>
             </form>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Giả lập hành động lưu thông tin và thay đổi mật khẩu
-        document.getElementById('customer-info-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-            alert('Thông tin khách hàng đã được lưu.');
-        });
-
-        document.getElementById('change-password-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-            alert('Mật khẩu đã được thay đổi.');
-        });
-    </script>
 </body>
-
-
-
+<script>
+    document.getElementById('edit-icon').addEventListener('click', function () {
+        var formElements = document.querySelectorAll('#customer-info-form input');
+        formElements.forEach(function (element) {
+            if (element.id !== 'phone' && element.id !== 'points') {
+                element.removeAttribute('readonly');
+            }
+        });
+    });
+</script>
