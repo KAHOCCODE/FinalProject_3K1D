@@ -240,6 +240,16 @@ namespace FinalProject_3K1D.Controllers
             return RedirectToAction("Index", "Home");
         }
         #endregion
+
+        #region
+        public IActionResult Profile()
+        {
+            return View();
+           
+        }
+        #endregion
+
     }
 }
+
 
