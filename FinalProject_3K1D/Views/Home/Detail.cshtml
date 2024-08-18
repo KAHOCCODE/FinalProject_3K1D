@@ -198,7 +198,7 @@
 <script src="path/to/your/bootstrap.bundle.min.js"></script>
 
 
-   <script>
+<script>
     function bookTickets() {
         // Lấy tất cả các checkbox đã chọn
         const selectedTimes = [];
@@ -212,29 +212,36 @@
         }
 
         // Gửi dữ liệu tới server để lưu vào session
-        fetch('/Home/SaveBookingSession', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'RequestVerificationToken': '@Html.AntiForgeryToken()' // Bảo mật CSRF
-            },
-            body: JSON.stringify({
-                movieId: '@Model.IdPhim', // Gửi ID phim
-                selectedTimes: selectedTimes // Gửi giờ chiếu đã chọn
-            })
+       fetch('/Home/SaveBookingSession', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': '@Html.AntiForgeryToken()' // Bảo mật CSRF
+        },
+        body: JSON.stringify({
+            movieId: '@Model.IdPhim', // Gửi ID phim
+            selectedTimes: selectedTimes // Gửi giờ chiếu đã chọn
+        })
         }).then(response => {
             if (!response.ok) {
                 throw new Error('Có lỗi xảy ra');
             }
             return response.json();
         }).then(data => {
-            // Xử lý kết quả sau khi lưu vào session
-            alert("Thông tin đã được lưu vào session!");
-            window.location.href = "/Home/ChonGhe"; // Chuyển đến trang thanh toán hoặc trang tiếp theo
+            if (!data.success) {
+                // Hiển thị thông báo lỗi nếu người dùng chưa đăng nhập
+                alert(data.message);
+                window.location.href = "/AccountKH/Login"; // Chuyển đến trang đăng nhập nếu cần
+            } else {
+                // Xử lý kết quả sau khi lưu vào session
+                alert(data.message);
+                window.location.href = "/Home/ChonGhe"; // Chuyển đến trang tiếp theo
+            }
         }).catch(error => {
             console.error('Error:', error);
             alert("Đã xảy ra lỗi khi lưu thông tin.");
         });
+
     }
 </script>
 

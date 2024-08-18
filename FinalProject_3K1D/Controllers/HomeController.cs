@@ -52,17 +52,17 @@ public class HomeController : Controller
         }
         public IActionResult Detail()
         {
-            var userName = HttpContext.Session.GetString("UserName");
-            var userId = HttpContext.Session.GetString("UserId");
-            var userRole = HttpContext.Session.GetString("UserRole");
+            //var userName = HttpContext.Session.GetString("UserName");
+            //var userId = HttpContext.Session.GetString("UserId");
+            //var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(userName))
-            {
-                return RedirectToAction("Login", "AccountKH");
-            }
+            //if (string.IsNullOrEmpty(userName))
+            //{
+            //    return RedirectToAction("Login", "AccountKH");
+            //}
 
-            ViewBag.UserName = userName;
-            ViewBag.UserRole = userRole;
+            //ViewBag.UserName = userName;
+            //ViewBag.UserRole = userRole;
             var id = Request.Query["id"].ToString();
             using (var db = new QlrapPhimContext())
             {
@@ -87,6 +87,15 @@ public class HomeController : Controller
         [HttpPost]
         public IActionResult SaveBookingSession([FromBody] BookingSessionModel model)
         {
+            var userName = HttpContext.Session.GetString("UserName");
+            var userId = HttpContext.Session.GetString("UserId");
+            var userRole = HttpContext.Session.GetString("UserRole");
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                // Nếu chưa đăng nhập, chuyển hướng đến trang Login
+                return Json(new { success = false, message = "Bạn cần đăng nhập trước khi đặt vé." });
+            }
             // Lưu idPhim vào session
             HttpContext.Session.SetString("MovieId", model.MovieId);
 
