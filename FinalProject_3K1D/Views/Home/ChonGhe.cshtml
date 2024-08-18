@@ -233,11 +233,33 @@
         let totalPrice = 0; // Variable to store the total price
 
         // Function to update the total price display
-        function updateTotalPrice() {
-            const totalElement = document.querySelector('.summary-info p:last-child');
-            totalPrice = selectedSeats.size * ticketPrice;
-            totalElement.textContent = `Tổng cộng: ${totalPrice.toLocaleString()} VND`;
+       // Giá tiền của từng loại ghế (có thể điều chỉnh theo nhu cầu)
+const vipPrice = ticketPrice * 1.3;  // VIP seats cost 30% of standard price
+const deluxePrice = ticketPrice * 1.2;  // Deluxe seats cost 20% of standard price
+const standardPrice = ticketPrice;  // Standard seats
+
+// Function to update the total price display
+function updateTotalPrice() {
+    totalPrice = 0;  // Reset total price
+
+    selectedSeats.forEach(seatId => {
+        // Xác định loại ghế dựa trên ký tự đầu tiên (A, B, C là VIP và Deluxe)
+        const row = seatId.charAt(0);
+
+        if (row === 'A') {
+            totalPrice += vipPrice;  // Hàng A là VIP
+        } else if (row === 'B' || row === 'C') {
+            totalPrice += deluxePrice;  // Hàng B và C là Deluxe
+        } else {
+            totalPrice += standardPrice;  // Các hàng còn lại là Standard
         }
+    });
+
+    // Cập nhật hiển thị tổng tiền
+    const totalElement = document.querySelector('.summary-info p:last-child');
+    totalElement.textContent = `Tổng cộng: ${totalPrice.toLocaleString()} VND`;
+}
+
 
         // Function to update the displayed selected seat IDs
         function updateSelectedSeatDisplay() {
