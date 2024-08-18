@@ -83,7 +83,7 @@ public class HomeController : Controller
                 return View(phims);
             }
         }
-        
+
         [HttpPost]
         public IActionResult SaveBookingSession([FromBody] BookingSessionModel model)
         {
@@ -91,40 +91,54 @@ public class HomeController : Controller
             var userId = HttpContext.Session.GetString("UserId");
             var userRole = HttpContext.Session.GetString("UserRole");
 
-            if (string.IsNullOrEmpty(userName))
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(userId))
             {
-                // Nếu chưa đăng nhập, chuyển hướng đến trang Login
+                // If the user is not logged in, redirect to the login page
                 return Json(new { success = false, message = "Bạn cần đăng nhập trước khi đặt vé." });
             }
-            // Lưu idPhim vào session
+
+            // Save the UserId to the BookingSessionModel
+            model.UserId = userId;
+
+            // Save the movie ID into the session
             HttpContext.Session.SetString("MovieId", model.MovieId);
 
-            // Lưu giờ chiếu đã chọn vào session (chuỗi JSON để lưu trữ mảng)
+            // Save selected times into the session as a JSON string
             HttpContext.Session.SetString("SelectedTimes", Newtonsoft.Json.JsonConvert.SerializeObject(model.SelectedTimes));
+
+            // Optionally, save selected seats as well
+            if (model.SelectedSeats != null)
+            {
+                HttpContext.Session.SetString("SelectedSeats", Newtonsoft.Json.JsonConvert.SerializeObject(model.SelectedSeats));
+            }
 
             return Json(new { success = true });
         }
 
+
         // Model để nhận dữ liệu từ client
-       public IActionResult ChonGhe()
+        public IActionResult ChonGhe()
         {
-            // Truy cập dữ liệu từ session
+            // Retrieve data from session
             var movieId = HttpContext.Session.GetString("MovieId");
             var selectedTimesJson = HttpContext.Session.GetString("SelectedTimes");
+            var userId = HttpContext.Session.GetString("UserId"); // Retrieve UserId from session
 
-            if (string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(selectedTimesJson))
+            if (string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(selectedTimesJson) || string.IsNullOrEmpty(userId))
             {
-                return RedirectToAction("Index", "Home"); // Chuyển hướng nếu thông tin không tồn tại trong session
+                return RedirectToAction("Index", "Home"); // Redirect if necessary information is missing from session
             }
 
             var selectedTimes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(selectedTimesJson);
 
-            // Sử dụng movieId và selectedTimes trong logic của bạn
+            // Use movieId, selectedTimes, and userId in your logic
             ViewBag.MovieId = movieId;
             ViewBag.SelectedTimes = selectedTimes;
+            ViewBag.UserId = userId; // Pass UserId to the view
 
             return View();
         }
+
         public IActionResult Payment()
         {
             var movieId = HttpContext.Session.GetString("MovieId");

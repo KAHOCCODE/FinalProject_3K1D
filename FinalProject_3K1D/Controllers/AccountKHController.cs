@@ -159,23 +159,18 @@ namespace FinalProject_3K1D.Controllers
                 if (model.Role == "KhachHang")
                 {
                     // Login logic for customer
-                    var khachhang = _context.KhachHangs.SingleOrDefault(kh => kh.UserKh == model.UserKh);
+                    var khachhang = await _context.KhachHangs
+                        .SingleOrDefaultAsync(kh => kh.UserKh == model.UserKh && kh.PassKh == model.PassKh);
 
                     if (khachhang == null)
                     {
-                        ModelState.AddModelError("", "Tài khoản không tồn tại.");
+                        ModelState.AddModelError("", "Tài khoản hoặc mật khẩu không đúng.");
                         return View(model);
                     }
 
-                    if (khachhang.PassKh != model.PassKh)
-                    {
-                        ModelState.AddModelError("", "Mật khẩu không đúng.");
-                        return View(model);
-                    }
-
-                    // Lưu thông tin vào session
-                    HttpContext.Session.SetString("UserName", khachhang.HoTen);
+                    // Store IdKhachHang in session
                     HttpContext.Session.SetString("UserId", khachhang.IdKhachHang);
+                    HttpContext.Session.SetString("UserName", khachhang.HoTen);
                     HttpContext.Session.SetString("UserRole", "KhachHang");
 
                     var claims = new List<Claim>
@@ -196,23 +191,18 @@ namespace FinalProject_3K1D.Controllers
                 else if (model.Role == "NhanVien")
                 {
                     // Login logic for employee
-                    var nhanvien = _context.NhanViens.SingleOrDefault(nv => nv.UserNv == model.UserKh);
+                    var nhanvien = await _context.NhanViens
+                        .SingleOrDefaultAsync(nv => nv.UserNv == model.UserKh && nv.PassNv == model.PassKh);
 
                     if (nhanvien == null)
                     {
-                        ModelState.AddModelError("", "Tài khoản không tồn tại.");
+                        ModelState.AddModelError("", "Tài khoản hoặc mật khẩu không đúng.");
                         return View(model);
                     }
 
-                    if (nhanvien.PassNv != model.PassKh)
-                    {
-                        ModelState.AddModelError("", "Mật khẩu không đúng.");
-                        return View(model);
-                    }
-
-                    // Lưu thông tin vào session
-                    HttpContext.Session.SetString("UserName", nhanvien.HoTen);
+                    // Store IdNhanVien in session
                     HttpContext.Session.SetString("UserId", nhanvien.IdNhanVien);
+                    HttpContext.Session.SetString("UserName", nhanvien.HoTen);
                     HttpContext.Session.SetString("UserRole", "NhanVien");
 
                     var claims = new List<Claim>
@@ -233,6 +223,9 @@ namespace FinalProject_3K1D.Controllers
             }
             return View(model);
         }
+
+
+
 
         #endregion
 
