@@ -134,11 +134,15 @@
                 icon: 'success',
                 title: 'Success',
                 text: 'Lịch Chiếu created successfully!'
-            }).then(() => {
-                form.submit(); // Submit the form after showing the success message
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit the form after showing the success message
+                }
             });
         }
     });
+
+
 
     document.getElementById('floatingIdRap').addEventListener('change', function () {
         var selectedRapId = this.value;
