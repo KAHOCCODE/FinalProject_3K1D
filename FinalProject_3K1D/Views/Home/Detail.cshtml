@@ -188,7 +188,8 @@
                 @foreach (var lichChieu in Model.LichChieus)
                 {
                 <label class="btn-time">
-                    <input type="checkbox" name="selectedTimes" value="@lichChieu.GioChieu"> @lichChieu.GioChieu
+                    <input type="checkbox" name="selectedTimes" value="@lichChieu.GioChieu">
+                        @lichChieu.GioChieu - Phòng: @(lichChieu.TenPhong ?? "Unknown"))
                 </label>
                 }
             
@@ -197,22 +198,21 @@
                 <button class="btn-book" onclick="bookTickets()">Đặt Vé</button>
 <script src="path/to/your/bootstrap.bundle.min.js"></script>
 
-
 <script>
     function bookTickets() {
-        // Lấy tất cả các checkbox đã chọn
-        const selectedTimes = [];
-        document.querySelectorAll('input[name="selectedTimes"]:checked').forEach(function(checkbox) {
-            selectedTimes.push(checkbox.value);
-        });
+    // Lấy tất cả các checkbox đã chọn
+    const selectedTimes = [];
+    document.querySelectorAll('input[name="selectedTimes"]:checked').forEach(function(checkbox) {
+        selectedTimes.push(checkbox.value);
+    });
 
-        if (selectedTimes.length === 0) {
-            alert("Vui lòng chọn ít nhất một giờ chiếu.");
-            return;
-        }
+    if (selectedTimes.length === 0) {
+        alert("Vui lòng chọn ít nhất một giờ chiếu.");
+        return;
+    }
 
-        // Gửi dữ liệu tới server để lưu vào session
-       fetch('/Home/SaveBookingSession', {
+    // Gửi dữ liệu tới server để lưu vào session
+    fetch('/Home/SaveBookingSession', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -220,28 +220,30 @@
         },
         body: JSON.stringify({
             movieId: '@Model.IdPhim', // Gửi ID phim
-            selectedTimes: selectedTimes // Gửi giờ chiếu đã chọn
+            selectedTimes: selectedTimes, // Gửi giờ chiếu đã chọn
+            cinemaName: 'Tên rạp',  // Gửi tên rạp
+            roomName: 'Tên phòng'   // Gửi tên phòng chiếu
         })
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Có lỗi xảy ra');
-            }
-            return response.json();
-        }).then(data => {
-            if (!data.success) {
-                // Hiển thị thông báo lỗi nếu người dùng chưa đăng nhập
-                alert(data.message);
-                window.location.href = "/AccountKH/Login"; // Chuyển đến trang đăng nhập nếu cần
-            } else {
-                // Xử lý kết quả sau khi lưu vào session
-                alert(data.message);
-                window.location.href = "/Home/ChonGhe"; // Chuyển đến trang tiếp theo
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-            alert("Đã xảy ra lỗi khi lưu thông tin.");
-        });
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Có lỗi xảy ra');
+        }
+        return response.json();
+    }).then(data => {
+        if (!data.success) {
+            // Hiển thị thông báo lỗi nếu người dùng chưa đăng nhập
+            alert(data.message);
+            window.location.href = "/AccountKH/Login"; // Chuyển đến trang đăng nhập nếu cần
+        } else {
+            // Xử lý kết quả sau khi lưu vào session
+            alert(data.message);
+            window.location.href = "/Home/ChonGhe"; // Chuyển đến trang tiếp theo
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+        alert("Đã xảy ra lỗi khi lưu thông tin.");
+    });
+}
 
-    }
 </script>
 

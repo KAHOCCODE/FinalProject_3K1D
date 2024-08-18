@@ -202,8 +202,8 @@
         <div class="footer mt-4">
             <div class="footer-content">
                 <div class="info-panel">
-                    <p><strong>Tên phim:</strong> @ViewBag.MovieName</p>
-                    <p><strong>Giờ Chiếu:</strong>
+                    <p><strong>Tên phim</strong> @ViewBag.MovieName</p>
+                    <p><strong>Giờ Chiếu</strong>
                         @foreach (var time in ViewBag.SelectedTimes)
                         {
                             <li>@time</li>
@@ -213,8 +213,6 @@
                 </div>
                 <div class="summary-panel">
                     <div class="summary-info">
-                        <p><strong>Tạm tính:</strong> <span id="temp-price">0 VND</span></p>
-                        <p><strong>Giảm giá:</strong> <span id="discount">0 VND</span></p>
                         <p><strong>Tổng cộng:</strong> <span id="total-price">0 VND</span></p>
                     </div>
                     <div class="btn-container">

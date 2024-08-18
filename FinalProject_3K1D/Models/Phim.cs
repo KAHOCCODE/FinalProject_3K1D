@@ -86,7 +86,20 @@ public partial class Phim
             return giaVe;
         }
     }
+    //lấy tenrap
+    public string TenRap
+    {
+        get
+        {
+            string tenRap = "";
+            foreach (var lichChieu in LichChieus)
+            {
+                tenRap += lichChieu.IdRapNavigation?.TenRap + ", ";
+            }
 
+            return tenRap;
+        }
+    }
 
 
 

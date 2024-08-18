@@ -52,27 +52,31 @@ public class HomeController : Controller
         }
         public IActionResult Detail()
         {
-            //var userName = HttpContext.Session.GetString("UserName");
-            //var userId = HttpContext.Session.GetString("UserId");
-            //var userRole = HttpContext.Session.GetString("UserRole");
-
-            //if (string.IsNullOrEmpty(userName))
-            //{
-            //    return RedirectToAction("Login", "AccountKH");
-            //}
-
-            //ViewBag.UserName = userName;
-            //ViewBag.UserRole = userRole;
             var id = Request.Query["id"].ToString();
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound(); // Handle case where id is not provided
+            }
+
             using (var db = new QlrapPhimContext())
             {
                 var phim = db.Phims
                     .Include(p => p.IdTheLoais)
                     .Include(p => p.LichChieus)
+                        .ThenInclude(l => l.IdPhongChieuNavigation)
+                    .Include(p => p.LichChieus)
+                        .ThenInclude(l => l.IdRapNavigation)
                     .FirstOrDefault(p => p.IdPhim == id);
+
+                if (phim == null)
+                {
+                    return NotFound(); // Handle case where movie is not found
+                }
+
                 return View(phim);
             }
         }
+
         public IActionResult _Home()
         {
             using (var db = new QlrapPhimContext())
