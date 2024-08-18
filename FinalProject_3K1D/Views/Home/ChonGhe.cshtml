@@ -1,145 +1,303 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@{
+    Layout = null;
+
+}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Đặt Ghế</title>
-    @{
-        Layout = null;
-    }
+    <title>Chọn Ghế</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            font-family: 'Arial', sans-serif;
         }
 
-        .screen {
+        .screen-panel {
             text-align: center;
+            background: linear-gradient(45deg, #434343, #000);
+            color: white;
+            padding: 15px;
             margin-bottom: 20px;
-            font-weight: bold;
+            font-size: 1.4em;
+            border-radius: 8px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .seats {
+        .seats-panel {
             display: grid;
-            grid-template-columns: repeat(10, 40px); /* 10 ghế mỗi hàng */
-            grid-gap: 5px;
-            justify-content: center;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 12px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         .seat {
-            width: 40px;
-            height: 40px;
-            background-color: #4CAF50; /* Màu xanh cho ghế trống */
-            border: 1px solid #ddd;
-            cursor: pointer;
+            border-radius: 6px;
             text-align: center;
-            line-height: 40px;
             color: white;
+            padding: 20px 0;
+            font-weight: bold;
+            transition: transform 0.2s, background-color 0.3s;
+            cursor: pointer;
+        }
+
+            .seat:hover {
+                transform: scale(1.1);
+            }
+
+            /* Màu sắc cho từng loại ghế */
+            .seat.vip {
+                background-color: #ff5722;
+            }
+
+                .seat.vip:hover {
+                    background-color: #e64a19;
+                }
+
+            .seat.deluxe {
+                background-color: #00bcd4;
+            }
+
+                .seat.deluxe:hover {
+                    background-color: #00796b;
+                }
+
+            .seat.standard {
+                background-color: #8bc34a;
+            }
+
+                .seat.standard:hover {
+                    background-color: #689f38;
+                }
+
+            .seat.selected {
+                background-color: #ffeb3b; /* Màu vàng cho ghế được chọn */
+                color: #000; /* Màu chữ để dễ đọc hơn trên nền vàng */
+            }
+
+        .footer {
+            background: linear-gradient(45deg, #333, #555);
+            border-radius: 15px;
+            margin-top: 20px;
+            padding: 20px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 20px;
+        }
+
+            .info-panel p {
+                margin: 0;
+            }
+
+        .points-panel {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+            .points-panel input[type="number"] {
+                width: 100px;
+                margin-left: 10px;
+                border-radius: 5px;
+                padding: 5px;
+            }
+
+        .summary-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+            .summary-panel .summary-info {
+                flex: 1;
+            }
+
+                .summary-panel .summary-info p {
+                    margin: 5px 0;
+                }
+
+        .btn-container {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+            .btn-container .btn {
+                margin-left: 10px;
+                padding: 12px 30px;
+                font-size: 1.2em;
+                border-radius: 50px;
+                transition: background-color 0.3s, transform 0.2s;
+            }
+
+            .btn-container .btn-pay {
+                background-color: #ff9800;
+                border-color: #ff9800;
+            }
+
+                .btn-container .btn-pay:hover {
+                    background-color: #e65100;
+                    transform: scale(1.05);
+                }
+
+            .btn-container .btn-cancel {
+                background-color: #f44336;
+                border-color: #f44336;
+            }
+
+                .btn-container .btn-cancel:hover {
+                    background-color: #c62828;
+                    transform: scale(1.05);
+                }
+
+        /* Phần chú thích */
+        .legend-panel {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .legend span {
+            display: inline-block;
+            margin: 0 15px;
+            padding: 5px 15px;
+            border-radius: 5px;
             font-weight: bold;
         }
 
-        .seat.selected {
-            background-color: #FF5722; /* Màu cam khi ghế được chọn */
-        }
-
-        .seat.occupied {
-            background-color: #444; /* Màu xám cho ghế đã đặt */
-            cursor: not-allowed;
-        }
-
-        .btn-payment {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #FF5722;
+        .legend .vip {
+            background-color: #ff5722;
             color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
         }
 
-        .btn-payment:hover {
-            background-color: #e64a19;
+        .legend .deluxe {
+            background-color: #00bcd4;
+            color: white;
         }
+
+        .legend .standard {
+            background-color: #8bc34a;
+            color: white;
+        }
+
+        .legend .selected {
+            background-color: #ffeb3b;
+            color: #000;
+        }
+
+        .legend .booked {
+            background-color: #b0bec5; /* Màu xám nhạt */
+            color: #000; /* Màu chữ đen để dễ đọc hơn trên nền xám nhạt */
+        }
+
     </style>
 </head>
 <body>
+    <div class="container mt-4">
+        <!-- Panel Màn Hình -->
+        <div class="screen-panel">
+            Màn Hình
+        </div>
 
-    <h2>Chọn Ghế</h2>
-    <div class="screen">Màn Hình</div>
-    <p>User ID: @ViewBag.UserId</p>
-    <p><strong>Mã phim:</strong> @ViewBag.MovieId</p>
-    <p><strong>Giờ chiếu đã chọn:</strong>
-        <ul>
-            @foreach (var time in ViewBag.SelectedTimes)
-            {
-                        <li>@time</li>
-            }
-        </ul>
-    </p>
-    <!-- Tạo hàng ghế 7x10 -->
-    <div class="seats">
-        @for (int i = 0; i < 7; i++)
-        {
-            @for (int j = 0; j < 10; j++)
-            {
-                var seatId = "Seat" + (i * 10 + j + 1); 
-                        <div class="seat" id="@seatId" onclick="selectSeat('@seatId')">@seatId</div>
-            }
-        }
-    </div>
+        <!-- Panel Ghế -->
+        <div class="seats-panel">
+            <!-- Tạo Ghế Tự Động -->
+            <script>
+                const seatPanel = document.querySelector('.seats-panel');
+                const rows = 8;
+                const columns = 10;
+                const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-    <button class="btn-payment" onclick="proceedToPayment()">Thanh Toán</button>
+                for (let i = 0; i < rows; i++) {
+                    for (let j = 0; j < columns; j++) {
+                        const seat = document.createElement('div');
+                        seat.classList.add('seat');
 
-    <script>
-        var selectedSeats = [];
+                        // Thêm màu sắc cho từng hàng
+                        if (i === 0) {
+                            seat.classList.add('vip');
+                        } else if (i === 1 || i === 2) {
+                            seat.classList.add('deluxe');
+                        } else {
+                            seat.classList.add('standard');
+                        }
 
-        function selectSeat(seatId) {
-            var seat = document.getElementById(seatId);
-            if (seat.classList.contains('occupied')) {
-                return; // Không thể chọn ghế đã đặt
-            }
+                        seat.textContent = `${alphabet[i]}${j + 1}`;
 
-            if (seat.classList.contains('selected')) {
-                seat.classList.remove('selected');
-                selectedSeats = selectedSeats.filter(id => id !== seatId);
-            } else {
-                seat.classList.add('selected');
-                selectedSeats.push(seatId);
-            }
-        }
+                        // Thêm sự kiện chọn ghế
+                        seat.addEventListener('click', () => {
+                            if (seat.classList.contains('selected')) {
+                                seat.classList.remove('selected');
+                            } else {
+                                seat.classList.add('selected');
+                            }
+                        });
 
-        function proceedToPayment() {
-            if (selectedSeats.length === 0) {
-                alert("Vui lòng chọn ít nhất một ghế.");
-                return;
-            }
-
-            // Gửi thông tin về ghế đã chọn, mã phim và giờ chiếu đến server
-            fetch('/Home/SaveBookingSession', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': '@Html.AntiForgeryToken()' // Bảo mật CSRF
-                },
-                body: JSON.stringify({
-                    movieId: '@ViewBag.MovieId', // Lấy ID phim từ ViewBag
-                    selectedTimes: @Html.Raw(Json.Serialize(ViewBag.SelectedTimes)), // Lấy giờ chiếu từ ViewBag
-                    selectedSeats: selectedSeats // Gửi danh sách ghế đã chọn
-                })
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Có lỗi xảy ra');
+                        seatPanel.appendChild(seat);
+                    }
                 }
-                return response.json();
-            }).then(data => {
-                alert("Thông tin đã được lưu vào session!");
-                window.location.href = "/Home/Payment"; // Chuyển đến trang thanh toán
-            }).catch(error => {
-                console.error('Error:', error);
-                alert("Đã xảy ra lỗi khi lưu thông tin.");
-            });
-        }
-    </script>
+            </script>
+        </div>
+
+        <!-- Panel Chú Thích -->
+        <div class="legend-panel mt-4">
+            <div class="legend">
+                <span class="vip">VIP</span>
+                <span class="deluxe">Deluxe</span>
+                <span class="standard">Standard</span>
+                <span class="selected">Ghế đang chọn </span>
+                <span class="booked">Ghế đã được đặt</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer mt-4">
+            <div class="footer-content">
+                <div class="info-panel">
+                    <p><strong>Thông tin phim:</strong> Avengers: Endgame</p>
+                    <p><strong>Giờ Chiếu:</strong></p>
+                    <p><strong>Điểm tích lũy:</strong> 1000 điểm</p>
+                    <div class="points-panel">
+                        <label for="points"><strong>Sử dụng điểm tích lũy:</strong></label>
+                        <input type="number" id="points" min="0" max="1000" step="10" value="0">
+                    </div>
+                </div>
+                <div class="summary-panel">
+                    <div class="summary-info">
+                        <p><strong>Tạm tính:</strong> 200.000 VNĐ</p>
+                        <p><strong>Giảm giá:</strong> </p>
+                        <p><strong>Tổng cộng:</strong> 200.000 VNĐ</p>
+                    </div>
+                    <div class="btn-container">
+                        <button type="button" class="btn btn-cancel">Hủy</button>
+                        <button type="button" class="btn btn-pay btn-warning">Thanh Toán</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

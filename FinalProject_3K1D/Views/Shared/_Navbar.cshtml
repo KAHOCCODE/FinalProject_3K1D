@@ -22,8 +22,19 @@
                 <li><a href="#"><i class="fas fa-phone-alt"></i> Contact</a></li>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <span>Chào, @User.Identity.Name!</span>
-                    <li><a href="#" id="logoutButton"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn"><i class="fas fa-user"></i> Chào, @User.Identity.Name!</a>
+                        <div class="dropdown-content">
+                            <a asp-controller="AccountKH" asp-action="Profile"><i class="fas fa-user-circle"></i> Profile</a>
+                            <a asp-controller="Transaction" asp-action="History"><i class="fas fa-history"></i> Lịch sử giao dịch</a>
+                            <form id="logoutForm" asp-controller="AccountKH" asp-action="Logout" method="post">
+                                <button type="submit" id="logoutButton" style="all: unset; cursor: pointer;">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
+                        </div>
+
+                    </li>
                 }
                 else
                 {
@@ -53,11 +64,13 @@
                     cancelButtonText: 'Hủy'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Redirect to logout action
-                        window.location.href = '@Url.Action("Login", "AccountKH")';
+                        // Submit the logout form
+                        document.getElementById('logoutForm').submit();
                     }
                 });
             });
         }
     });
+
+
 </script>
