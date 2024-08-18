@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FinalProject_3K1D.Models;
-using FinalProject_3K1D.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
 using Microsoft.AspNetCore.Identity;
+using FinalProject_3K1D.ViewModels;
 
 namespace FinalProject_3K1D.Controllers
 {
@@ -241,14 +241,124 @@ namespace FinalProject_3K1D.Controllers
         }
         #endregion
 
-        #region
+        #region Profile
         public IActionResult Profile()
         {
-            return View();
-           
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "AccountKH");
+            }
+
+            var khachHang = _context.KhachHangs.FirstOrDefault(kh => kh.IdKhachHang == userId);
+            if (khachHang == null)
+            {
+                return RedirectToAction("Login", "AccountKH");
+            }
+
+            return View(khachHang);
+
         }
+
+        [HttpPost]
+        public IActionResult UpdateProfile(KhachHang updatedKhachHang)
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "AccountKH");
+            }
+
+            var khachHang = _context.KhachHangs.FirstOrDefault(kh => kh.IdKhachHang == userId);
+            if (khachHang == null)
+            {
+                return RedirectToAction("Login", "AccountKH");
+            }
+
+            // Cập nhật thông tin (trừ SDT và Điểm Tích Lũy)
+            khachHang.HoTen = updatedKhachHang.HoTen;
+            khachHang.NgaySinh = updatedKhachHang.NgaySinh;
+            khachHang.Email = updatedKhachHang.Email;
+            khachHang.Cccd = updatedKhachHang.Cccd;
+            khachHang.DiaChi = updatedKhachHang.DiaChi;
+
+            _context.Update(khachHang);
+            _context.SaveChanges();
+
+            return RedirectToAction("Profile");
+        }
+
         #endregion
 
+        #region Change Password
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userEmail = User.Identity?.Name;
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    ModelState.AddModelError("", "Người dùng không xác định.");
+                    return View(model);
+                }
+
+                var user = await _context.KhachHangs
+                    .FirstOrDefaultAsync(kh => kh.Email == userEmail);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "Người dùng không tồn tại.");
+                    return View(model);
+                }
+
+                // Using PasswordHasher for hashing passwords
+                var passwordHasher = new PasswordHasher<KhachHang>();
+
+                // Check current password
+                if (passwordHasher.VerifyHashedPassword(user, user.PassKh, model.OldPassword) == PasswordVerificationResult.Failed)
+                {
+                    ModelState.AddModelError("", "Mật khẩu hiện tại không đúng.");
+                    return View(model);
+                }
+
+                // Check if the new password is the same as the old one
+                if (passwordHasher.VerifyHashedPassword(user, user.PassKh, model.NewPassword) != PasswordVerificationResult.Failed)
+                {
+                    ModelState.AddModelError("", "Mật khẩu mới không thể giống mật khẩu cũ.");
+                    return View(model);
+                }
+
+                // Hash new password and update
+                user.PassKh = passwordHasher.HashPassword(user, model.NewPassword);
+
+                try
+                {
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Mật khẩu đã được thay đổi thành công!";
+                    return RedirectToAction("Profile");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Đã xảy ra lỗi khi thay đổi mật khẩu. Vui lòng thử lại.");
+                    Console.WriteLine($"Error: {ex.Message}");
+                }
+            }
+
+            return View(model);
+        }
+
+
+
+        #endregion
     }
 }
 
