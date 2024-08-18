@@ -201,45 +201,43 @@
     <script src="path/to/your/bootstrap.bundle.min.js"></script>
     <script>
         function bookTickets() {
-            const selectedTimes = [];
-            document.querySelectorAll('input[name="selectedTimes"]:checked').forEach(function (checkbox) {
-                selectedTimes.push(checkbox.value);
-            });
+    const selectedTime = document.querySelector('input[name="selectedTime"]:checked');
 
-            if (selectedTimes.length === 0) {
-                alert("Vui lòng chọn ít nhất một giờ chiếu.");
-                return;
-            }
+    if (!selectedTime) {
+        alert("Vui lòng chọn một giờ chiếu.");
+        return;
+    }
 
-            fetch('/Home/SaveBookingSession', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': '@Html.AntiForgeryToken()'
-                },
-                body: JSON.stringify({
-                    movieId: '@Model.IdPhim',
-                    selectedTimes: selectedTimes,
-                    cinemaName: 'Tên rạp',
-                    roomName: 'Tên phòng'
-                })
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Có lỗi xảy ra');
-                }
-                return response.json();
-            }).then(data => {
-                if (!data.success) {
-                    alert(data.message);
-                    window.location.href = "/AccountKH/Login";
-                } else {
-                    alert(data.message);
-                    window.location.href = "/Home/ChonGhe";
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert("Đã xảy ra lỗi khi lưu thông tin.");
-            });
+    fetch('/Home/SaveBookingSession', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'RequestVerificationToken': '@Html.AntiForgeryToken()'
+        },
+        body: JSON.stringify({
+            movieId: '@Model.IdPhim',
+            selectedTimes: [selectedTime.value], // Lưu giờ chiếu đã chọn
+            cinemaName: 'Tên rạp',
+            roomName: 'Tên phòng'
+        })
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Có lỗi xảy ra');
         }
+        return response.json();
+    }).then(data => {
+        if (!data.success) {
+            alert(data.message);
+            window.location.href = "/AccountKH/Login";
+        } else {
+            alert(data.message);
+            window.location.href = "/Home/ChonGhe";
+        }
+    }).catch(error => {
+        console.error('Error:', error);
+        alert("Đã xảy ra lỗi khi lưu thông tin.");
+    });
+}
+
     </script>
 </body>
