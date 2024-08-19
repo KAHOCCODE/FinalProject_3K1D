@@ -21,7 +21,7 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             _logger = logger; // Initialize the logger
         }
 
-        // GET: /Admin/ScheduleManagement
+        #region Index
         public async Task<IActionResult> Index()
         {
             var lichChieus = await _context.LichChieus
@@ -32,7 +32,9 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
 
             return View(lichChieus);
         }
+        #endregion
 
+        #region Details
         [Route("Admin/ScheduleManagement/Details/{id}")]
         public async Task<IActionResult> Details(string id)
         {
@@ -54,8 +56,9 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
 
             return View(lichChieu);
         }
+        #endregion
 
-        // GET: /Admin/ScheduleManagement/Create
+        #region create
         [Route("Admin/ScheduleManagement/Create")]
         public IActionResult Create()
         {
@@ -63,10 +66,8 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             {
                 IdLichChieu = GenerateNewIdLichChieu()
             };
-
+            SetViewDataForSelectLists();
             ViewData["NextId"] = newLichChieu.IdLichChieu;
-            ViewData["IdPhim"] = new SelectList(_context.Phims, "IdPhim", "TenPhim");
-            ViewData["IdRap"] = new SelectList(_context.Raps, "IdRap", "TenRap");
             return View(newLichChieu);
         }
 
@@ -75,34 +76,27 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdLichChieu,GioChieu,IdPhongChieu,GiaVe,IdPhim,IdRap")] LichChieu lichChieu)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    if (string.IsNullOrEmpty(lichChieu.IdLichChieu))
-                    {
-                        lichChieu.IdLichChieu = GenerateNewIdLichChieu();
-                    }
+            lichChieu.IdLichChieu = GenerateNewIdLichChieu();
 
-                    _context.LichChieus.Add(lichChieu);
-                    await _context.SaveChangesAsync();
+            // Tìm kiếm Rạp và phòng chiếu để thêm vào Navigation Property
+            lichChieu.IdRapNavigation = await _context.Raps.FirstOrDefaultAsync(r => r.IdRap == lichChieu.IdRap);
+            lichChieu.IdPhongChieuNavigation = await _context.PhongChieus.FirstOrDefaultAsync(pc => pc.IdPhongChieu == lichChieu.IdPhongChieu);
 
-                    TempData["SuccessMessage"] = "Lịch chiếu đã được thêm thành công!";
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error occurred while creating LichChieu");
-                    TempData["ErrorMessage"] = "Có lỗi xảy ra khi thêm lịch chiếu.";
-                    return View(lichChieu);
-                }
-            }
+            _context.LichChieus.Add(lichChieu);
+            await _context.SaveChangesAsync();
 
-            ViewData["IdPhim"] = new SelectList(_context.Phims, "IdPhim", "TenPhim", lichChieu.IdPhim);
-            ViewData["IdRap"] = new SelectList(_context.Raps, "IdRap", "TenRap", lichChieu.IdRap);
+            TempData["SuccessMessage"] = "Lịch chiếu đã được thêm thành công!";
+            return RedirectToAction("Index");
+
+            SetViewDataForSelectLists(lichChieu);
             return View(lichChieu);
         }
 
+        private void SetViewDataForSelectLists(LichChieu lichChieu = null)
+        {
+            ViewData["IdPhim"] = new SelectList(_context.Phims, "IdPhim", "TenPhim", lichChieu?.IdPhim);
+            ViewData["IdRap"] = new SelectList(_context.Raps, "IdRap", "TenRap", lichChieu?.IdRap);
+        }
 
         [HttpGet]
         public JsonResult GetPhongChieuByRap(string idRap)
@@ -123,7 +117,7 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
 
             if (!existingIds.Any())
             {
-                return "LC001";
+                return "LC01";
             }
 
             int maxNumber = existingIds
@@ -135,8 +129,9 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                 .Max();
 
             var newNumber = maxNumber + 1;
-            return "LC" + newNumber.ToString("D3");
+            return "LC" + newNumber.ToString("D2");
         }
+        #endregion
 
         #region edit
         [Route("Admin/ScheduleManagement/Edit/{id}")]
