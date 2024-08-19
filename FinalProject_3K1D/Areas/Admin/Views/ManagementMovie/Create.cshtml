@@ -1,85 +1,129 @@
-﻿@model FinalProject_3K1D.Models.LichChieu
+﻿@model FinalProject_3K1D.Models.Phim
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
     var nextId = ViewData["NextId"] as string;
 }
-
 <div class="container mt-4">
     <div class="card border-0 shadow-lg rounded-3">
         <div class="card-header" style="background-color: #b66dff; color: white;">
-            <h4 class="mb-0 text-center">Create New Lich Chieu</h4>
+            <h4 class="mb-0 text-center">Create New Phim</h4>
         </div>
         <div class="card-body p-4">
-            <form id="createForm" asp-action="Create">
+            <form id="createForm" asp-action="Create" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="IdLichChieu" class="form-control border-primary" id="floatingIdLichChieu" placeholder="ID Lich Chieu" readonly value="@nextId" />
-                            <label for="floatingIdLichChieu">Mã Lịch Chiếu</label>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input asp-for="GioChieu" type="datetime-local" class="form-control border-primary" id="floatingGioChieu" />
-                            <label for="floatingGioChieu">Giờ Chiếu</label>
-                            <div class="form-text text-danger">
-                                <span asp-validation-for="GioChieu"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <select asp-for="IdPhongChieu" class="form-control border-primary" id="floatingIdPhongChieu">
-                                <option value="">Chọn Phòng Chiếu...</option>
-                                @* Populate options dynamically *@
-                            </select>
-                            <label for="floatingIdPhongChieu">Phòng Chiếu</label>
-                            <div class="form-text text-danger">
-                                <span asp-validation-for="IdPhongChieu"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <input asp-for="GiaVe" type="number" min="0" class="form-control border-primary" id="floatingGiaVe" placeholder="Giá Vé" />
-                            <label for="floatingGiaVe">Giá Vé</label>
-                            <div class="form-text text-danger">
-                                <span asp-validation-for="GiaVe"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <select asp-for="IdPhim" class="form-control border-primary" id="floatingIdPhim">
-                                <option value="">Chọn Phim...</option>
-                                @* Populate options dynamically *@
-                            </select>
-                            <label for="floatingIdPhim">Phim</label>
+                            <input asp-for="IdPhim" class="form-control border-primary" id="floatingIdPhim" placeholder="ID Phim" readonly value="@nextId" />
+                            <label for="floatingIdPhim">Mã Phim</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="IdPhim"></span>
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="TenPhim" class="form-control border-primary" id="floatingTenPhim" placeholder="Tên Phim" />
+                            <label for="floatingTenPhim">Tên Phim</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="TenPhim"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="MoTa" class="form-control border-primary" id="floatingMoTa" placeholder="Mô Tả"></textarea>
+                            <label for="floatingMoTa">Mô Tả</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="MoTa"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="ThoiLuong" type="number" min="1" class="form-control border-primary" id="floatingThoiLuong" placeholder="Thời Lượng (phút)" />
+                            <label for="floatingThoiLuong">Thời Lượng (phút)</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="ThoiLuong"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="NgayKhoiChieu" type="date" class="form-control border-primary" id="floatingNgayKhoiChieu" />
+                            <label for="floatingNgayKhoiChieu">Ngày Khởi Chiếu</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="NgayKhoiChieu"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="NgayKetThuc" type="date" class="form-control border-primary" id="floatingNgayKetThuc" />
+                            <label for="floatingNgayKetThuc">Ngày Kết Thúc</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="NgayKetThuc"></span>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <select asp-for="IdRap" class="form-control border-primary" id="floatingIdRap">
-                                <option value="">Chọn Rạp...</option>
-                                @* Populate options dynamically *@
+                            <select asp-for="QuocGiaSanXuat" class="form-control border-primary" id="QuocGiaSanXuat">
+                                <option value="">Chọn quốc gia...</option>
+                                @* Dynamically populated countries *@
+                                @* Options will be populated dynamically *@
                             </select>
-                            <label for="floatingIdRap">Rạp</label>
+                            <label for="floatingQuocGiaSanXuat">Quốc Gia Sản Xuất</label>
+                            <label for="QuocGiaSanXuat">Quốc Gia Sản Xuất</label>
                             <div class="form-text text-danger">
-                                <span asp-validation-for="IdRap"></span>
+                                <span asp-validation-for="QuocGiaSanXuat"></span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="DaoDien" class="form-control border-primary" id="floatingDaoDien" placeholder="Đạo Diễn" />
+                            <label for="floatingDaoDien">Đạo Diễn</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="DaoDien"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="NamSx" type="number" min="1900" max="@DateTime.Now.Year" class="form-control border-primary" id="floatingNamSx" placeholder="Năm Sản Xuất" />
+                            <label for="floatingNamSx">Năm Sản Xuất</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="NamSx"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <select asp-for="DinhDangPhim" class="form-control border-primary" id="floatingDinhDangPhim">
+                                <option value="2D">2D</option>
+                                <option value="3D">3D</option>
+                                <option value="IMAX">IMAX</option>
+                            </select>
+                            <label for="floatingDinhDangPhim">Định Dạng Phim</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="DinhDangPhim"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="ApPhich" type="file" class="form-control border-primary" id="floatingApPhich" />
+                            <label for="floatingApPhich">Áp Phích</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="ApPhich"></span>
+                            </div>
+                        </div>
+                        <div id="imagePreview" class="mt-3">
+                            <!-- Preview image will be displayed here -->
                         </div>
                     </div>
                 </div>
@@ -92,17 +136,35 @@
         </div>
     </div>
 </div>
-
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+    // JavaScript to handle image preview
+    document.getElementById('floatingApPhich').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById('imagePreview');
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = 'Poster Preview';
+                img.style.maxHeight = '200px';
+                img.style.maxWidth = '200px';
+                img.style.objectFit = 'contain';
+                preview.innerHTML = ''; // Clear previous previews
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = '<span>Chưa có ảnh</span>';
+        }
+    });
     document.getElementById('createForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Prevent the default form submission
-
         const form = event.target;
         const formData = new FormData(form);
-
         // Example validation: Check if all fields are filled (customize as needed)
         let isValid = true;
         formData.forEach((value, key) => {
@@ -115,13 +177,12 @@
                 });
             }
         });
-
         if (isValid) {
             // Submit the form if valid (or simulate a successful submission)
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'Lịch Chiếu created successfully!'
+                text: 'Phim created successfully!'
             }).then(() => {
                 form.submit(); // Submit the form after showing the success message
             });
