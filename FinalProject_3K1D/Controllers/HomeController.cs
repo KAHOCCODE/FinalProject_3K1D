@@ -185,20 +185,41 @@ public class HomeController : Controller
         {
             var seatIds = HttpContext.Session.GetString("SelectedSeatIds");
             var totalAmount = HttpContext.Session.GetInt32("TotalAmount");
+            var movieId = HttpContext.Session.GetString("MovieId");
+            var userId = HttpContext.Session.GetString("UserId");
+            var selectedLichChieuId = HttpContext.Session.GetString("SelectedLichChieuId");
 
-            if (string.IsNullOrEmpty(seatIds) || totalAmount == null)
+            if (string.IsNullOrEmpty(seatIds) || totalAmount == null || string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(userId))
             {
-                // If data is missing, show an error message
-                ViewBag.ErrorMessage = "Dữ liệu ghế hoặc tổng cộng không hợp lệ. Vui lòng chọn lại ghế.";
-                return View("ChonGhe"); // Redirect back to seat selection
+                // Nếu dữ liệu bị thiếu, hiển thị thông báo lỗi
+                ViewBag.ErrorMessage = "Dữ liệu không hợp lệ. Vui lòng chọn lại.";
+                return View("ChonGhe"); // Redirect lại trang chọn ghế
             }
 
-            // Pass the seat IDs and total amount to the view for payment processing
-            ViewBag.SelectedSeatIds = seatIds;
-            ViewBag.TotalAmount = totalAmount;
+            using (var db = new QlrapPhimContext())
+            {
+                var movie = db.Phims.FirstOrDefault(p => p.IdPhim == movieId);
+                var lichChieu = db.LichChieus
+                    .Include(l => l.IdRapNavigation)
+                    .FirstOrDefault(l => l.IdLichChieu == selectedLichChieuId);
+                var customer = db.KhachHangs.FirstOrDefault(u => u.IdKhachHang == userId);
+
+                if (movie == null || lichChieu == null || customer == null)
+                {
+                    return RedirectToAction("Index", "Home"); // Redirect nếu dữ liệu không tìm thấy
+                }
+
+                // Truyền dữ liệu vào ViewBag
+                ViewBag.MovieName = movie.TenPhim;
+                ViewBag.CustomerName = customer.HoTen; // Giả sử tên khách hàng lưu trong UserName
+                ViewBag.GioChieu = lichChieu.GioChieu;
+                ViewBag.SelectedSeatIds = seatIds;
+                ViewBag.TotalAmount = totalAmount;
+            }
 
             return View();
         }
+
 
 
     }
