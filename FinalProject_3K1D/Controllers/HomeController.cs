@@ -158,28 +158,48 @@ public class HomeController : Controller
         }
 
 
+        [HttpPost]
+        public IActionResult SavePaymentDetails([FromBody] PaymentDetailsModel model)
+        {
+            if (model.SeatIds == null || model.TotalAmount <= 0)
+            {
+                return Json(new { success = false, message = "Dữ liệu ghế hoặc tổng cộng không hợp lệ." });
+            }
+
+            // Save the seat IDs and total amount into session
+            HttpContext.Session.SetString("SelectedSeatIds", string.Join(",", model.SeatIds));
+            HttpContext.Session.SetInt32("TotalAmount", model.TotalAmount);
+
+            return Json(new { success = true });
+        }
+
+        // Model to receive data from the client
+        public class PaymentDetailsModel
+        {
+            public List<string> SeatIds { get; set; }
+            public int TotalAmount { get; set; }
+        }
 
 
         public IActionResult Payment()
         {
-            var movieId = HttpContext.Session.GetString("MovieId");
-            var selectedTimesJson = HttpContext.Session.GetString("SelectedTimes");
-            var selectedSeatsJson = HttpContext.Session.GetString("SelectedSeats");
+            var seatIds = HttpContext.Session.GetString("SelectedSeatIds");
+            var totalAmount = HttpContext.Session.GetInt32("TotalAmount");
 
-            if (string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(selectedTimesJson) || string.IsNullOrEmpty(selectedSeatsJson))
+            if (string.IsNullOrEmpty(seatIds) || totalAmount == null)
             {
-                return RedirectToAction("Index", "Home"); // Chuyển hướng nếu thông tin không tồn tại trong session
+                // If data is missing, show an error message
+                ViewBag.ErrorMessage = "Dữ liệu ghế hoặc tổng cộng không hợp lệ. Vui lòng chọn lại ghế.";
+                return View("ChonGhe"); // Redirect back to seat selection
             }
 
-            var selectedTimes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(selectedTimesJson);
-            var selectedSeats = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(selectedSeatsJson);
-
-            ViewBag.MovieId = movieId;
-            ViewBag.SelectedTimes = selectedTimes;
-            ViewBag.SelectedSeats = selectedSeats;
+            // Pass the seat IDs and total amount to the view for payment processing
+            ViewBag.SelectedSeatIds = seatIds;
+            ViewBag.TotalAmount = totalAmount;
 
             return View();
         }
+
 
     }
 }
