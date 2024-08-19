@@ -220,7 +220,9 @@ public class HomeController : Controller
             return View();
         }
 
-
-
+        public IActionResult Huyve()
+        { 
+            return View();
+        }         
     }
 }
