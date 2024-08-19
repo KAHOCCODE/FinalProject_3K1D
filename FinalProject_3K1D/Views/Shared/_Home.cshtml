@@ -83,7 +83,6 @@
                                                 <i class="fa-solid fa-star${i < Math.floor(slide.stars) ? '' : '-half-stroke'}"></i>
                                             `).join('')}
                                         </div>
-                                        <p>${slide.description}</p>
                                         <div class="genre">
                                             ${slide.genres.map(genre => `<a href="#" class="category">${genre}</a>`).join('')}
                                         </div>
@@ -146,93 +145,6 @@
         </div>
     </div>
 </div>
-   @*  <!-- Popular Movies Section -->
- <div class="show">
-    <div class="tv_show">
-        <h1>Movies Now Showing</h1>
-        <div class="box">
-                @foreach (var phim in Model) // Filter for movies that are now showing
-                {
-                            <div class="card">
-                                <div class="details">
-                                    <div class="left">
-                                        <p class="name">@phim.TenPhim</p>
-                                        <div class="date_quality">
-                                            <p class="quality">@phim.DinhDangPhim</p> <!-- Assuming quality is HD, you can replace this with actual data if available -->
-                                            <p class="date">@phim.NamSx</p>
-                                        </div>
-                                        <p class="category">
-                                    @string.Join("/", phim.IdTheLoais.Select(t => t.TenTheLoai))
-                                        </p>
-                                        <div class="info">
-                                            <div class="time">
-                                                <i class="fa-regular fa-clock"></i>
-                                                <p>@phim.ThoiLuong min</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="right">
-                                        <!-- Ticket Booking -->
-                                        <div class="ticket-booking">
-                                            <i class="fa-solid fa-ticket"></i>
-                                            <a href="/Home/Detail?id=@phim.IdPhim">Chi tiết</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <img src="~/images/@phim.ApPhich" alt="@phim.TenPhim"> <!-- Replace with actual image path -->
-                            </div>
-                }
-        </div>
-    </div>
-</div>
-    <!-- test-->
-    <!-- Upcoming Movies Section -->
- <div class="show">
-    <div class="tv_show">
-        <h1>Movies Now Showing</h1>
-        <div class="box">
-                @if (Model != null && Model.Any())
-                {
-                    @foreach (var phim in Model)
-                    {
-                <div class="card">
-                    <div class="details">
-                        <div class="left">
-                            <p class="name">@phim.TenPhim</p>
-                            <div class="date_quality">
-                                <p class="quality">@phim.DinhDangPhim</p>
-                                <p class="date">@phim.NamSx</p>
-                            </div>
-                            <p class="category">
-                                        @string.Join("/", phim.IdTheLoais.Select(t => t.TenTheLoai))
-                            </p>
-                            <div class="info">
-                                <div class="time">
-                                    <i class="fa-regular fa-clock"></i>
-                                    <p>@phim.ThoiLuong min</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="right">
-                            <div class="ticket-booking">
-                                <i class="fa-solid fa-ticket"></i>
-                                <a href="/Home/Detail?id=@phim.IdPhim">Chi tiết</a>
-                            </div>
-                        </div>
-                    </div>
-                    <img src="~/images/@phim.ApPhich" alt="@phim.TenPhim">
-                </div>
-                    }
-                }
-                else
-                {
-        <p>Không có phim nào được hiển thị.</p>
-                }
-
-        </div>
-    </div>
-</div>
-    <!-- World Best TV Show Section --> *@
    
 </body>
 </html>

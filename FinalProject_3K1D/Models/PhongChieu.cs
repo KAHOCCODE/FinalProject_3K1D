@@ -14,5 +14,18 @@ public partial class PhongChieu
     public virtual Rap? IdRapNavigation { get; set; }
 
     public virtual ICollection<LichChieu> LichChieus { get; set; } = new List<LichChieu>();
+    //lấy tên rạp
+    public string TenRap
+    {
+        get
+        {
+            if (IdRapNavigation != null)
+            {
+                return IdRapNavigation.TenRap;
+            }
+            return "";
+        }
+    }
+
 
 }

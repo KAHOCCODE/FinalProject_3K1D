@@ -20,9 +20,42 @@ public partial class LichChieu
 
     public virtual Phim? IdPhimNavigation { get; set; }
 
-    public virtual Rap? IdRapNavigation { get; set; }
+    public virtual Rap? IdRapNavigation { get; set; } 
 
     public virtual PhongChieu IdPhongChieuNavigation { get; set; } = null!;
 
     public virtual ICollection<Ve> Ves { get; set; } = new List<Ve>();
+    //lấy tên phòng
+    public string TenPhong
+    {
+        get
+        {
+            if (IdPhongChieuNavigation != null)
+            {
+                return IdPhongChieuNavigation.TenPhong;
+            }
+            else
+            {
+                return "Unknown";
+            }
+        }
+    }
+    //lấy tên rạp
+
+    public string TenRap
+    {
+        get
+        {
+            if (IdRapNavigation != null)
+            {
+                return IdRapNavigation.TenRap;
+            }
+            else
+            {
+                return "Unknown";
+            }
+        }
+    }
+
+
 }

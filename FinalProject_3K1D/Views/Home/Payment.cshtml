@@ -131,7 +131,6 @@
     </style>
 
 
-    @RenderBody();
 </head>
 <body>
     <h1 class="payment-page-title">Trang Thanh Toán</h1>
@@ -155,19 +154,19 @@
             </div>
         </div>
         <div class="order-summary">
-            <h3>QUÁI VẬT KHÔNG GIAN</h3>
-            <p>Rạp: 3K1D Cinema</p>
-            <p>Thành Phố Hồ Chí Minh</p>
-            <p>Thời gian: 12:40 Thứ Hai 19/08/2024</p>
-            <p>Phòng chiếu: O6 | Số vé: 1 | Loại vé: _____</p>
-            <p>Loại ghế: Ghế Thường | Số ghế: E05</p>
+            <h3>Tên phim: <span class="highlight">@ViewBag.MovieName</span></h3>
+            <p>Tên khách hàng: @ViewBag.CustomerName</p>
+            <p>Giờ chiếu: @ViewBag.GioChieu</p>
+            <p>Ghế đã chọn: @ViewBag.SelectedSeatIds</p>
             <hr>
-            <h3>SỐ TIỀN CẦN THANH TOÁN: <span class="highlight">45,000VND</span></h3>
+            <h3>SỐ TIỀN CẦN THANH TOÁN: <span class="highlight">@ViewBag.TotalAmount VND</span></h3>
             <div class="buttons">
                 <button class="back-button">QUAY LẠI</button>
                 <button id="pay-button" class="pay-button" disabled>THANH TOÁN</button>
             </div>
-        </div>
+        
+
+    </div>
     </div>
 
     <script>
@@ -186,6 +185,13 @@
                 document.getElementById('pay-button').disabled = false;
             });
         });
+        document.getElementById('pay-button').addEventListener('click', function () {
+            // Xử lý thanh toán ở đây
+            alert("Thanh toán thành công!");
+            // Redirect đến trang xác nhận hoặc hóa đơn
+        });
+
     </script>
 </body>
+
 
