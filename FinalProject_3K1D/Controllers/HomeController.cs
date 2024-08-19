@@ -107,17 +107,12 @@ public class HomeController : Controller
             // Save the movie ID into the session
             HttpContext.Session.SetString("MovieId", model.MovieId);
 
-            // Save selected times into the session as a JSON string
-            HttpContext.Session.SetString("SelectedTimes", Newtonsoft.Json.JsonConvert.SerializeObject(model.SelectedTimes));
-
-            // Optionally, save selected seats as well
-            if (model.SelectedSeats != null)
-            {
-                HttpContext.Session.SetString("SelectedSeats", Newtonsoft.Json.JsonConvert.SerializeObject(model.SelectedSeats));
-            }
+            // Save selected LichChieuId into the session
+            HttpContext.Session.SetString("SelectedLichChieuId", model.SelectedLichChieuId);
 
             return Json(new { success = true });
         }
+
 
 
         // Model để nhận dữ liệu từ client
@@ -125,35 +120,44 @@ public class HomeController : Controller
         {
             // Retrieve data from session
             var movieId = HttpContext.Session.GetString("MovieId");
-            var selectedTimesJson = HttpContext.Session.GetString("SelectedTimes");
+            var selectedLichChieuId = HttpContext.Session.GetString("SelectedLichChieuId");
             var userId = HttpContext.Session.GetString("UserId"); // Retrieve UserId from session
 
-            if (string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(selectedTimesJson) || string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(selectedLichChieuId) || string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Index", "Home"); // Redirect if necessary information is missing from session
             }
 
-            var selectedTimes = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(selectedTimesJson);
-
-            // Fetch movie details using movieId
+            // Fetch movie details using movieId and selectedLichChieuId
             using (var db = new QlrapPhimContext())
             {
                 var movie = db.Phims.FirstOrDefault(p => p.IdPhim == movieId);
-                if (movie == null)
+                var lichChieu = db.LichChieus
+                    .Include(l => l.IdPhongChieuNavigation)
+                    .Include(l => l.IdRapNavigation)
+                    .FirstOrDefault(l => l.IdLichChieu == selectedLichChieuId);
+
+                if (movie == null || lichChieu == null)
                 {
-                    return RedirectToAction("Index", "Home"); // Redirect if movie not found
+                    return RedirectToAction("Index", "Home"); // Redirect if movie or schedule not found
                 }
 
-                // Pass movie details to the view
+                // Pass movie and schedule details to the view
                 ViewBag.MovieId = movieId;
-                ViewBag.SelectedTimes = selectedTimes;
+                ViewBag.SelectedLichChieuId = selectedLichChieuId;
                 ViewBag.UserId = userId;
                 ViewBag.MovieName = movie.TenPhim; // Pass TenPhim (movie name) to the view
                 ViewBag.TicketPrice = movie.GiaVe; // Ticket price
+
+                // Additional information from LichChieu
+                ViewBag.GioChieu = lichChieu.GioChieu; // Thời gian chiếu
+                ViewBag.TenPhong = lichChieu.IdPhongChieuNavigation.TenPhong; // Tên phòng
             }
 
             return View();
         }
+
+
 
 
         public IActionResult Payment()

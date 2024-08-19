@@ -185,25 +185,30 @@
         <!-- Booking Section -->
         <div class="booking-section">
             <h2>Lịch Chiếu</h2>
+            <div class="booking-section">
+            <h2>Lịch Chiếu</h2>
             <div class="time-buttons">
                 @foreach (var lichChieu in Model.LichChieus)
                 {
                     <label class="btn-time">
-                        <input type="checkbox" name="selectedTimes" value="@lichChieu.GioChieu">
+                        <input type="radio" name="selectedLichChieu" value="@lichChieu.IdLichChieu">
                         @lichChieu.GioChieu - Phòng: @(lichChieu.TenPhong ?? "Unknown")
                     </label>
                 }
             </div>
+
+
+
             <button class="btn-book" onclick="bookTickets()">Đặt Vé</button>
         </div>
     </div>
 
     <script src="path/to/your/bootstrap.bundle.min.js"></script>
     <script>
-        function bookTickets() {
-    const selectedTime = document.querySelector('input[name="selectedTime"]:checked');
+       function bookTickets() {
+    const selectedLichChieu = document.querySelector('input[name="selectedLichChieu"]:checked');
 
-    if (!selectedTime) {
+    if (!selectedLichChieu) {
         alert("Vui lòng chọn một giờ chiếu.");
         return;
     }
@@ -216,9 +221,7 @@
         },
         body: JSON.stringify({
             movieId: '@Model.IdPhim',
-            selectedTimes: [selectedTime.value], // Lưu giờ chiếu đã chọn
-            cinemaName: 'Tên rạp',
-            roomName: 'Tên phòng'
+            selectedLichChieuId: selectedLichChieu.value // Lưu IdLichChieu đã chọn
         })
     }).then(response => {
         if (!response.ok) {
@@ -238,6 +241,7 @@
         alert("Đã xảy ra lỗi khi lưu thông tin.");
     });
 }
+
 
     </script>
 </body>

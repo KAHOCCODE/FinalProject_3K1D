@@ -203,12 +203,8 @@
             <div class="footer-content">
                 <div class="info-panel">
                     <p><strong>Tên phim</strong> @ViewBag.MovieName</p>
-                    <p><strong>Giờ Chiếu</strong>
-                        @foreach (var time in ViewBag.SelectedTimes)
-                        {
-                            <li>@time</li>
-                        }
-                    </p>
+                     <p><strong>Giờ Chiếu:</strong> @ViewBag.GioChieu</p>
+                    <p><strong>Phòng Chiếu:</strong> @ViewBag.TenPhong</p>
                     <p><strong>Mã ghế ngồi:</strong> <span id="selected-seat-ids"></span></p>
                 </div>
                 <div class="summary-panel">
