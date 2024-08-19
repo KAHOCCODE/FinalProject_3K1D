@@ -220,7 +220,7 @@
             </div>
         </div>
     </div>
-    <script>
+   <script>
     const seatPanel = document.querySelector('.seats-panel');
     const rows = 8;
     const columns = 10;
@@ -338,9 +338,50 @@
     // Add event listener for the cancel button
     document.querySelector('.btn-cancel').addEventListener('click', cancelSelection);
 
+    // Add event listener for the payment button
+    document.querySelector('.btn-pay').addEventListener('click', () => {
+        // Get the selected seat IDs and total price
+        const selectedSeatsArray = Array.from(selectedSeats);
+        const totalAmount = totalPrice;
+
+        if (selectedSeatsArray.length === 0 || totalAmount === 0) {
+            alert("Bạn chưa chọn ghế hoặc tổng cộng không hợp lệ.");
+            return;
+        }
+
+        // Create a payload object
+        const payload = {
+            seatIds: selectedSeatsArray,
+            totalAmount: totalAmount
+        };
+
+        // Save the data to the session via an API call
+        fetch('/Home/SavePaymentDetails', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': '@Html.AntiForgeryToken()' // CSRF protection
+            },
+            body: JSON.stringify(payload)
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            if (data.success) {
+                // Redirect to the payment view
+                window.location.href = '/Home/Payment';
+            } else {
+                alert(data.message); // Display error message
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi lưu dữ liệu. Vui lòng thử lại.');
+        });
+    });
+
     updateTotalPrice();
     updateSelectedSeatDisplay();
 </script>
+
 
     
 </body>
