@@ -30,7 +30,7 @@ namespace FinalProject_3K1D.Controllers
 
         public IActionResult Index()
         {
-            using (var db = new QlrapPhimContext())
+            using (var db = new QlrapPhimContext()) 
             {
                 var phims = db.Phims
                     .Include(p => p.IdTheLoais)
@@ -191,13 +191,37 @@ namespace FinalProject_3K1D.Controllers
 
             if (string.IsNullOrEmpty(seatIds) || totalAmount == null || string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(userId))
             {
-                // Nếu dữ liệu bị thiếu, hiển thị thông báo lỗi
+                // If data is missing, display an error message
                 ViewBag.ErrorMessage = "Dữ liệu không hợp lệ. Vui lòng chọn lại.";
-                return View("ChonGhe"); // Redirect lại trang chọn ghế
+                return View("ChonGhe"); // Redirect to the seat selection page
             }
 
             using (var db = new QlrapPhimContext())
             {
+                // Generate a new ticket ID
+                int newTicketId = GenerateTicketId();
+
+                // Create a new ticket object
+                var newTicket = new Ve
+                {
+                    IdVe = newTicketId,
+                    IdKhachHang = userId,
+                    TrangThai = 0,
+                    LoaiVe = 0,
+                    IdLichChieu = selectedLichChieuId,
+                    TienBanVe = totalAmount,
+                    MaGheNgoi = seatIds,
+                    NgayMua = DateTime.Now
+                };
+
+                // Add the ticket to the database
+                db.Ves.Add(newTicket);
+                db.SaveChanges();
+
+                // Save the new ticket ID to the session
+                HttpContext.Session.SetInt32("TicketId", newTicket.IdVe);
+
+                // Fetch additional details for display
                 var movie = db.Phims.FirstOrDefault(p => p.IdPhim == movieId);
                 var lichChieu = db.LichChieus
                     .Include(l => l.IdRapNavigation)
@@ -206,19 +230,26 @@ namespace FinalProject_3K1D.Controllers
 
                 if (movie == null || lichChieu == null || customer == null)
                 {
-                    return RedirectToAction("Index", "Home"); // Redirect nếu dữ liệu không tìm thấy
+                    return RedirectToAction("Index", "Home"); // Redirect if data not found
                 }
 
-                // Truyền dữ liệu vào ViewBag
+                // Pass data to the ViewBag
                 ViewBag.MovieName = movie.TenPhim;
-                ViewBag.CustomerName = customer.HoTen; // Giả sử tên khách hàng lưu trong UserName
+                ViewBag.CustomerName = customer.HoTen;
                 ViewBag.GioChieu = lichChieu.GioChieu;
                 ViewBag.SelectedSeatIds = seatIds;
                 ViewBag.TotalAmount = totalAmount;
+                ViewBag.TicketId = newTicketId; // Pass the generated ticket ID to the view
+                ViewBag.CustomerId = userId;
+                ViewBag.LoaiVe = 0;
+                
+                ViewBag.TrangThai = 0;
+
             }
 
             return View();
         }
+
 
         public IActionResult Huyve()
         {
@@ -290,6 +321,24 @@ namespace FinalProject_3K1D.Controllers
                     // Log the exception (e.g., using a logging framework)
                     return StatusCode(500, "Internal server error: " + ex.Message);
                 }
+            }
+        }
+
+        private int GenerateTicketId()
+        {
+            using (var db = new QlrapPhimContext())
+            {
+                // Get the highest existing ticket ID
+                var lastTicket = db.Ves
+                    .OrderByDescending(v => v.IdVe)
+                    .FirstOrDefault();
+
+                if (lastTicket != null)
+                {
+                    // Increment the last ID by 1
+                    return lastTicket.IdVe + 1;
+                }
+                return 1; // Start with ID 1 if no tickets exist
             }
         }
 
