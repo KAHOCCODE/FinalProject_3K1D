@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinalProject_3K1D.Models;
 
@@ -31,7 +32,9 @@ public partial class Phim
     public virtual ICollection<LichChieu> LichChieus { get; set; } = new List<LichChieu>();
 
     public virtual ICollection<TheLoai> IdTheLoais { get; set; } = new List<TheLoai>();
-
+    // Thuộc tính để lưu trữ danh sách ID thể loại được chọn
+    [NotMapped]
+    public List<string> SelectedTheLoaiIds { get; set; } = new List<string>();
     public string TenTheoLoai
     {
         get

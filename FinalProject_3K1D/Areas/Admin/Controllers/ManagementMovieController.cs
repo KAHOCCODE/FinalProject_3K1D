@@ -1,5 +1,6 @@
 ﻿using FinalProject_3K1D.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace _3K1D_Final.Areas.Admin.Controllers
@@ -19,6 +20,7 @@ namespace _3K1D_Final.Areas.Admin.Controllers
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
             var movies = _context.Phims
+                .Include(p => p.IdTheLoais)
                 .Where(p => p.NgayKhoiChieu <= today && p.NgayKetThuc >= today);
 
             if (!string.IsNullOrEmpty(searchString))
@@ -37,6 +39,7 @@ namespace _3K1D_Final.Areas.Admin.Controllers
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
             var movies = _context.Phims
+                .Include(p => p.IdTheLoais)
                 .Where(p => p.NgayKetThuc < today);
 
             if (!string.IsNullOrEmpty(searchString))
@@ -55,6 +58,7 @@ namespace _3K1D_Final.Areas.Admin.Controllers
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
             var movies = _context.Phims
+                .Include(p => p.IdTheLoais)
                 .Where(p => p.NgayKhoiChieu > today);
 
             if (!string.IsNullOrEmpty(searchString))
@@ -74,6 +78,7 @@ namespace _3K1D_Final.Areas.Admin.Controllers
         {
             var nextId = GeneratePhimId();
             ViewData["NextId"] = nextId;
+            ViewBag.TheLoaiList = _context.TheLoais.ToList();
             return View();
         }
         [HttpPost]
@@ -94,14 +99,19 @@ namespace _3K1D_Final.Areas.Admin.Controllers
 
                     phim.ApPhich = apPhich.FileName; // Save the filename or path to your database
                 }
-
+                if (phim.SelectedTheLoaiIds != null && phim.SelectedTheLoaiIds.Count > 0)
+                {
+                    phim.IdTheLoais = _context.TheLoais
+                                       .Where(t => phim.SelectedTheLoaiIds.Contains(t.IdTheLoai))
+                                       .ToList();
+                }
                 // Save the movie to the database
                 _context.Add(phim);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-
+            ViewBag.TheLoaiList = _context.TheLoais.ToList();
             return View(phim);
         }
 

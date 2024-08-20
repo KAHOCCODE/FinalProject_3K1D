@@ -76,4 +76,34 @@ public partial class Ve
             }
         }
     }
+    public string TenPhong
+    {
+        get
+        {
+            if (IdLichChieuNavigation != null && IdLichChieuNavigation.IdPhongChieuNavigation != null)
+            {
+                return IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong;
+            }
+            else
+            {
+                return "Unknown";
+            }
+        }
+    }
+    //lấy giờ chiếu datetime
+    public DateTime GioChieu
+    {
+        get
+        {
+            if (IdLichChieuNavigation != null)
+            {
+                return IdLichChieuNavigation.GioChieu;
+            }
+            else
+            {
+                return DateTime.Now;
+            }
+        }
+    }
+
 }
