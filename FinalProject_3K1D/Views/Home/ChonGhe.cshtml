@@ -1,6 +1,8 @@
 ﻿@{
     Layout = null;
 }
+<!DOCTYPE html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -185,24 +187,35 @@
         .btn-back {
             display: inline-flex;
             align-items: center;
-            background: #ff5722; /* Màu nền của nút */
+            background: #ff5722;
             color: #fff;
             padding: 10px 20px;
             border-radius: 8px;
             font-size: 1rem;
-            text-decoration: none; /* Xóa gạch chân của liên kết */
+            text-decoration: none;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
             transition: background 0.3s, transform 0.3s;
-            margin-bottom: 20px; /* Khoảng cách dưới nút */
+            margin-bottom: 20px;
         }
 
             .btn-back:hover {
-                background: #e64a19; /* Màu nền khi hover */
+                background: #e64a19;
                 transform: scale(1.05);
             }
 
             .btn-back i {
-                margin-right: 8px; /* Khoảng cách giữa biểu tượng và văn bản */
+                margin-right: 8px;
+            }
+
+        .seat.booked {
+            background-color: #b0bec5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+            .seat.booked:hover {
+                background-color: #b0bec5;
+                transform: none;
             }
     </style>
 </head>
@@ -249,165 +262,208 @@
     </div>
 
     <script>
-        const seatPanel = document.querySelector('.seats-panel');
-        const rows = 8;
-        const columns = 10;
-        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const selectedSeats = new Set(); // Store selected seat IDs
-        const ticketPrice = @ViewBag.TicketPrice; // Example ticket price (in VND)
-        let totalPrice = 0; // Variable to store the total price
+        document.addEventListener('DOMContentLoaded', function () {
+            const seatPanel = document.querySelector('.seats-panel');
+            const rows = 8;
+            const columns = 10;
+            const alphabet = 'ABCDEFGH'; // Row labels from A to H
+            const selectedSeats = new Set(); // Store selected seat IDs
+            const ticketPrice = @ViewBag.TicketPrice; // Example ticket price (in VND)
+            let totalPrice = 0; // Variable to store the total price
 
-        // Function to update the total price display
-        const vipPrice = ticketPrice * 1.3;  // VIP seats cost 30% of standard price
-        const deluxePrice = ticketPrice * 1.2;  // Deluxe seats cost 20% of standard price
-        const standardPrice = ticketPrice;  // Standard seats
+            // Function to update the total price display
+            const vipPrice = ticketPrice * 1.3;  // VIP seats cost 30% more than standard price
+            const deluxePrice = ticketPrice * 1.2;  // Deluxe seats cost 20% more than standard price
+            const standardPrice = ticketPrice;  // Standard seats
 
-        function updateTotalPrice() {
-            totalPrice = 0;  // Reset total price
+            function updateTotalPrice() {
+                totalPrice = 0;  // Reset total price
 
-            selectedSeats.forEach(seatId => {
-                // Xác định loại ghế dựa trên ký tự đầu tiên (A, B, C là VIP và Deluxe)
-                const row = seatId.charAt(0);
+                selectedSeats.forEach(seatId => {
+                    // Determine seat type based on the row
+                    const row = seatId.charAt(0);
 
-                if (row === 'H') {
-                    totalPrice += vipPrice;  // Hàng H là VIP
-                } else if (row === 'G' || row === 'F') {
-                    totalPrice += deluxePrice;  // Hàng G và F là Deluxe
-                } else {
-                    totalPrice += standardPrice;  // Các hàng còn lại là Standard
-                }
-            });
-
-            // Cập nhật hiển thị tổng tiền
-            const totalElement = document.querySelector('.summary-info p:last-child');
-            totalElement.textContent = `Tổng cộng: ${totalPrice.toLocaleString()} VND`;
-        }
-
-        function updateSelectedSeatDisplay() {
-            const selectedSeatIdsElement = document.getElementById('selected-seat-ids');
-            selectedSeatIdsElement.textContent = Array.from(selectedSeats).join(', ');
-
-            // Save selected seats to session via an API call
-            saveSelectedSeatsToSession(Array.from(selectedSeats));
-        }
-
-        function saveSelectedSeatsToSession(seatIds) {
-            fetch('/Home/SaveSelectedSeats', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': '@Html.AntiForgeryToken()' // CSRF protection
-                },
-                body: JSON.stringify(seatIds)
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to save selected seats to session');
-                }
-                return response.json();
-            }).then(data => {
-                console.log('Selected seats saved to session:', data);
-            }).catch(error => {
-                console.error('Error:', error);
-            });
-        }
-
-        function cancelSelection() {
-            // Remove 'selected' class from all selected seats
-            selectedSeats.forEach(seatId => {
-                const seat = document.querySelector(`[data-seat="${seatId}"]`);
-                if (seat) {
-                    seat.classList.remove('selected');
-                }
-            });
-
-            // Clear the selectedSeats set
-            selectedSeats.clear();
-
-            // Update the display and total price
-            updateTotalPrice();
-            updateSelectedSeatDisplay();
-        }
-
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < columns; j++) {
-                const seat = document.createElement('div');
-                seat.classList.add('seat');
-                seat.setAttribute('data-seat', `${alphabet[i]}${j + 1}`);
-
-                // Assign classes based on row (VIP, Deluxe, Standard)
-                if (i === 0) {
-                    seat.classList.add('vip');
-                } else if (i === 1 || i === 2) {
-                    seat.classList.add('deluxe');
-                } else {
-                    seat.classList.add('standard');
-                }
-
-                const seatId = `${alphabet[i]}${j + 1}`;
-                seat.textContent = seatId;
-
-                seat.addEventListener('click', () => {
-                    if (!seat.classList.contains('selected')) {
-                        seat.classList.add('selected');
-                        selectedSeats.add(seatId);
+                    if (row === 'H') {
+                        totalPrice += vipPrice;  // Row H is VIP
+                    } else if (row === 'G' || row === 'F') {
+                        totalPrice += deluxePrice;  // Rows G and F are Deluxe
                     } else {
-                        seat.classList.remove('selected');
-                        selectedSeats.delete(seatId);
+                        totalPrice += standardPrice;  // All other rows are Standard
                     }
-
-                    updateTotalPrice();
-                    updateSelectedSeatDisplay();
                 });
 
-                seatPanel.appendChild(seat);
-            }
-        }
-
-        // Add event listener for the cancel button
-        document.querySelector('.btn-cancel').addEventListener('click', cancelSelection);
-
-        // Add event listener for the payment button
-        document.querySelector('.btn-pay').addEventListener('click', () => {
-            // Get the selected seat IDs and total price
-            const selectedSeatsArray = Array.from(selectedSeats);
-            const totalAmount = totalPrice;
-
-            if (selectedSeatsArray.length === 0 || totalAmount === 0) {
-                alert("Bạn chưa chọn ghế hoặc tổng cộng không hợp lệ.");
-                return;
+                // Update total price display
+                const totalElement = document.querySelector('#total-price');
+                totalElement.textContent = `${totalPrice.toLocaleString()} VND`;
             }
 
-            // Create a payload object
-            const payload = {
-                seatIds: selectedSeatsArray,
-                totalAmount: totalAmount
-            };
+            function updateSelectedSeatDisplay() {
+                const selectedSeatIdsElement = document.getElementById('selected-seat-ids');
+                selectedSeatIdsElement.textContent = Array.from(selectedSeats).join(', ');
 
-            // Save the data to the session via an API call
-            fetch('/Home/SavePaymentDetails', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': '@Html.AntiForgeryToken()' // CSRF protection
-                },
-                body: JSON.stringify(payload)
-            }).then(response => {
-                return response.json();
-            }).then(data => {
-                if (data.success) {
-                    // Redirect to the payment view
-                    window.location.href = '/Home/Payment';
-                } else {
-                    alert(data.message); // Display error message
+                // Save selected seats to session via an API call
+                saveSelectedSeatsToSession(Array.from(selectedSeats));
+            }
+
+            function saveSelectedSeatsToSession(seatIds) {
+                fetch('/Home/SaveSelectedSeats', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': '@Html.AntiForgeryToken()' // CSRF protection
+                    },
+                    body: JSON.stringify(seatIds)
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to save selected seats to session');
+                    }
+                    return response.json();
+                }).then(data => {
+                    console.log('Selected seats saved to session:', data);
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+
+            function cancelSelection() {
+                // Remove 'selected' class from all selected seats
+                selectedSeats.forEach(seatId => {
+                    const seat = document.querySelector(`[data-seat="${seatId}"]`);
+                    if (seat) {
+                        seat.classList.remove('selected');
+                    }
+                });
+
+                // Clear the selectedSeats set
+                selectedSeats.clear();
+
+                // Update the display and total price
+                updateTotalPrice();
+                updateSelectedSeatDisplay();
+            }
+            function fetchTakenSeats() {
+                fetch('/Home/TakenSeat')
+                    .then(response => response.json())
+                    .then(bookedSeats => {
+                        // Chuyển danh sách ghế thành một Set để dễ dàng kiểm tra sự tồn tại
+                        const takenSeatsSet = new Set(bookedSeats);
+
+                        // Tạo các ghế
+                        for (let i = 0; i < rows; i++) {
+                            for (let j = 0; j < columns; j++) {
+                                const seatId = `${alphabet[i]}${j + 1}`;
+                                const seat = document.createElement('div');
+                                seat.classList.add('seat');
+                                seat.setAttribute('data-seat', seatId);
+
+                                // Kiểm tra xem ghế có trong danh sách ghế đã đặt không
+                                if (takenSeatsSet.has(seatId)) {
+                                    seat.classList.add('booked');
+                                    seat.style.cursor = 'not-allowed';
+                                    seat.removeEventListener('click', handleSeatClick); // Gỡ bỏ sự kiện click cho ghế đã đặt
+                                } else {
+                                    // Gán lớp dựa trên hàng (VIP, Deluxe, Standard)
+                                    if (alphabet[i] === 'H') {
+                                        seat.classList.add('vip');
+                                    } else if (alphabet[i] === 'G' || alphabet[i] === 'F') {
+                                        seat.classList.add('deluxe');
+                                    } else {
+                                        seat.classList.add('standard');
+                                    }
+
+                                    seat.addEventListener('click', handleSeatClick);
+                                }
+
+                                seat.textContent = seatId;
+                                seatPanel.appendChild(seat);
+                            }
+                        }
+
+                        // Lấy danh sách ghế đã chọn từ phiên làm việc
+                        fetch('/Home/GetSelectedSeats')
+                            .then(response => response.json())
+                            .then(selectedSeats => {
+                                selectedSeats.forEach(seatId => {
+                                    const seat = document.querySelector(`[data-seat="${seatId}"]`);
+                                    if (seat && !seat.classList.contains('booked')) {
+                                        seat.classList.add('selected');
+                                        selectedSeats.add(seatId);
+                                    }
+                                });
+
+                                updateTotalPrice();
+                                updateSelectedSeatDisplay();
+                            })
+                            .catch(error => console.error('Error fetching selected seats:', error));
+                    })
+                    .catch(error => console.error('Error fetching taken seats:', error));
+            }
+
+            function handleSeatClick(event) {
+                const seat = event.currentTarget;
+                const seatId = seat.getAttribute('data-seat');
+
+                if (seat.classList.contains('booked')) {
+                    return; // Do nothing if the seat is booked
                 }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Có lỗi xảy ra khi lưu dữ liệu. Vui lòng thử lại.');
+
+                if (!seat.classList.contains('selected')) {
+                    seat.classList.add('selected');
+                    selectedSeats.add(seatId);
+                } else {
+                    seat.classList.remove('selected');
+                    selectedSeats.delete(seatId);
+                }
+
+                updateTotalPrice();
+                updateSelectedSeatDisplay();
+            }
+
+            // Fetch and display taken seats when the page loads
+            fetchTakenSeats();
+
+            // Add event listener for the cancel button
+            document.querySelector('.btn-cancel').addEventListener('click', cancelSelection);
+
+            // Add event listener for the payment button
+            document.querySelector('.btn-pay').addEventListener('click', () => {
+                // Get the selected seat IDs and total price
+                const selectedSeatsArray = Array.from(selectedSeats);
+                const totalAmount = totalPrice;
+
+                if (selectedSeatsArray.length === 0 || totalAmount === 0) {
+                    alert("Bạn chưa chọn ghế hoặc tổng cộng không hợp lệ.");
+                    return;
+                }
+
+                // Create a payload object
+                const payload = {
+                    seatIds: selectedSeatsArray,
+                    totalAmount: totalAmount
+                };
+
+                // Save the data to the session via an API call
+                fetch('/Home/SavePaymentDetails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': '@Html.AntiForgeryToken()' // CSRF protection
+                    },
+                    body: JSON.stringify(payload)
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Redirect to the payment view
+                            window.location.href = '/Home/Payment';
+                        } else {
+                            alert(data.message); // Display error message
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra khi lưu dữ liệu. Vui lòng thử lại.');
+                    });
             });
         });
-
-        updateTotalPrice();
-        updateSelectedSeatDisplay();
-    </script>
+</script>
 </body>
 </html>

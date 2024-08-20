@@ -115,20 +115,17 @@ namespace FinalProject_3K1D.Controllers
 
 
 
-        // Model để nhận dữ liệu từ client
         public IActionResult ChonGhe()
         {
-            // Retrieve data from session
             var movieId = HttpContext.Session.GetString("MovieId");
             var selectedLichChieuId = HttpContext.Session.GetString("SelectedLichChieuId");
-            var userId = HttpContext.Session.GetString("UserId"); // Retrieve UserId from session
+            var userId = HttpContext.Session.GetString("UserId");
 
             if (string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(selectedLichChieuId) || string.IsNullOrEmpty(userId))
             {
-                return RedirectToAction("Index", "Home"); // Redirect if necessary information is missing from session
+                return RedirectToAction("Index", "Home");
             }
 
-            // Fetch movie details using movieId and selectedLichChieuId
             using (var db = new QlrapPhimContext())
             {
                 var movie = db.Phims.FirstOrDefault(p => p.IdPhim == movieId);
@@ -139,22 +136,26 @@ namespace FinalProject_3K1D.Controllers
 
                 if (movie == null || lichChieu == null)
                 {
-                    return RedirectToAction("Index", "Home"); // Redirect if movie or schedule not found
+                    return RedirectToAction("Index", "Home");
                 }
 
-                // Pass movie and schedule details to the view
+                // Get the list of taken seats
+                var takenSeats = db.Ves
+                    .Where(v => v.IdLichChieu == selectedLichChieuId)
+                    .Select(v => v.MaGheNgoi)
+                    .ToList();
+
                 ViewBag.MovieId = movieId;
                 ViewBag.SelectedLichChieuId = selectedLichChieuId;
                 ViewBag.UserId = userId;
-                ViewBag.MovieName = movie.TenPhim; // Pass TenPhim (movie name) to the view
-                ViewBag.TicketPrice = movie.GiaVe; // Ticket price
+                ViewBag.MovieName = movie.TenPhim;
+                ViewBag.TicketPrice = movie.GiaVe;
+                ViewBag.GioChieu = lichChieu.GioChieu;
+                ViewBag.TenPhong = lichChieu.IdPhongChieuNavigation.TenPhong;
+                ViewBag.TakenSeats = takenSeats;
 
-                // Additional information from LichChieu
-                ViewBag.GioChieu = lichChieu.GioChieu; // Thời gian chiếu
-                ViewBag.TenPhong = lichChieu.IdPhongChieuNavigation.TenPhong; // Tên phòng
+                return View();
             }
-
-            return View();
         }
 
 
@@ -340,10 +341,35 @@ namespace FinalProject_3K1D.Controllers
                 return 1; // Start with ID 1 if no tickets exist
             }
         }
+        public IActionResult TakenSeat()
+        {
+            using (var db = new QlrapPhimContext())
+            {
+                // Lấy tất cả các giá trị trong cột MaGheNgoi từ cơ sở dữ liệu
+                var seatStrings = db.Ves
+                    .Select(v => v.MaGheNgoi)
+                    .ToList();
 
+                // Tạo một tập hợp để lưu ghế đã đặt
+                var bookedSeats = new HashSet<string>();
 
+                // Tách chuỗi và thêm các ghế vào tập hợp
+                foreach (var seatString in seatStrings)
+                {
+                    if (!string.IsNullOrEmpty(seatString))
+                    {
+                        var seats = seatString.Split(',');
+                        foreach (var seat in seats)
+                        {
+                            bookedSeats.Add(seat.Trim());
+                        }
+                    }
+                }
 
-
+                // Trả về danh sách ghế đã đặt dưới dạng JSON
+                return Json(bookedSeats.ToList());
+            }
+        }
     }
 }
 
