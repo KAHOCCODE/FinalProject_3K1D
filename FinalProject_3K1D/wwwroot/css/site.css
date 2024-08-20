@@ -4,102 +4,145 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
-
-/* Navigation Bar */
-nav {
-    background-color: #333;
+/* Navigation Container */
+.nav-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: #1c1c1c; /* Dark background for the navigation bar */
     color: #fff;
-    padding: 10px 0;
+    border-bottom: 3px solid #e50914; /* Accent color border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Darker shadow for depth */
 }
 
+/* Navigation Bar */
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 10px 30px; /* Adjusted padding for top and bottom */
+}
 
+/* Container */
 .container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    justify-content: space-between; /* Align items to both ends */
 }
 
-.logo h1 {
-    margin-left: auto;
-    font-size: 18px; /* Adjust the font size for logo text if needed */
+/* Logo and Search Container */
+.logo-search-container {
+    display: flex;
+    flex-direction: column; /* Stack logo and search bar vertically */
+    align-items: flex-start; /* Align items to the start (left) */
+    flex: 1;
 }
 
+/* Logo */
+.logo {
+    margin-right: 20px; /* Space between logo and search bar */
+}
+
+.logo-img {
+    height: 60px; /* Adjusted logo height */
+}
+
+/* Search Bar */
 .search-bar {
     display: flex;
     align-items: center;
-    flex: 1;
-    max-width: 450px;
+    max-width: 400px; /* Adjusted width of search bar */
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1); /* Slightly opaque background */
+    border-radius: 25px;
+    overflow: hidden;
+    margin-top: 5px; /* Space between logo and search bar */
 }
 
     .search-bar input {
         width: 100%;
-        padding: 8px; /* Adjust padding if needed */
+        padding: 8px 12px;
         border: none;
-        border-radius: 20px 0 0 20px;
-        font-size: 14px; /* Smaller font size */
+        border-radius: 25px 0 0 25px;
+        font-size: 14px;
+        background: #333;
+        color: #fff;
     }
 
     .search-bar button {
-        padding: 8px 12px; /* Adjust padding if needed */
+        padding: 8px 12px;
         border: none;
-        border-radius: 0 20px 20px 0;
-        background-color: #9933FF;
+        border-radius: 0 25px 25px 0;
+        background-color: #e50914; /* Highlight color for button */
+        color: #fff;
         cursor: pointer;
+        font-size: 14px;
     }
 
         .search-bar button i {
-            font-size: 14px; /* Smaller icon size */
+            font-size: 14px;
         }
 
+/* Navigation Links */
 .nav-links {
-    list-style: none;
     display: flex;
-    gap: 20px; /* Adjust gap between items */
+    gap: 20px;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-left: auto; /* Pushes the nav-links to the right */
 }
 
-    .nav-links li a {
-        color: #fff;
-        text-decoration: none;
-        padding: 8px; /* Adjust padding if needed */
-        font-size: 17px; /* Smaller font size */
-        transition: background-color 0.3s;
+    .nav-links li {
+        position: relative;
     }
 
-        .nav-links li a:hover {
-            background-color: #555;
-            border-radius: 5px;
+    .nav-links a {
+        color: #fff;
+        text-decoration: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #e50914; /* Accent color on hover */
+            transform: scale(1.05); /* Slightly scale up on hover */
         }
 
-/* Parent container for positioning */
-.nav-container {
-    position: relative; /* Ensures the dropdown is positioned relative to this container */
-}
+    /* Dropdown Menu */
+    .nav-links .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #333;
+        color: #fff;
+        min-width: 200px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        z-index: 1;
+        top: 100%;
+        left: 0;
+        border-radius: 8px;
+        overflow: hidden;
+    }
 
-/* Dropdown Container */
-.nav-links .dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.nav-links .dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%; /* Position dropdown below the "Movies" menu item */
-    left: 0;
-    background: linear-gradient(to bottom right, #ff7e5f, #feb47b);
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 2; /* Ensure dropdown appears above other content */
-}
+    .nav-links .dropdown:hover .dropdown-content {
+        display: block;
+    }
 
     .nav-links .dropdown-content a {
         color: #fff;
-        padding: 10px 12px; /* Adjust padding if needed */
+        padding: 10px 20px;
         text-decoration: none;
         display: block;
-        font-size: 14px; /* Smaller font size */
         transition: background-color 0.3s;
     }
 
@@ -107,27 +150,157 @@ nav {
             background-color: #555;
         }
 
-.nav-links .dropdown:hover .dropdown-content {
-    display: block;
+/* Buttons in Dropdown */
+.btn-primary {
+    background-color: #e50914; /* Highlight color for button */
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.3s;
 }
+
+    .btn-primary:hover {
+        background-color: #c81012;
+    }
+
+/* Logout Button */
+#logoutButton {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 0;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+    #logoutButton:hover {
+        color: #e50914; /* Accent color on hover */
+    }
+/* Footer Styles */
+.footer {
+    background-color: #1c1c1c; /* Dark background */
+    color: #fff;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden; /* To ensure that the animation does not overflow */
+    box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for a floating effect */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 10px;
+    min-width: 200px;
+}
+
+    .footer-section h3 {
+        margin-bottom: 20px;
+        font-size: 18px;
+        color: #e50914; /* Accent color for headings */
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+        .footer-section h3::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: #e50914; /* Accent color underline */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .footer-section h3:hover::after {
+            width: 70px; /* Expand underline on hover */
+        }
+
+    .footer-section p {
+        font-size: 14px;
+    }
+
+    .footer-section a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+        .footer-section a:hover {
+            color: #e50914; /* Highlight color on hover */
+        }
+
+.quick-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+    .quick-links ul li {
+        margin-bottom: 10px;
+    }
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+}
+
+    .footer-bottom p {
+        font-size: 14px;
+        margin: 0;
+        color: #ccc; /* Lighter color for footer text */
+    }
+
+/* Animation on scroll */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.footer {
+    animation: slideInUp 1s ease-out;
+}
+
 
 
 /* CSS cho Carousel Background */
 .carousel-background {
     background: linear-gradient(to bottom, #ff7e5f, #feb47b);
-    padding: 20px; /* Adjust the padding as needed */
-    margin: 0; /* Remove negative margin */
-    overflow: hidden; /* Ensure no overflow */
+    padding: 20px; /* Điều chỉnh padding nếu cần */
+    margin: 0;
+    overflow: hidden;
+    padding-top: 50px; /* Khoảng cách giữa thanh điều hướng và slideshow */
 }
 
-/* Swiper Container */
 .swiper {
-    width: 100%; /* Full width */
-    height: 100vh; /* Full viewport height */
+    width: 100%;
+    height: calc(100vh - 60px); /* Giảm chiều cao của swiper để có khoảng cách dưới thanh điều hướng */
     border-radius: 20px;
     overflow: hidden;
-    margin: 0 auto; /* Center align */
+    margin: 0 auto;
+    margin-top: 60px; /* Đảm bảo swiper không bị che bởi thanh điều hướng */
 }
+
 
 /* Swiper Slide */
 .swiper-slide {

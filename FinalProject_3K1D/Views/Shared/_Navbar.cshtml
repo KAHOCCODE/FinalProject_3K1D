@@ -1,51 +1,56 @@
 ﻿@* _Navbar.cshtml *@
 <div class="nav-container">
-    <nav>
+    <nav class="navbar">
         <div class="container">
-            <div class="logo">
-                <h1><img src="\image\logo.png" alt="Logo" width="235" height="48" class="d-inline-block align-top"></h1>
+            <!-- Logo and Search Container -->
+            <div class="logo-search-container">
+                <!-- Logo -->
+                <div class="logo">
+                    <a href="/"><img src="/image/logo.png" alt="Logo" class="logo-img"></a>
+                </div>
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <input type="text" placeholder="Search movies ...">
+                    <button><i class="fa fa-search"></i></button>
+                </div>
             </div>
-            <div class="search-bar">
-                <input type="text" placeholder="Search movies ...">
-                <button><i class="fa fa-search"></i></button>
-            </div>
+
+            <!-- Navigation Links -->
             <ul class="nav-links">
-                <li><a href="GiamGia"><i class="fas fa-gift"></i> Promotions</a></li>
+                <li><a href="/GiamGia"><i class="fas fa-gift"></i> Khuyến mãi</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropbtn"><i class="fas fa-film"></i> Movies</a>
+                    <a href="#" class="dropbtn"><i class="fas fa-film"></i> Phim <i class="fas fa-caret-down"></i></a>
                     <div class="dropdown-content">
                         <a href="#">Phim Đang Chiếu</a>
                         <a href="#">Phim Sắp Chiếu</a>
                     </div>
                 </li>
-                <li><a href="#"><i class="fas fa-utensils"></i> Foods & Drinks</a></li>
-                <li><a href="#"><i class="fas fa-phone-alt"></i> Contact</a></li>
+                <li><a href="#"><i class="fas fa-utensils"></i> Đồ ăn & Nước</a></li>
+                <li><a href="#"><i class="fas fa-phone-alt"></i> Liên hệ</a></li>
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li class="dropdown">
-                        <a href="#" class="dropbtn"><i class="fas fa-user"></i> Chào, @User.Identity.Name!</a>
+                        <a href="#" class="dropbtn"><i class="fas fa-user"></i> Hello, @User.Identity.Name! <i class="fas fa-caret-down"></i></a>
                         <div class="dropdown-content">
-                            <a asp-controller="AccountKH" asp-action="Profile"><i class="fas fa-user-circle"></i> Profile</a>
-                                    <a href="/Home/Huyve" class="btn btn-primary">
-                                        <i class="fas fa-history"></i> Lịch sử giao dịch
-                                    </a>
+                            <a asp-controller="AccountKH" asp-action="Profile"><i class="fas fa-user-circle"></i> Hồ sơ</a>
+                            <a href="/Home/Huyve"><i class="fas fa-history"></i> Lịch sử giao dịch</a>
                             <form id="logoutForm" asp-controller="AccountKH" asp-action="Logout" method="post">
-                                <button type="submit" id="logoutButton" style="all: unset; cursor: pointer;">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                <button type="submit" id="logoutButton">
+                                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
                                 </button>
                             </form>
                         </div>
-
                     </li>
                 }
                 else
                 {
-                    <li><a asp-controller="AccountKH" asp-action="Login"><i class="fas fa-user"></i> Login/Signup</a></li>
+                    <li><a asp-controller="AccountKH" asp-action="Login"><i class="fas fa-user"></i> Đăng nhập/Đăng ký</a></li>
                 }
             </ul>
         </div>
     </nav>
 </div>
+
 
 <!-- SweetAlert2 JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -56,14 +61,14 @@
             logoutButton.addEventListener('click', function (event) {
                 event.preventDefault();
                 Swal.fire({
-                    title: 'Bạn có chắc chắn?',
-                    text: 'Bạn muốn đăng xuất khỏi tài khoản của mình!',
+                    title: 'Are you sure?',
+                    text: 'You want to logout from your account!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Đăng xuất',
-                    cancelButtonText: 'Hủy'
+                    confirmButtonText: 'Logout',
+                    cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Submit the logout form
@@ -73,6 +78,4 @@
             });
         }
     });
-
-
 </script>

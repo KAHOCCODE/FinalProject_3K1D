@@ -11,17 +11,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+    <!-- Header -->
     <header>
         @Html.Partial("_Navbar")
     </header>
+
     <!-- Nội dung chính -->
     <div class="container">
         @RenderBody()
     </div>
 
-    <!-- Carrousel Phim -->
-    <!-- Khung nền cho Carrousel Phim -->
-    <!-- Carrousel Phim -->
+    <!-- Carousel Phim -->
     <div class="carousel-background">
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
@@ -32,99 +32,36 @@
             <!-- Điều hướng Swiper -->
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
-            <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-            <script>
-                const swiper = new Swiper('.mySwiper', {
-                    loop: true, // Lặp các slide
-                    autoplay: {
-                        delay: 3000, // Thay đổi slide sau mỗi 3000 mili giây
-                        disableOnInteraction: false, // Tự động phát không dừng khi có tương tác của người dùng
-                    },
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                });
-
-                // Mảng dữ liệu slide
-                const slides = [
-                    {
-                        title: "Cái Chết Trên Sông Nile",
-                        image: "/images/background.jpg", // Đảm bảo đường dẫn này là chính xác
-                        stars: 4.5,
-                        genres: ["Hành Động", "Tâm Lý", "4K"],
-                        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit...",
-                        trailerText: "Xem trailer"
-                    },
-                    {
-                        title: "Phim Khác",
-                        image: "/images/Thor.jpg", // Đảm bảo đường dẫn này là chính xác
-                        stars: 5,
-                        genres: ["Phiêu Lưu", "Huyền Bí", "HD"],
-                        description: "Mô tả phim khác ở đây...",
-                        trailerText: "Xem trailer"
-                    }
-                    // Thêm các đối tượng slide khác ở đây
-                ];
-                // Thêm các slide vào Swiper
-                slides.forEach(slide => {
-                    const slideHTML = `
-                            <div class="swiper-slide">
-                                <div class="image">
-                                    <div class="black">
-                                        <h1>${slide.title}</h1>
-                                        <div class="star">
-                                            ${Array.from({ length: 5 }, (_, i) => `
-                                                <i class="fa-solid fa-star${i < Math.floor(slide.stars) ? '' : '-half-stroke'}"></i>
-                                            `).join('')}
-                                        </div>
-                                        <div class="genre">
-                                            ${slide.genres.map(genre => `<a href="#" class="category">${genre}</a>`).join('')}
-                                        </div>
-                                        <div class="watch">
-                                            <i class="fa-solid fa-play"></i>
-                                            <p>${slide.trailerText}</p>
-                                        </div>
-                                    </div>
-                                    <img src="${slide.image}" alt="${slide.title}">
-                                </div>
-                            </div>
-                        `;
-                    swiper.appendSlide(slideHTML);
-                });
-            </script>
         </div>
     </div>
+
+    <!-- Phim Đang Chiếu -->
     <div class="show">
-    <div class="tv_show">
-        <h1>Phim Đang Chiếu</h1>
-        <div class="box">
-            @if (Model != null && Model.Any()) // Kiểm tra Model trước khi sử dụng
-            {
-                @foreach (var phim in Model) // Lọc các phim đang chiếu
+        <div class="tv_show">
+            <h1>Phim Đang Chiếu</h1>
+            <div class="box">
+                @if (Model != null && Model.Any())
                 {
-                    <div class="card">
-                        <div class="details">
-                            <div class="left">
-                                <p class="name">@phim.TenPhim</p>
-                                <div class="date_quality">
-                                    <p class="quality">@phim.DinhDangPhim</p> <!-- Giả sử chất lượng là HD, bạn có thể thay thế bằng dữ liệu thực nếu có -->
-                                    <p class="date">@phim.NamSx</p>
-                                </div>
-                                <p class="category">
-                                @string.Join("/", phim.IdTheLoais.Select(t => t.TenTheLoai))
-                                </p>
-                                <div class="info">
-                                    <div class="time">
-                                        <i class="fa-regular fa-clock"></i>
-                                        <p>@phim.ThoiLuong phút</p>
+                    @foreach (var phim in Model)
+                    {
+                        <div class="card">
+                            <div class="details">
+                                <div class="left">
+                                    <p class="name">@phim.TenPhim</p>
+                                    <div class="date_quality">
+                                        <p class="quality">@phim.DinhDangPhim</p>
+                                        <p class="date">@phim.NamSx</p>
+                                    </div>
+                                    <p class="category">
+                                        @string.Join("/", phim.IdTheLoais.Select(t => t.TenTheLoai))
+                                    </p>
+                                    <div class="info">
+                                        <div class="time">
+                                            <i class="fa-regular fa-clock"></i>
+                                            <p>@phim.ThoiLuong phút</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                                 <div class="right">
                                     <!-- Đặt vé -->
                                     <div class="ticket-booking">
@@ -133,18 +70,87 @@
                                         </a>
                                     </div>
                                 </div>
+                            </div>
+                            <img src="~/image/ApPhich/@phim.ApPhich" alt="@phim.TenPhim">
                         </div>
-                        <img src="~/image/ApPhich/@phim.ApPhich" alt="@phim.TenPhim"> <!-- Thay thế bằng đường dẫn hình ảnh thực -->
-                    </div>
+                    }
                 }
-            }
-            else
-            {
-                <p>Không có dữ liệu để hiển thị</p>
-            }
+                else
+                {
+                    <p>Không có dữ liệu để hiển thị</p>
+                }
+            </div>
         </div>
     </div>
-</div>
-   
+
+    <!-- Footer -->
+    <footer>
+        @Html.Partial("_Footer")
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.mySwiper', {
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+        const slides = [
+            {
+                title: "Cái Chết Trên Sông Nile",
+                image: "/images/background.jpg",
+                stars: 4.5,
+                genres: ["Hành Động", "Tâm Lý", "4K"],
+                description: "Lorem ipsum dolor sit amet consectetur adipisicing elit...",
+                trailerText: "Xem trailer"
+            },
+            {
+                title: "Phim Khác",
+                image: "/images/Thor.jpg",
+                stars: 5,
+                genres: ["Phiêu Lưu", "Huyền Bí", "HD"],
+                description: "Mô tả phim khác ở đây...",
+                trailerText: "Xem trailer"
+            }
+        ];
+
+        slides.forEach(slide => {
+            const slideHTML = `
+                        <div class="swiper-slide">
+                            <div class="image">
+                                <div class="black">
+                                    <h1>${slide.title}</h1>
+                                    <div class="star">
+                                        ${Array.from({ length: 5 }, (_, i) => `
+                                            <i class="fa-solid fa-star${i < Math.floor(slide.stars) ? '' : '-half-stroke'}"></i>
+                                        `).join('')}
+                                    </div>
+                                    <div class="genre">
+                                        ${slide.genres.map(genre => `<a href="#" class="category">${genre}</a>`).join('')}
+                                    </div>
+                                    <div class="watch">
+                                        <i class="fa-solid fa-play"></i>
+                                        <p>${slide.trailerText}</p>
+                                    </div>
+                                </div>
+                                <img src="${slide.image}" alt="${slide.title}">
+                            </div>
+                        </div>
+                    `;
+            swiper.appendSlide(slideHTML);
+        });
+    </script>
 </body>
 </html>
