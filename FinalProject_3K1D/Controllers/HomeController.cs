@@ -6,20 +6,20 @@ using System.Diagnostics;
 namespace FinalProject_3K1D.Controllers
 {
     //sử dụng session (paste code này vào)
-//    var userName = HttpContext.Session.GetString("UserName");
-//    var userId = HttpContext.Session.GetString("UserId");
-//    var userRole = HttpContext.Session.GetString("UserRole");
+    //    var userName = HttpContext.Session.GetString("UserName");
+    //    var userId = HttpContext.Session.GetString("UserId");
+    //    var userRole = HttpContext.Session.GetString("UserRole");
 
-//    if (string.IsNullOrEmpty(userName))
-//    {
-//        return RedirectToAction("Login", "AccountKH");
-//}
+    //    if (string.IsNullOrEmpty(userName))
+    //    {
+    //        return RedirectToAction("Login", "AccountKH");
+    //}
 
-//ViewBag.UserName = userName;
-//ViewBag.UserRole = userRole;
- // ví dụ xem ở detail
-    
-public class HomeController : Controller
+    //ViewBag.UserName = userName;
+    //ViewBag.UserRole = userRole;
+    // ví dụ xem ở detail
+
+    public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
@@ -221,8 +221,81 @@ public class HomeController : Controller
         }
 
         public IActionResult Huyve()
-        { 
-            return View();
-        }         
+        {
+            // Retrieve the user ID from the session
+            var userId = HttpContext.Session.GetString("UserId");
+            
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Index", "Home"); // Redirect if UserId is not found in session
+            }
+
+            using (var db = new QlrapPhimContext())
+            {
+                // Fetch the user's tickets from the database
+                var tickets = db.Ves
+                    .Include(v => v.IdLichChieuNavigation)
+                    .ThenInclude(lc => lc.IdPhongChieuNavigation)
+                    .Include(v => v.IdLichChieuNavigation.IdPhimNavigation)
+                    .Include(v => v.IdKhachHangNavigation)
+                    .Where(v => v.IdKhachHang == userId)
+                    .ToList();
+
+                // If no tickets found, redirect to another view or show a message (optional)
+                if (!tickets.Any())
+                {
+                    return RedirectToAction("Index", "Home"); // Or you can return a view with a message
+                }
+
+                // Pass the tickets to the view (for demonstration, we'll pass the first ticket)
+                var ticket = tickets.FirstOrDefault();
+
+                if (ticket != null)
+                {
+                    ViewBag.MovieTitle = ticket.IdLichChieuNavigation?.IdPhimNavigation?.TenPhim ?? "Unknown";
+                    ViewBag.Showtime = ticket.IdLichChieuNavigation?.GioChieu.ToString() ?? "Unknown";
+                    ViewBag.Room = ticket.IdLichChieuNavigation?.IdPhongChieuNavigation?.TenPhong ?? "Unknown";
+                    ViewBag.CustomerName = ticket.IdKhachHangNavigation?.HoTen ?? "Unknown";
+                    ViewBag.Price = ticket.TienBanVe.HasValue ? ticket.TienBanVe.Value.ToString() : "Unknown";
+                    ViewBag.IdVe = ticket.IdVe;
+                    ViewBag.IdSeat = ticket.MaGheNgoi;
+                }
+
+                return View(ticket);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CancelTicket(int idVe)
+        {
+            using (var _context = new QlrapPhimContext())
+            {
+                try
+                {
+                    var ticket = _context.Ves.Find(idVe);
+
+                    if (ticket == null)
+                    {
+                        return BadRequest("Ticket not found.");
+                    }
+
+                    _context.Ves.Remove(ticket);
+                    _context.SaveChanges();
+
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception (e.g., using a logging framework)
+                    return StatusCode(500, "Internal server error: " + ex.Message);
+                }
+            }
+        }
+
+
+
+
     }
 }
+

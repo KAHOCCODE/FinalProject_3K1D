@@ -36,12 +36,9 @@ public partial class QlrapPhimContext : DbContext
     public virtual DbSet<KhuyenMai> KhuyenMais { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-<<<<<<< HEAD
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-3TRF427\\HOANGKA;Initial Catalog=QLRapPhim;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
-=======
+
         => optionsBuilder.UseSqlServer("Data Source=DESKTOP-0U55SOV\\SQLEXPRESS;Initial Catalog=QLRapPhim;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
->>>>>>> b4084f6e3150a183f1d58aca44a2d1e44190e881
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
