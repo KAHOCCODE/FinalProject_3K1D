@@ -1,4 +1,4 @@
-* {
+﻿* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -252,355 +252,9 @@ nav {
 
 
 
-
-/*--------------*/
-
-.second {
-    width: 100%;
-    height: auto;
-    margin: 0 auto;
-    padding-bottom: 25px;
-    background: #171717;
-}
-
-    .second .latest {
-        width: 95%;
-        margin: 0 auto;
-    }
-
-        .second .latest h1 {
-            font-size: 20px;
-            color: #fff;
-            margin-bottom: 20px;
-        }
-
-        .second .latest .box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-            .second .latest .box .card {
-                width: 250px;
-                height: 370px;
-                margin: 10px;
-                overflow: hidden;
-                border-radius: 8px;
-            }
-
-                .second .latest .box .card .details {
-                    width: 250px;
-                    height: 370px;
-                    overflow: hidden;
-                    position: absolute;
-                    border-radius: 8px;
-                    transition: 0.3s;
-                    opacity: 0;
-                }
-
-                .second .latest .box .card:hover .details {
-                    opacity: 1;
-                    background: linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.7));
-                }
-
-                .second .latest .box .card .details .left {
-                    position: absolute;
-                    bottom: 0;
-                    color: #fff;
-                    transform: translateX(-100px);
-                    transition: 0.4s;
-                    opacity: 0;
-                }
-
-                .second .latest .box .card:hover .details .left {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-
-                .second .latest .box .card .details .left p.name {
-                    width: 100%;
-                    font-size: 20px;
-                    font-weight: bold;
-                    margin-left: 10px;
-                    margin-bottom: 10px;
-                }
-
-                .second .latest .box .card .details .left .date_quality {
-                    display: flex;
-                    align-items: center;
-                }
-
-                    .second .latest .box .card .details .left .date_quality p.quality {
-                        width: 30px;
-                        font-size: 13px;
-                        background: #ffe100;
-                        color: #282931;
-                        margin-left: 10px;
-                        margin-bottom: 8px;
-                        text-align: center;
-                        font-weight: bold;
-                    }
-
-                    .second .latest .box .card .details .left .date_quality p.date {
-                        color: #fff;
-                        font-size: 15px;
-                        font-weight: bold;
-                        text-align: left;
-                        margin-left: 10px;
-                        margin-bottom: 8px;
-                    }
-
-                .second .latest .box .card .details .left p.category {
-                    margin-left: 10px;
-                    font-size: 13px;
-                    margin-bottom: 8px;
-                }
-
-                .second .latest .box .card .details .left .info {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 10px;
-                }
-
-                    .second .latest .box .card .details .left .info .rate {
-                        display: flex;
-                        align-items: center;
-                        margin-left: 10px;
-                        margin-right: 10px;
-                    }
-
-                        .second .latest .box .card .details .left .info .rate i {
-                            font-size: 12px;
-                            color: #ffd500;
-                            margin-right: 5px;
-                        }
-
-                        .second .latest .box .card .details .left .info .rate p {
-                            font-size: 12px;
-                        }
-
-                    .second .latest .box .card .details .left .info .time {
-                        display: flex;
-                        align-items: center;
-                    }
-
-                        .second .latest .box .card .details .left .info .time i {
-                            font-size: 12px;
-                            color: #ffd500;
-                            margin-left: 5px;
-                        }
-
-                        .second .latest .box .card .details .left .info .time p {
-                            font-size: 12px;
-                            margin-left: 5px;
-                        }
-
-                .second .latest .box .card .details .right {
-                    position: absolute;
-                    right: 0;
-                    bottom: 0;
-                    color: #fff;
-                    transform: translateX(100px);
-                    transition: 0.4s;
-                    opacity: 0;
-                }
-
-                .second .latest .box .card:hover .details .right {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-
-                .second .latest .box .card .details .right i {
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
-                    font-size: 20px;
-                    text-align: center;
-                    background-color: #ffe100;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    color: #282931;
-                    margin: 0 10px 8px 0;
-                }
-
-                .second .latest .box .card img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    object-position: center;
-                }
-
-
-
-
 /*---------*/
-
-.upcoming {
-    width: 100%;
-    height: auto;
-    margin: 0 auto;
-    padding-bottom: 25px;
-    background-color: #171717;
-}
-
-    .upcoming .movies_box {
-        width: 95%;
-        margin: 0 auto;
-    }
-
-        .upcoming .movies_box h1 {
-            font-size: 20px;
-            color: #fff;
-            margin-bottom: 20px;
-        }
-
-        .upcoming .movies_box .box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-            .upcoming .movies_box .box .card {
-                width: 250px;
-                height: 370px;
-                margin: 10px;
-                overflow: hidden;
-                border-radius: 8px;
-            }
-
-                .upcoming .movies_box .box .card .details {
-                    width: 250px;
-                    height: 370px;
-                    overflow: hidden;
-                    position: absolute;
-                    border-radius: 8px;
-                    transition: 0.3s;
-                    opacity: 0;
-                }
-
-                .upcoming .movies_box .box .card:hover .details {
-                    opacity: 1;
-                    background: linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.7));
-                }
-
-                .upcoming .movies_box .box .card .details .left {
-                    position: absolute;
-                    bottom: 0;
-                    color: #fff;
-                    transform: translateX(-100px);
-                    transition: 0.4s;
-                    opacity: 0;
-                }
-
-                .upcoming .movies_box .box .card:hover .details .left {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-
-                .upcoming .movies_box .box .card .details .left p.name {
-                    width: 100%;
-                    font-size: 20px;
-                    font-weight: bold;
-                    margin-left: 10px;
-                    margin-bottom: 10px;
-                }
-
-                .upcoming .movies_box .box .card .details .left .date_quality {
-                    display: flex;
-                    align-items: center;
-                }
-
-                    .upcoming .movies_box .box .card .details .left .date_quality p.quality {
-                        width: 30px;
-                        font-size: 13px;
-                        background: #ffe100;
-                        color: #282931;
-                        margin-left: 10px;
-                        margin-bottom: 8px;
-                        text-align: center;
-                        font-weight: bold;
-                    }
-
-                    .upcoming .movies_box .box .card .details .left .date_quality p.date {
-                        color: #fff;
-                        font-size: 15px;
-                        font-weight: bold;
-                        text-align: left;
-                        margin-left: 10px;
-                        margin-bottom: 8px;
-                    }
-
-                .upcoming .movies_box .box .card .details .left p.category {
-                    margin-left: 10px;
-                    font-size: 13px;
-                    margin-bottom: 8px;
-                }
-
-                .upcoming .movies_box .box .card .details .left .info {
-                    display: flex;
-                    align-items: center;
-                    margin-bottom: 10px;
-                }
-
-                    .upcoming .movies_box .box .card .details .left .info .time {
-                        display: flex;
-                        align-items: center;
-                    }
-
-                        .upcoming .movies_box .box .card .details .left .info .time i {
-                            font-size: 12px;
-                            color: #ffd500;
-                            margin-left: 5px;
-                        }
-
-                        .upcoming .movies_box .box .card .details .left .info .time p {
-                            font-size: 12px;
-                            margin-left: 5px;
-                        }
-
-                .upcoming .movies_box .box .card .details .right {
-                    position: absolute;
-                    right: 0;
-                    bottom: 0;
-                    color: #fff;
-                    transform: translateX(100px);
-                    transition: 0.4s;
-                    opacity: 0;
-                }
-
-                .upcoming .movies_box .box .card:hover .details .right {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-
-                .upcoming .movies_box .box .card .details .right i {
-                    width: 40px;
-                    height: 40px;
-                    line-height: 40px;
-                    font-size: 20px;
-                    text-align: center;
-                    background-color: #ffe100;
-                    border-radius: 50%;
-                    cursor: pointer;
-                    color: #282931;
-                    margin: 0 10px 8px 0;
-                }
-
-                .upcoming .movies_box .box .card img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    object-position: center;
-                }
-
-
-
-
-/*----------*/
-
 .show {
     width: 100%;
-    height: auto;
     margin: 0 auto;
     padding-bottom: 25px;
     background-color: #171717;
@@ -618,22 +272,24 @@ nav {
         }
 
         .show .tv_show .box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+            justify-content: center;
         }
 
             .show .tv_show .box .card {
-                width: 250px;
+                width: 100%;
                 height: 370px;
-                margin: 10px;
                 overflow: hidden;
                 border-radius: 8px;
+                position: relative;
+                background-color: #333;
             }
 
                 .show .tv_show .box .card .details {
-                    width: 250px;
-                    height: 370px;
+                    width: 100%;
+                    height: 100%;
                     overflow: hidden;
                     position: absolute;
                     border-radius: 8px;
@@ -705,23 +361,6 @@ nav {
                     margin-bottom: 10px;
                 }
 
-                    .show .tv_show .box .card .details .left .info .rate {
-                        display: flex;
-                        align-items: center;
-                        margin-left: 10px;
-                        margin-right: 10px;
-                    }
-
-                        .show .tv_show .box .card .details .left .info .rate i {
-                            font-size: 12px;
-                            color: #ffd500;
-                            margin-right: 5px;
-                        }
-
-                        .show .tv_show .box .card .details .left .info .rate p {
-                            font-size: 12px;
-                        }
-
                     .show .tv_show .box .card .details .left .info .time {
                         display: flex;
                         align-items: center;
@@ -772,7 +411,6 @@ nav {
                     object-fit: cover;
                     object-position: center;
                 }
-
 
 
 
