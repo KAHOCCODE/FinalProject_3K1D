@@ -26,7 +26,9 @@
                         <a href="#" class="dropbtn"><i class="fas fa-user"></i> Chào, @User.Identity.Name!</a>
                         <div class="dropdown-content">
                             <a asp-controller="AccountKH" asp-action="Profile"><i class="fas fa-user-circle"></i> Profile</a>
-                            <a asp-controller="Transaction" asp-action="History"><i class="fas fa-history"></i> Lịch sử giao dịch</a>
+                                    <a href="/Home/Huyve" class="btn btn-primary">
+                                        <i class="fas fa-history"></i> Lịch sử giao dịch
+                                    </a>
                             <form id="logoutForm" asp-controller="AccountKH" asp-action="Logout" method="post">
                                 <button type="submit" id="logoutButton" style="all: unset; cursor: pointer;">
                                     <i class="fas fa-sign-out-alt"></i> Logout

@@ -246,7 +246,6 @@ namespace FinalProject_3K1D.Controllers
                 ViewBag.TrangThai = 0;
 
             }
-
             return View();
         }
 
