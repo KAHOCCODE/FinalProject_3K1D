@@ -15,6 +15,7 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             _context = context;
         }
 
+        #region Index
         public IActionResult Index(DateTime? startDate, DateTime? endDate)
         {
             var query = _context.Ves
@@ -47,7 +48,9 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
 
             return View(data);
         }
+        #endregion
 
+        #region Details 
         public IActionResult Details(string movieName, DateTime? startDate, DateTime? endDate)
         {
             var query = _context.Ves
@@ -83,5 +86,6 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
 
             return View(data);
         }
+        #endregion
     }
 }

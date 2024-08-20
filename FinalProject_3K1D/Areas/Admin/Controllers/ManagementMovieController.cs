@@ -13,7 +13,8 @@ namespace _3K1D_Final.Areas.Admin.Controllers
         {
             _context = context;
         }
-        //danh sách các phim đang chiếu
+
+        # region danh sách các phim đang chiếu
         public IActionResult Index(string searchString)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
@@ -25,11 +26,13 @@ namespace _3K1D_Final.Areas.Admin.Controllers
                 movies = movies.Where(p => p.TenPhim.Contains(searchString));
             }
 
-            ViewData["SearchString"] = searchString;  // Chuyển giá trị searchString đến ViewData
+            ViewData["SearchString"] = searchString;  
 
             return View(movies.ToList());
         }
+        #endregion
 
+        #region Phim đã kết thúc
         public IActionResult MoviesEnd(string searchString)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
@@ -41,11 +44,13 @@ namespace _3K1D_Final.Areas.Admin.Controllers
                 movies = movies.Where(p => p.TenPhim.Contains(searchString));
             }
 
-            ViewData["SearchString"] = searchString;  // Chuyển giá trị searchString đến ViewData
+            ViewData["SearchString"] = searchString;  
 
             return View(movies.ToList());
         }
+        #endregion
 
+        #region Phim sắp chiếu
         public IActionResult MoviesComing(string searchString)
         {
             var today = DateOnly.FromDateTime(DateTime.Now);
@@ -57,13 +62,14 @@ namespace _3K1D_Final.Areas.Admin.Controllers
                 movies = movies.Where(p => p.TenPhim.Contains(searchString));
             }
 
-            ViewData["SearchString"] = searchString;  // Chuyển giá trị searchString đến ViewData
+            ViewData["SearchString"] = searchString; 
 
             return View(movies.ToList());
         }
+        #endregion
 
 
-        //thêm phim mới 
+        #region thêm phim mới 
         public IActionResult Create()
         {
             var nextId = GeneratePhimId();
@@ -110,7 +116,10 @@ namespace _3K1D_Final.Areas.Admin.Controllers
             }
             return "P01";
         }
-        //delete phim
+
+        #endregion
+
+        #region xóa phim
         [HttpPost]
         public IActionResult Delete(string id)
         {
@@ -141,6 +150,9 @@ namespace _3K1D_Final.Areas.Admin.Controllers
 
             return RedirectToAction("Index");
         }
+        #endregion
+
+        #region chi tiết phim
         public IActionResult Detail(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -158,8 +170,9 @@ namespace _3K1D_Final.Areas.Admin.Controllers
 
             return View(movie);
         }
+        #endregion
 
-        // GET: Admin/ManagementMovie/Edit/5
+        #region edit phim 
         public IActionResult Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -178,7 +191,6 @@ namespace _3K1D_Final.Areas.Admin.Controllers
             return View(movie);
         }
 
-        // POST: Admin/ManagementMovie/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, Phim phim, IFormFile apPhich)
@@ -221,5 +233,6 @@ namespace _3K1D_Final.Areas.Admin.Controllers
 
             return View(phim);
         }
+        #endregion
     }
 }
