@@ -73,14 +73,14 @@ public partial class Phim
         }
     }
     //lấy giá vé từ lich chiếu
-    public string GiaVe
+    public decimal GiaVe
     {
         get
         {
-            string giaVe = "";
+            decimal giaVe = 0;
             foreach (var lichChieu in LichChieus)
             {
-                giaVe += lichChieu.GiaVe + ", ";
+                giaVe += lichChieu.GiaVe;
             }
 
             return giaVe;
