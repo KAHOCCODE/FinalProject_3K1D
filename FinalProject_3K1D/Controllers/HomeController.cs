@@ -220,7 +220,70 @@ public class HomeController : Controller
             return View();
         }
 
+        public IActionResult Huyve()
+        {
+            // Retrieve the user ID from the session
+            var userId = HttpContext.Session.GetString("UserId");
 
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Index", "Home"); // Redirect if UserId is not found in session
+            }
+
+            using (var db = new QlrapPhimContext())
+            {
+                // Fetch the user's tickets from the database
+                var tickets = db.Ves
+                    .Include(v => v.IdLichChieuNavigation)
+                    .ThenInclude(lc => lc.IdPhongChieuNavigation)
+                    .Include(v => v.IdLichChieuNavigation.IdPhimNavigation)
+                    .Include(v => v.IdKhachHangNavigation)
+                    .Where(v => v.IdKhachHang == userId)
+                    .ToList();
+
+                // If no tickets found, redirect to another view or show a message (optional)
+                if (!tickets.Any())
+                {
+                    return RedirectToAction("Index", "Home"); // Or you can return a view with a message
+                }
+
+                // Pass the tickets to the view (for demonstration, we'll pass the first ticket)
+                var ticket = tickets.FirstOrDefault();
+
+                if (ticket != null)
+                {
+                    ViewBag.MovieTitle = ticket.IdLichChieuNavigation?.IdPhimNavigation?.TenPhim ?? "Unknown";
+                    ViewBag.Showtime = ticket.IdLichChieuNavigation?.GioChieu.ToString() ?? "Unknown";
+                    ViewBag.Room = ticket.IdLichChieuNavigation?.IdPhongChieuNavigation?.TenPhong ?? "Unknown";
+                    ViewBag.CustomerName = ticket.IdKhachHangNavigation?.HoTen ?? "Unknown";
+                    ViewBag.Price = ticket.TienBanVe.HasValue ? ticket.TienBanVe.Value.ToString() : "Unknown";
+                    ViewBag.IdVe = ticket.IdVe;
+                }
+
+                return View(ticket);
+            }
+        }
+
+
+        [HttpPost]
+        public IActionResult CancelTicket([FromBody] int idVe)
+        {
+            using (var db = new QlrapPhimContext())
+            {
+                
+                // Fetch the ticket from the database
+                var ticket = db.Ves.FirstOrDefault(v => v.IdVe == idVe);
+                if (ticket != null)
+                {
+                    // Update the ticket status to cancelled
+                    ticket.TrangThai = 0;
+                    db.SaveChanges();
+                    return Json(new { success = true });
+                }
+            }
+            
+            return Json(new { success = false });
+        }
 
     }
 }

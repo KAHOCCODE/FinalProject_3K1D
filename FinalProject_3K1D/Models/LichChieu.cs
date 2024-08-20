@@ -56,6 +56,20 @@ public partial class LichChieu
             }
         }
     }
-
+    //tên phim
+    public string TenPhim
+    {
+        get
+        {
+            if (IdPhimNavigation != null)
+            {
+                return IdPhimNavigation.TenPhim;
+            }
+            else
+            {
+                return "Unknown";
+            }
+        }
+    }
 
 }

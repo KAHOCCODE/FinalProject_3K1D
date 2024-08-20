@@ -72,20 +72,22 @@ public partial class Phim
             return tenPhong;
         }
     }
-    //lấy giá vé từ lich chiếu
-    public string GiaVe
+    //lấy giá vé từ lich chiếu  decimal
+    public decimal GiaVe
     {
         get
         {
-            string giaVe = "";
+            decimal giaVe = 0;
             foreach (var lichChieu in LichChieus)
             {
-                giaVe += lichChieu.GiaVe + ", ";
+                giaVe += lichChieu.GiaVe;
             }
 
             return giaVe;
         }
     }
+
+
     //lấy tenrap
     public string TenRap
     {
