@@ -36,6 +36,7 @@
                             <th class="text-center">@Html.DisplayNameFor(model => model.DaoDien)</th>
                             <th class="text-center">@Html.DisplayNameFor(model => model.NamSx)</th>
                             <th class="text-center">@Html.DisplayNameFor(model => model.DinhDangPhim)</th>
+                            <th class="text-center">Thể loại</th>
                             <th class="text-center">Áp Phích</th>
                             <th class="text-center">Actions</th>
                         </tr>
@@ -54,6 +55,12 @@
                                 <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.DaoDien)</td>
                                 <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.NamSx)</td>
                                 <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.DinhDangPhim)</td>
+                                <td class="align-middle text-center">
+                                    @foreach (var theLoai in item.IdTheLoais)
+                                    {
+                                        <span class="badge bg-secondary">@theLoai.TenTheLoai</span>
+                                    }
+                                </td>
                                 <td class="align-middle text-center">
                                     @if (!string.IsNullOrEmpty(item.ApPhich))
                                     {

@@ -2,6 +2,8 @@
     Layout = null;
 }
 @model FinalProject_3K1D.Models.Phim
+<!DOCTYPE html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,13 +22,18 @@
             padding: 0;
         }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
         .movie-detail-page {
             padding: 40px;
             background: #1e1e1e; /* Nền tối cho phần chi tiết phim */
             border-radius: 12px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
             margin: 40px auto;
-            max-width: 1200px;
             position: relative;
             overflow: hidden;
         }
@@ -157,15 +164,42 @@
             background: #ff5722; /* Màu nền khi chọn */
             color: #fff;
         }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            background: #ff5722; /* Màu nền của nút */
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-decoration: none; /* Xóa gạch chân của liên kết */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            transition: background 0.3s, transform 0.3s;
+            margin-bottom: 20px; /* Khoảng cách dưới nút */
+        }
+
+            .btn-back:hover {
+                background: #e64a19; /* Màu nền khi hover */
+                transform: scale(1.05);
+            }
+
+            .btn-back i {
+                margin-right: 8px; /* Khoảng cách giữa biểu tượng và văn bản */
+            }
     </style>
 </head>
 <body>
     <div class="container movie-detail-page">
+        <!-- Nút quay lại -->
+        <a href="javascript:history.back()" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
         <div class="movie-header">
             <!-- Movie Poster -->
             @if (Model != null)
             {
-                    <img src="~/image/ApPhich/@Model.ApPhich" alt="@Model.TenPhim" class="movie-poster">
+                <img src="~/image/ApPhich/@Model.ApPhich" alt="@Model.TenPhim" class="movie-poster">
             }
             <!-- Movie Information -->
             <div class="movie-info">
@@ -195,51 +229,48 @@
                 }
             </div>
 
-
-
             <button class="btn-book" onclick="bookTickets()">Đặt Vé</button>
         </div>
     </div>
 
     <script src="path/to/your/bootstrap.bundle.min.js"></script>
     <script>
-       function bookTickets() {
-    const selectedLichChieu = document.querySelector('input[name="selectedLichChieu"]:checked');
+        function bookTickets() {
+            const selectedLichChieu = document.querySelector('input[name="selectedLichChieu"]:checked');
 
-    if (!selectedLichChieu) {
-        alert("Vui lòng chọn một giờ chiếu.");
-        return;
-    }
+            if (!selectedLichChieu) {
+                alert("Vui lòng chọn một giờ chiếu.");
+                return;
+            }
 
-    fetch('/Home/SaveBookingSession', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'RequestVerificationToken': '@Html.AntiForgeryToken()'
-        },
-        body: JSON.stringify({
-            movieId: '@Model.IdPhim',
-            selectedLichChieuId: selectedLichChieu.value // Lưu IdLichChieu đã chọn
-        })
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error('Có lỗi xảy ra');
+            fetch('/Home/SaveBookingSession', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': '@Html.AntiForgeryToken()'
+                },
+                body: JSON.stringify({
+                    movieId: '@Model.IdPhim',
+                    selectedLichChieuId: selectedLichChieu.value // Lưu IdLichChieu đã chọn
+                })
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Có lỗi xảy ra');
+                }
+                return response.json();
+            }).then(data => {
+                if (!data.success) {
+                    alert(data.message);
+                    window.location.href = "/AccountKH/Login";
+                } else {
+                    alert(data.message);
+                    window.location.href = "/Home/ChonGhe";
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert("Đã xảy ra lỗi khi lưu thông tin.");
+            });
         }
-        return response.json();
-    }).then(data => {
-        if (!data.success) {
-            alert(data.message);
-            window.location.href = "/AccountKH/Login";
-        } else {
-            alert(data.message);
-            window.location.href = "/Home/ChonGhe";
-        }
-    }).catch(error => {
-        console.error('Error:', error);
-        alert("Đã xảy ra lỗi khi lưu thông tin.");
-    });
-}
-
-
     </script>
 </body>
+</html>
