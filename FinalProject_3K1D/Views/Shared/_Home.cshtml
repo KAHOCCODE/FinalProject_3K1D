@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<FinalProject_3K1D.Models.Phim>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Movies Website</title>
+    <title>@ViewBag.Title - Trang Web Phim</title>
     <link rel="stylesheet" href="~/css/site.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -14,32 +14,31 @@
     <header>
         @Html.Partial("_Navbar")
     </header>
-    <!-- Main Content -->
+    <!-- Nội dung chính -->
     <div class="container">
         @RenderBody()
     </div>
 
-    <!-- Movie Carousel -->
-    <!-- Background Container for Movie Carousel -->
-    <!-- Movie Carousel -->
-    <!-- Movie Carousel -->
+    <!-- Carrousel Phim -->
+    <!-- Khung nền cho Carrousel Phim -->
+    <!-- Carrousel Phim -->
     <div class="carousel-background">
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
-                <!-- Slides will be added dynamically here -->
+                <!-- Các slide sẽ được thêm động ở đây -->
             </div>
-            <!-- Swiper Pagination -->
+            <!-- Phân trang Swiper -->
             <div class="swiper-pagination"></div>
-            <!-- Swiper Navigation -->
+            <!-- Điều hướng Swiper -->
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
             <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
             <script>
                 const swiper = new Swiper('.mySwiper', {
-                    loop: true, // Loop slides
+                    loop: true, // Lặp các slide
                     autoplay: {
-                        delay: 3000, // Slide change delay in milliseconds
-                        disableOnInteraction: false, // Autoplay will not stop on user interactions
+                        delay: 3000, // Thay đổi slide sau mỗi 3000 mili giây
+                        disableOnInteraction: false, // Tự động phát không dừng khi có tương tác của người dùng
                     },
                     pagination: {
                         el: '.swiper-pagination',
@@ -51,27 +50,27 @@
                     },
                 });
 
-                // Array of slide data
+                // Mảng dữ liệu slide
                 const slides = [
                     {
-                        title: "Death on the Nile",
-                        image: "/images/background.jpg", // Ensure this path is correct
+                        title: "Cái Chết Trên Sông Nile",
+                        image: "/images/background.jpg", // Đảm bảo đường dẫn này là chính xác
                         stars: 4.5,
-                        genres: ["Action", "Drama", "4K"],
+                        genres: ["Hành Động", "Tâm Lý", "4K"],
                         description: "Lorem ipsum dolor sit amet consectetur adipisicing elit...",
-                        trailerText: "Watch the trailer"
+                        trailerText: "Xem trailer"
                     },
                     {
-                        title: "Another Movie",
-                        image: "/images/Thor.jpg", // Ensure this path is correct
+                        title: "Phim Khác",
+                        image: "/images/Thor.jpg", // Đảm bảo đường dẫn này là chính xác
                         stars: 5,
-                        genres: ["Adventure", "Fantasy", "HD"],
-                        description: "Another movie description goes here...",
-                        trailerText: "Watch the trailer"
+                        genres: ["Phiêu Lưu", "Huyền Bí", "HD"],
+                        description: "Mô tả phim khác ở đây...",
+                        trailerText: "Xem trailer"
                     }
-                    // Add more slide objects here
+                    // Thêm các đối tượng slide khác ở đây
                 ];
-                // Add slides to Swiper
+                // Thêm các slide vào Swiper
                 slides.forEach(slide => {
                     const slideHTML = `
                             <div class="swiper-slide">
@@ -102,51 +101,50 @@
     </div>
     <div class="show">
     <div class="tv_show">
-        <h1>Movies Now Showing</h1>
+        <h1>Phim Đang Chiếu</h1>
         <div class="box">
             @if (Model != null && Model.Any()) // Kiểm tra Model trước khi sử dụng
-{
-                @foreach (var phim in Model) // Filter for movies that are now showing
+            {
+                @foreach (var phim in Model) // Lọc các phim đang chiếu
                 {
-                        <div class="card">
-                            <div class="details">
-                                <div class="left">
-                                    <p class="name">@phim.TenPhim</p>
-                                    <div class="date_quality">
-                                        <p class="quality">@phim.DinhDangPhim</p> <!-- Assuming quality is HD, you can replace this with actual data if available -->
-                                        <p class="date">@phim.NamSx</p>
-                                    </div>
-                                    <p class="category">
-                                    @string.Join("/", phim.IdTheLoais.Select(t => t.TenTheLoai))
-                                    </p>
-                                    <div class="info">
-                                        <div class="time">
-                                            <i class="fa-regular fa-clock"></i>
-                                            <p>@phim.ThoiLuong min</p>
-                                        </div>
-                                    </div>
+                    <div class="card">
+                        <div class="details">
+                            <div class="left">
+                                <p class="name">@phim.TenPhim</p>
+                                <div class="date_quality">
+                                    <p class="quality">@phim.DinhDangPhim</p> <!-- Giả sử chất lượng là HD, bạn có thể thay thế bằng dữ liệu thực nếu có -->
+                                    <p class="date">@phim.NamSx</p>
                                 </div>
-                                <div class="right">
-                                    <!-- Ticket Booking -->
-                                    <div class="ticket-booking">
-                                        <i class="fa-solid fa-ticket"></i>
-                                        <a href="/Home/Detail?id=@phim.IdPhim">Chi tiết</a>
+                                <p class="category">
+                                @string.Join("/", phim.IdTheLoais.Select(t => t.TenTheLoai))
+                                </p>
+                                <div class="info">
+                                    <div class="time">
+                                        <i class="fa-regular fa-clock"></i>
+                                        <p>@phim.ThoiLuong phút</p>
                                     </div>
                                 </div>
                             </div>
-                            <img src="~/image/ApPhich/@phim.ApPhich" alt="@phim.TenPhim"> <!-- Replace with actual image path -->
+                                <div class="right">
+                                    <!-- Đặt vé -->
+                                    <div class="ticket-booking">
+                                        <a href="/Home/Detail?id=@phim.IdPhim">
+                                            <i class="fa-solid fa-ticket"></i>
+                                        </a>
+                                    </div>
+                                </div>
                         </div>
+                        <img src="~/image/ApPhich/@phim.ApPhich" alt="@phim.TenPhim"> <!-- Thay thế bằng đường dẫn hình ảnh thực -->
+                    </div>
                 }
-                }
-                else
-                {
-        <p>Không có dữ liệu để hiển thị </p>
-                }
+            }
+            else
+            {
+                <p>Không có dữ liệu để hiển thị</p>
+            }
         </div>
     </div>
 </div>
    
 </body>
 </html>
-
-<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
