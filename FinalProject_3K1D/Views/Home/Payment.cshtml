@@ -3,6 +3,8 @@
     Layout = null;
 }
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -129,8 +131,6 @@
             cursor: pointer;
         }
     </style>
-
-
 </head>
 <body>
     <h1 class="payment-page-title">Trang Thanh Toán</h1>
@@ -161,12 +161,10 @@
             <hr>
             <h3>SỐ TIỀN CẦN THANH TOÁN: <span class="highlight">@ViewBag.TotalAmount VND</span></h3>
             <div class="buttons">
-                <button class="back-button">QUAY LẠI</button>
+                <button class="back-button" onclick="window.history.back()">QUAY LẠI</button>
                 <button id="pay-button" class="pay-button" disabled>THANH TOÁN</button>
             </div>
-        
-
-    </div>
+        </div>
     </div>
 
     <script>
@@ -185,13 +183,14 @@
                 document.getElementById('pay-button').disabled = false;
             });
         });
+
         document.getElementById('pay-button').addEventListener('click', function () {
             // Xử lý thanh toán ở đây
             alert("Thanh toán thành công!");
-            // Redirect đến trang xác nhận hoặc hóa đơn
-        });
 
+            // Redirect đến trang home sau khi thanh toán thành công
+            window.location.href = '@Url.Action("Index", "Home")';
+        });
     </script>
 </body>
-
-
+</html>
