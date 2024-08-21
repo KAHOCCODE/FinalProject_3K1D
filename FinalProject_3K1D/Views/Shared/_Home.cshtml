@@ -36,7 +36,7 @@
     </div>
 
     <!-- Phim Đang Chiếu -->
-    <div class="show">
+    <div id="phim-dang-chieu" class="show">
         <div class="tv_show">
             <h1>Phim Đang Chiếu</h1>
             <div class="box">
@@ -83,6 +83,19 @@
         </div>
     </div>
 
+    <script>
+        document.querySelectorAll('.nav-links a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+
+
     <!-- Footer -->
     <footer>
         @Html.Partial("_Footer")
@@ -117,7 +130,7 @@
                 trailerText: "Xem trailer"
             },
             {
-                title: "Phim Khác",
+                title: "Thor",
                 image: "/images/Thor.jpg",
                 stars: 5,
                 genres: ["Phiêu Lưu", "Huyền Bí", "HD"],

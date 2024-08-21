@@ -281,6 +281,11 @@
     animation: slideInUp 1s ease-out;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+
 
 
 /* CSS cho Carousel Background */
@@ -289,7 +294,7 @@
     padding: 20px; /* Điều chỉnh padding nếu cần */
     margin: 0;
     overflow: hidden;
-    padding-top: 50px; /* Khoảng cách giữa thanh điều hướng và slideshow */
+    padding-top: 80px; /* Khoảng cách giữa thanh điều hướng và slideshow */
 }
 
 .swiper {
@@ -439,9 +444,9 @@
     }
 
         .show .tv_show h1 {
-            font-size: 20px;
+            font-size: 25px;
             color: #fff;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .show .tv_show .box {
