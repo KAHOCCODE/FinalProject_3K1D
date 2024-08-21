@@ -343,10 +343,12 @@ namespace FinalProject_3K1D.Controllers
         }
         public IActionResult TakenSeat()
         {
+            var selectedLichChieuId = HttpContext.Session.GetString("SelectedLichChieuId");
             using (var db = new QlrapPhimContext())
             {
                 // Lấy tất cả các giá trị trong cột MaGheNgoi từ cơ sở dữ liệu
                 var seatStrings = db.Ves
+                    .Where(v => v.IdLichChieu == selectedLichChieuId)
                     .Select(v => v.MaGheNgoi)
                     .ToList();
 
