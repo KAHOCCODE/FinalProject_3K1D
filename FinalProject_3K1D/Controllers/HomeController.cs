@@ -139,7 +139,7 @@ namespace FinalProject_3K1D.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                // Get the list of taken seats
+                // Lấy danh sách chỗ ngồi đã ngồi
                 var takenSeats = db.Ves
                     .Where(v => v.IdLichChieu == selectedLichChieuId)
                     .Select(v => v.MaGheNgoi)
