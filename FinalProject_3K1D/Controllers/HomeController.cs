@@ -22,13 +22,11 @@ namespace FinalProject_3K1D.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly QlrapPhimContext _context;
-        public HomeController(ILogger<HomeController> logger , QlrapPhimContext context)
+
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _context = context;
         }
-
         public IActionResult Index()
         {
             using (var db = new QlrapPhimContext()) 
@@ -244,8 +242,7 @@ namespace FinalProject_3K1D.Controllers
                 ViewBag.TicketId = newTicketId; // Pass the generated ticket ID to the view
                 ViewBag.CustomerId = userId;
                 ViewBag.LoaiVe = 0;
-                
-                ViewBag.TrangThai = 0;
+                ViewBag.TrangThai = 1;
 
             }
             return View();
@@ -256,7 +253,7 @@ namespace FinalProject_3K1D.Controllers
         {
             // Retrieve the user ID from the session
             var userId = HttpContext.Session.GetString("UserId");
-            
+
             if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Index", "Home"); // Redirect if UserId is not found in session
@@ -264,13 +261,13 @@ namespace FinalProject_3K1D.Controllers
 
             using (var db = new QlrapPhimContext())
             {
-                // Fetch the user's tickets from the database
+                // Fetch the user's tickets from the database with status = 1
                 var tickets = db.Ves
                     .Include(v => v.IdLichChieuNavigation)
                     .ThenInclude(lc => lc.IdPhongChieuNavigation)
                     .Include(v => v.IdLichChieuNavigation.IdPhimNavigation)
                     .Include(v => v.IdKhachHangNavigation)
-                    .Where(v => v.IdKhachHang == userId)
+                    .Where(v => v.IdKhachHang == userId && v.TrangThai == 1)
                     .ToList();
 
                 // If no tickets found, redirect to another view or show a message (optional)
@@ -279,40 +276,38 @@ namespace FinalProject_3K1D.Controllers
                     return RedirectToAction("Index", "Home"); // Or you can return a view with a message
                 }
 
-                // Pass the tickets to the view (for demonstration, we'll pass the first ticket)
-                var ticket = tickets.FirstOrDefault();
-
-                if (ticket != null)
-                {
-                    ViewBag.MovieTitle = ticket.IdLichChieuNavigation?.IdPhimNavigation?.TenPhim ?? "Unknown";
-                    ViewBag.Showtime = ticket.IdLichChieuNavigation?.GioChieu.ToString() ?? "Unknown";
-                    ViewBag.Room = ticket.IdLichChieuNavigation?.IdPhongChieuNavigation?.TenPhong ?? "Unknown";
-                    ViewBag.CustomerName = ticket.IdKhachHangNavigation?.HoTen ?? "Unknown";
-                    ViewBag.Price = ticket.TienBanVe.HasValue ? ticket.TienBanVe.Value.ToString() : "Unknown";
-                    ViewBag.IdVe = ticket.IdVe;
-                    ViewBag.IdSeat = ticket.MaGheNgoi;
-                }
-
-                return View(ticket);
+                // Pass the tickets to the view
+                return View(tickets);
             }
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CancelTicket(int idVe)
+        public IActionResult CancelTicket([FromBody] CancelTicketRequest request)
         {
             using (var _context = new QlrapPhimContext())
             {
                 try
                 {
-                    var ticket = _context.Ves.Find(idVe);
+                    if (request == null || request.IdVe <= 0)
+                    {
+                        return BadRequest("Invalid request.");
+                    }
+
+                    var ticket = _context.Ves.Find(request.IdVe);
 
                     if (ticket == null)
                     {
-                        return BadRequest("Ticket not found.");
+                        return NotFound("Ticket not found.");
                     }
 
-                    _context.Ves.Remove(ticket);
+                    if (ticket.TrangThai == 0)
+                    {
+                        return BadRequest("Ticket is already cancelled.");
+                    }
+
+                    ticket.TrangThai = 0; // Mark as cancelled
                     _context.SaveChanges();
 
                     return Ok();
@@ -324,6 +319,13 @@ namespace FinalProject_3K1D.Controllers
                 }
             }
         }
+
+        public class CancelTicketRequest
+        {
+            public int IdVe { get; set; }
+        }
+
+
 
         private int GenerateTicketId()
         {
@@ -402,8 +404,6 @@ namespace FinalProject_3K1D.Controllers
 
             return View(moviesQuery.ToList());
         }
-
-        #endregion
     }
 }
 
