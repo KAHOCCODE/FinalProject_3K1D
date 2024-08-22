@@ -10,5 +10,8 @@ namespace FinalProject_3K1D.Models
         public decimal GiaTri { get; set; }
         public DateTime NgayBatDau { get; set; }
         public DateTime NgayKetThuc { get; set; }
+
+        // Thêm mối quan hệ với KhachHang (nếu cần)
+        public virtual ICollection<KhachHang> KhachHangs { get; set; } = new List<KhachHang>();
     }
 }
