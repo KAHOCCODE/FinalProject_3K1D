@@ -1,4 +1,11 @@
 ﻿@* _Navbar.cshtml *@
+
+<haed>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/site.css">
+
+</haed>
 <div class="nav-container">
     <nav class="navbar">
         <div class="container">
@@ -21,8 +28,8 @@
                 <li class="dropdown">
                     <a href="#" class="dropbtn"><i class="fas fa-film"></i> Phim <i class="fas fa-caret-down"></i></a>
                     <div class="dropdown-content">
-                        <a href="MoviesShowing">Phim Đang Chiếu</a>
-                        <a href="#">Phim Sắp Chiếu</a>
+                        <a href="/Home/MoviesShowing">Phim Đang Chiếu</a>
+                        <a href="/Home/MoviesComingSoon">Phim Sắp Chiếu</a>
                     </div>
                 </li>
                 <li><a href="#"><i class="fas fa-utensils"></i> Đồ ăn & Nước</a></li>
