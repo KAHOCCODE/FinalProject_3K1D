@@ -207,7 +207,7 @@ namespace FinalProject_3K1D.Controllers
                 {
                     IdVe = newTicketId,
                     IdKhachHang = userId,
-                    TrangThai = 0,
+                    TrangThai = 1,
                     LoaiVe = 0,
                     IdLichChieu = selectedLichChieuId,
                     TienBanVe = totalAmount,
@@ -281,7 +281,37 @@ namespace FinalProject_3K1D.Controllers
                 return View(tickets);
             }
         }
+        public IActionResult VeDaHuy()
+        {
+            // Retrieve the user ID from the session
+            var userId = HttpContext.Session.GetString("UserId");
 
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Index", "Home"); // Redirect if UserId is not found in session
+            }
+
+            using (var db = new QlrapPhimContext())
+            {
+                // Fetch the user's tickets from the database with status = 1
+                var tickets = db.Ves
+                    .Include(v => v.IdLichChieuNavigation)
+                    .ThenInclude(lc => lc.IdPhongChieuNavigation)
+                    .Include(v => v.IdLichChieuNavigation.IdPhimNavigation)
+                    .Include(v => v.IdKhachHangNavigation)
+                    .Where(v => v.IdKhachHang == userId && v.TrangThai == 0)
+                    .ToList();
+
+                // If no tickets found, redirect to another view or show a message (optional)
+                if (!tickets.Any())
+                {
+                    return RedirectToAction("Index", "Home"); // Or you can return a view with a message
+                }
+
+                // Pass the tickets to the view
+                return View(tickets);
+            }
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
