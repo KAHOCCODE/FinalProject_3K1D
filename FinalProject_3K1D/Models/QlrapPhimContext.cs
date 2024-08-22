@@ -35,6 +35,7 @@ public partial class QlrapPhimContext : DbContext
 
     public virtual DbSet<KhuyenMai> KhuyenMais { get; set; }
 
+    public virtual DbSet<DanhGia> DanhGias { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
         => optionsBuilder.UseSqlServer("Data Source=DESKTOP-3TRF427\\HOANGKA;Initial Catalog=QLRapPhim;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");

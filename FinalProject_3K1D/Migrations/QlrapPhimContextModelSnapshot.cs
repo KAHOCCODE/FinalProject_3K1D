@@ -38,6 +38,44 @@ namespace FinalProject_3K1D.Migrations
                     b.ToTable("ChucVu", (string)null);
                 });
 
+            modelBuilder.Entity("FinalProject_3K1D.Models.DanhGia", b =>
+                {
+                    b.Property<int>("IdDanhGia")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdDanhGia"));
+
+                    b.Property<int>("Diem")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IdKhachHang")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("IdPhim")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<DateTime>("NgayDanhGia")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("NoiDung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TrangThaiDanhGia")
+                        .HasColumnType("bit");
+
+                    b.HasKey("IdDanhGia");
+
+                    b.HasIndex("IdKhachHang");
+
+                    b.HasIndex("IdPhim");
+
+                    b.ToTable("DanhGias");
+                });
+
             modelBuilder.Entity("FinalProject_3K1D.Models.KhachHang", b =>
                 {
                     b.Property<string>("IdKhachHang")
@@ -71,6 +109,12 @@ namespace FinalProject_3K1D.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<int?>("IdKhuyenMai")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("KhuyenMaiIdKhuyenMai")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("NgaySinh")
                         .HasColumnType("datetime");
 
@@ -93,6 +137,8 @@ namespace FinalProject_3K1D.Migrations
                         .HasColumnName("UserKH");
 
                     b.HasKey("IdKhachHang");
+
+                    b.HasIndex("KhuyenMaiIdKhuyenMai");
 
                     b.ToTable("KhachHang", (string)null);
                 });
@@ -437,6 +483,34 @@ namespace FinalProject_3K1D.Migrations
                     b.ToTable("PhanLoaiPhim", (string)null);
                 });
 
+            modelBuilder.Entity("FinalProject_3K1D.Models.DanhGia", b =>
+                {
+                    b.HasOne("FinalProject_3K1D.Models.KhachHang", "KhachHang")
+                        .WithMany()
+                        .HasForeignKey("IdKhachHang")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FinalProject_3K1D.Models.Phim", "Phim")
+                        .WithMany()
+                        .HasForeignKey("IdPhim")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KhachHang");
+
+                    b.Navigation("Phim");
+                });
+
+            modelBuilder.Entity("FinalProject_3K1D.Models.KhachHang", b =>
+                {
+                    b.HasOne("FinalProject_3K1D.Models.KhuyenMai", "KhuyenMai")
+                        .WithMany("KhachHangs")
+                        .HasForeignKey("KhuyenMaiIdKhuyenMai");
+
+                    b.Navigation("KhuyenMai");
+                });
+
             modelBuilder.Entity("FinalProject_3K1D.Models.LichChieu", b =>
                 {
                     b.HasOne("FinalProject_3K1D.Models.Phim", "IdPhimNavigation")
@@ -528,6 +602,11 @@ namespace FinalProject_3K1D.Migrations
             modelBuilder.Entity("FinalProject_3K1D.Models.KhachHang", b =>
                 {
                     b.Navigation("Ves");
+                });
+
+            modelBuilder.Entity("FinalProject_3K1D.Models.KhuyenMai", b =>
+                {
+                    b.Navigation("KhachHangs");
                 });
 
             modelBuilder.Entity("FinalProject_3K1D.Models.LichChieu", b =>
