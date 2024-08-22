@@ -1,0 +1,103 @@
+﻿@model IEnumerable<FinalProject_3K1D.Models.Phim>
+@{
+    ViewData["Title"] = "Danh sách phim đang được chiếu";
+    Layout = null;
+}
+
+<head>
+    <style>
+        .show {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .form-group {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        #genreSelect {
+            width: 100%;
+        }
+
+        .carousel-inner {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .carousel-item img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .card {
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<div class="show">
+    <h1>@ViewData["Title"]</h1>
+
+    <!-- Genre Filter -->
+    <form method="get" class="mb-3">
+        <div class="form-group">
+            <label for="genreSelect">Filter by Genre:</label>
+            <select id="genreSelect" name="selectedGenre" class="form-control" onchange="this.form.submit()">
+                <option value="">-- All Genres --</option>
+                @foreach (var genre in ViewData["Genres"] as List<string>)
+                {
+                    var isSelected = ViewData["SelectedGenre"]?.ToString() == genre ? "selected" : "";
+                    <option value="@genre" selected="@isSelected">@genre</option>
+                }
+            </select>
+        </div>
+        <input type="hidden" name="searchString" value="@ViewData["SearchString"]" />
+    </form>
+
+    <!-- Slideshow -->
+    <div id="movieCarousel" class="carousel slide">
+        <div class="carousel-inner">
+            @foreach (var item in Model.Select((phim, index) => new { phim, index }))
+            {
+                <div class="carousel-item @(item.index == 0 ? "active" : "")">
+                    <div class="d-flex justify-content-center">
+                        <div class="card mx-2">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.phim.TenPhim</h5>
+                                <p class="card-text">@item.phim.MoTa</p>
+                                <p class="card-text"><small class="text-muted">@item.phim.DinhDangPhim - @item.phim.NamSx</small></p>
+                                <a href="@Url.Action("Detail", "Home", new { id = item.phim.IdPhim })" class="btn btn-primary">View Details</a>
+                            </div>
+                            @if (!string.IsNullOrEmpty(item.phim.ApPhich))
+                            {
+                                <img src="@Url.Content("~/image/ApPhich/" + item.phim.ApPhich)" class="d-block w-100" alt="@item.phim.TenPhim">
+                            }
+                            else
+                            {
+                                <img src="/image/placeholder.jpg" class="d-block w-100" alt="No Image Available">
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <a class="carousel-control-prev" href="#movieCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#movieCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
+
+<!-- Bootstrap and jQuery -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

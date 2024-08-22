@@ -22,10 +22,11 @@ namespace FinalProject_3K1D.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly QlrapPhimContext _context;
+        public HomeController(ILogger<HomeController> logger , QlrapPhimContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -371,7 +372,38 @@ namespace FinalProject_3K1D.Controllers
                 // Trả về danh sách ghế đã đặt dưới dạng JSON
                 return Json(bookedSeats.ToList());
             }
+
+           
         }
+        #region MoviesShowing
+
+        public IActionResult MoviesShowing(string searchString, string selectedGenre)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            var moviesQuery = _context.Phims
+                .Include(p => p.IdTheLoais)
+                .Where(p => p.NgayKhoiChieu <= today && p.NgayKetThuc >= today);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                moviesQuery = moviesQuery.Where(p => p.TenPhim.Contains(searchString));
+            }
+
+            if (!string.IsNullOrEmpty(selectedGenre))
+            {
+                moviesQuery = moviesQuery.Where(p => p.IdTheLoais.Any(tl => tl.TenTheLoai == selectedGenre));
+            }
+
+            ViewData["SearchString"] = searchString;
+            ViewData["SelectedGenre"] = selectedGenre;
+
+            // Fetch unique genres for the filter dropdown
+            ViewData["Genres"] = _context.TheLoais.Select(tl => tl.TenTheLoai).Distinct().ToList();
+
+            return View(moviesQuery.ToList());
+        }
+
+        #endregion
     }
 }
 

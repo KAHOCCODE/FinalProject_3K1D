@@ -37,7 +37,7 @@ public partial class QlrapPhimContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-0U55SOV\\SQLEXPRESS;Initial Catalog=QLRapPhim;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-3TRF427\\HOANGKA;Initial Catalog=QLRapPhim;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
