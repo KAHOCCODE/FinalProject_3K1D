@@ -22,14 +22,15 @@ namespace FinalProject_3K1D.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly QlrapPhimContext _context;
+        public HomeController(ILogger<HomeController> logger, QlrapPhimContext context)
         {
             _logger = logger;
+            _context = context;
         }
         public IActionResult Index()
         {
-            using (var db = new QlrapPhimContext()) 
+            using (var db = new QlrapPhimContext())
             {
                 var phims = db.Phims
                     .Include(p => p.IdTheLoais)
@@ -375,7 +376,7 @@ namespace FinalProject_3K1D.Controllers
                 return Json(bookedSeats.ToList());
             }
 
-           
+
         }
         #region MoviesShowing
 
@@ -404,6 +405,36 @@ namespace FinalProject_3K1D.Controllers
 
             return View(moviesQuery.ToList());
         }
+        #endregion
+
+        #region MovieComingSoon
+        public IActionResult MoviesComingSoon(string searchString, string selectedGenre)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            var moviesQuery = _context.Phims
+                .Include(p => p.IdTheLoais)
+                .Where(p => p.NgayKhoiChieu > today);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                moviesQuery = moviesQuery.Where(p => p.TenPhim.Contains(searchString));
+            }
+
+            if (!string.IsNullOrEmpty(selectedGenre))
+            {
+                moviesQuery = moviesQuery.Where(p => p.IdTheLoais.Any(tl => tl.TenTheLoai == selectedGenre));
+            }
+
+            ViewData["SearchString"] = searchString;
+            ViewData["SelectedGenre"] = selectedGenre;
+
+            // Fetch unique genres for the filter dropdown
+            ViewData["Genres"] = _context.TheLoais.Select(tl => tl.TenTheLoai).Distinct().ToList();
+
+            return View(moviesQuery.ToList());
+        }
+
+        #endregion
     }
 }
 
