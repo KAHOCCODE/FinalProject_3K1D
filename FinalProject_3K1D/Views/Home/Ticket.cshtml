@@ -1,0 +1,39 @@
+﻿@model IEnumerable<FinalProject_3K1D.Models.Ve>
+
+@{
+    ViewData["Title"] = "Ticket";
+}
+
+<h1>All Tickets</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ticket ID</th>
+            <th>Customer Name</th>
+            <th>Movie Title</th>
+            <th>Cinema Hall</th>
+            <th>Room</th>
+            <th>Showtime</th>
+            <th>Seat(s)</th>
+            <th>Price</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ticket in Model)
+        {
+                <tr>
+                    <td>@ticket.IdVe</td>
+                    <td>@ticket.HoTen</td>
+                    <td>@ticket.TenPhim</td>
+                    <td>@ticket.TenRap</td>
+                    <td>@ticket.TenPhong</td>
+                    <td>@ticket.GioChieu.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@ticket.MaGheNgoi</td>
+                    <td>@ticket.TienBanVe?.ToString("C")</td>
+                    <td>@(ticket.TrangThai == 0 ? "Valid" : "Cancelled")</td>
+                </tr>
+        }
+    </tbody>
+</table>
