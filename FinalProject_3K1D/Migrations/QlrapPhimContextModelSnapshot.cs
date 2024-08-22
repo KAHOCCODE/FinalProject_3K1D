@@ -254,7 +254,6 @@ namespace FinalProject_3K1D.Migrations
                         .HasColumnName("idRap");
 
                     b.Property<DateTime?>("NgaySinh")
-                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<string>("PassNv")
