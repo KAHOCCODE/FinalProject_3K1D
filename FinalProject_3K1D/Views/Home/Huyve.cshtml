@@ -24,7 +24,7 @@
                     <p class="room"><strong>Phòng chiếu:</strong> @ticket.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong</p>
                     <p class="room"><strong>Mã ghế ngồi:</strong> @ticket.MaGheNgoi</p>
                     <p class="customer-name"><strong>Tên khách hàng:</strong> @ticket.IdKhachHangNavigation.HoTen</p>
-                    <p class="price"><strong>Giá tiền:</strong> @ticket.TienBanVe.HasValue ? ticket.TienBanVe.Value.ToString() : "Unknown" VND</p>
+                    <p class="price"><strong>Giá tiền:</strong> @ticket.TienBanVe VND</p>
                 </div>
                 <div class="modal-footer">
                     <button class="cancel-button" onclick="cancelTicket(@ticket.IdVe)">Hủy vé</button>
