@@ -9,58 +9,40 @@
 <!-- Background overlay -->
 <div class="overlay"></div>
 
+<!-- Container for the title and buttons -->
+<div class="header-container">
+    <h1 class="header-title">Vé đã hủy</h1>
+    <div class="header-buttons">
+        <button onclick="window.location.href='@Url.Action("Index", "Home")'" class="back-button">Quay lại trang chủ</button>
+    </div>
+</div>
+
 @if (Model.Any())
 {
-    foreach (var ticket in Model)
-    {
-                <div class="modal-container">
-                    <div class="ticket-modal">
-                        <div class="modal-header">
-                            <h2 class="movie-title">@ticket.IdLichChieuNavigation.IdPhimNavigation.TenPhim</h2>
-                        </div>
-                        <div class="modal-body">
-                            <p class="ticket-id"><strong>Mã vé:</strong> @ticket.IdVe</p>
-                            <p class="showtime"><strong>Giờ chiếu:</strong> @ticket.IdLichChieuNavigation.GioChieu.ToString()</p>
-                            <p class="room"><strong>Phòng chiếu:</strong> @ticket.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong</p>
-                            <p class="room"><strong>Mã ghế ngồi:</strong> @ticket.MaGheNgoi</p>
-                            <p class="customer-name"><strong>Tên khách hàng:</strong> @ticket.IdKhachHangNavigation.HoTen</p>
-                            <p class="price"><strong>Giá tiền:</strong> @ticket.TienBanVe VND</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="cancel-button" onclick="cancelTicket(@ticket.IdVe)">Hủy vé</button>
+        <div class="tickets-container">
+        @foreach (var ticket in Model)
+        {
+                    <div class="ticket-item">
+                        <div class="modal-container">
+                            <div class="ticket-modal">
+                                <div class="modal-header">
+                                    <h2 class="movie-title">@ticket.IdLichChieuNavigation.IdPhimNavigation.TenPhim</h2>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="ticket-id"><strong>Mã vé:</strong> @ticket.IdVe</p>
+                                    <p class="showtime"><strong>Giờ chiếu:</strong> @ticket.IdLichChieuNavigation.GioChieu.ToString()</p>
+                                    <p class="room"><strong>Phòng chiếu:</strong> @ticket.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong</p>
+                                    <p class="seat"><strong>Mã ghế ngồi:</strong> @ticket.MaGheNgoi</p>
+                                    <p class="customer-name"><strong>Tên khách hàng:</strong> @ticket.IdKhachHangNavigation.HoTen</p>
+                                    <p class="price"><strong>Giá tiền:</strong> @ticket.TienBanVe VND</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-    }
+        }
+        </div>
 }
 else
 {
         <p>Không có dữ liệu vé để hiển thị.</p>
 }
-<script>
-    function cancelTicket(idVe) {
-        if (confirm("Bạn có chắc muốn hủy vé này?")) {
-            // Get the anti-forgery token
-            var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-            // Make an AJAX request to cancel the ticket
-            fetch('/Home/CancelTicket', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'RequestVerificationToken': token
-                },
-                body: JSON.stringify({ idVe: idVe })
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert("Vé đã được hủy thành công.");
-                    window.location.reload(); // Reload the page to reflect the changes
-                } else {
-                    return response.text().then(text => alert("Có lỗi xảy ra khi hủy vé: " + text));
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    }
-</script>
