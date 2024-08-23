@@ -56,6 +56,8 @@ public partial class LichChieu
             }
         }
     }
+    
+
 
 
 }

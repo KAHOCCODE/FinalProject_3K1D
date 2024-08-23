@@ -250,24 +250,27 @@
              <div class="cinema-selection">
                 <label for="cinema-select"><i class="fas fa-map-marker-alt"></i> Chọn Rạp:</label>
                 <select id="cinema-select" name="cinema">
-                                @foreach (var cinemaGroup in Model.LichChieus.GroupBy(lc => lc.TenRap).Select(g => g.First()))
-                                {
+                            @foreach (var cinemaGroup in Model.LichChieus.GroupBy(lc => lc.TenRap).Select(g => g.First()))
+                            {
                             <option value="@(cinemaGroup.IdRap)">@cinemaGroup.TenRap</option>
-                                }
+                            }
                 </select>
             </div>
                 
                 
             <h2>Lịch Chiếu</h2>
-            <div id="showtime-container" class="time-buttons">
-                <div class="time-buttons">
-                    @foreach (var lichChieu in Model.LichChieus)
-                    {
-                        <label class="btn-time">
-                            <input type="radio" name="selectedLichChieu" value="@lichChieu.IdLichChieu">
-                            @lichChieu.GioChieu - Phòng: @(lichChieu.TenPhong ?? "Unknown") @* - Rạp: @(lichChieu.TenRap ?? "Unknown" *@)
-                        </label>
-                    }
+            <!-- Add this inside your <body> -->
+            <div id="showtime-container" style="display: none;">
+                <div id="showtime-container" class="time-buttons">
+                    <div class="time-buttons">
+                            @foreach (var lichChieu in Model.LichChieus)
+                            {
+                    <label class="btn-time">
+                        <input type="radio" name="selectedLichChieu" value="@lichChieu.IdLichChieu">
+                                    @lichChieu.GioChieu - Phòng: @(lichChieu.TenPhong ?? "Unknown") - Rạp: @(lichChieu.TenRap ?? "Unknown")
+                    </label>
+                            }
+                    </div>
                 </div>
             </div>
             <button class="btn-book" onclick="bookTickets()">Đặt Vé</button>
@@ -276,33 +279,45 @@
 
     <script src="path/to/your/bootstrap.bundle.min.js"></script>
     <script>
-       document.getElementById('cinema-select').addEventListener('change', function() {
-    const cinemaId = this.value;
-    if (cinemaId) {
-        fetch(`/YourController/GetShowtimes?cinemaId=${cinemaId}`)
-            .then(response => response.json())
-            .then(data => {
-                const showtimeContainer = document.getElementById('showtime-container');
-                showtimeContainer.innerHTML = ''; // Clear existing showtimes
-                data.forEach(showtime => {
-                    const button = document.createElement('label');
-                    button.className = 'btn-time';
-                    button.innerHTML = `
-                        <input type="radio" name="selectedLichChieu" value="${showtime.IdLichChieu}">
-                        ${new Date(showtime.GioChieu).toLocaleTimeString()} - Phòng: ${showtime.TenPhong || "Unknown"} }
-                    `;
-                    showtimeContainer.appendChild(button);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching showtimes:', error);
-                alert("Đã xảy ra lỗi khi tải lịch chiếu.");
-            });
-    } else {
-        // Clear showtimes if no cinema is selected
-        document.getElementById('showtime-container').innerHTML = '';
-    }
-});
+         document.getElementById('cinema-select').addEventListener('change', function() {
+            const cinemaId = this.value;
+            const showtimeContainer = document.getElementById('showtime-container');
+            const loadingSpinner = document.getElementById('loading-spinner');
+
+            if (cinemaId) {
+                loadingSpinner.style.display = 'block'; // Show loading indicator
+
+                fetch(`/HomeController/GetShowtimes?cinemaId=${cinemaId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        showtimeContainer.innerHTML = ''; // Clear existing showtimes
+                        if (data.length > 0) {
+                            showtimeContainer.style.display = 'flex'; // Show container if there are showtimes
+                            data.forEach(showtime => {
+                                const button = document.createElement('label');
+                                button.className = 'btn-time';
+                                button.innerHTML = `
+                                    <input type="radio" name="selectedLichChieu" value="${showtime.IdLichChieu}">
+                                    ${new Date(showtime.GioChieu).toLocaleTimeString()} - Phòng: ${showtime.TenPhong || "Unknown"}
+                                `;
+                                showtimeContainer.appendChild(button);
+                            });
+                        } else {
+                            showtimeContainer.style.display = 'none'; // Hide container if no showtimes
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching showtimes:', error);
+                        alert("Đã xảy ra lỗi khi tải lịch chiếu.");
+                    })
+                    .finally(() => {
+                        loadingSpinner.style.display = 'none'; // Hide loading indicator
+                    });
+            } else {
+                showtimeContainer.innerHTML = ''; // Clear showtimes
+                showtimeContainer.style.display = 'none'; // Hide container if no cinema is selected
+            }
+        });
 
         function bookTickets() {
             const selectedLichChieu = document.querySelector('input[name="selectedLichChieu"]:checked');
