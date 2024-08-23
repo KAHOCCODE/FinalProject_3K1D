@@ -141,13 +141,14 @@ namespace FinalProject_3K1D.Controllers
 
         #endregion
 
-        #region Login in
+        #region Login
         [HttpGet]
         public IActionResult Login(string? ReturnUrl)
         {
             ViewBag.ReturnUrl = ReturnUrl;
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginKH model, string? ReturnUrl)
@@ -158,7 +159,7 @@ namespace FinalProject_3K1D.Controllers
             {
                 if (model.Role == "KhachHang")
                 {
-                    // Login logic for customer
+                    // Logic đăng nhập cho Khách Hàng
                     var khachhang = await _context.KhachHangs
                         .SingleOrDefaultAsync(kh => kh.UserKh == model.UserKh && kh.PassKh == model.PassKh);
 
@@ -168,7 +169,7 @@ namespace FinalProject_3K1D.Controllers
                         return View(model);
                     }
 
-                    // Store IdKhachHang in session
+                    // Lưu thông tin người dùng vào session hoặc ClaimsPrincipal
                     HttpContext.Session.SetString("UserId", khachhang.IdKhachHang);
                     HttpContext.Session.SetString("UserName", khachhang.HoTen);
                     HttpContext.Session.SetString("UserRole", "KhachHang");
@@ -177,7 +178,8 @@ namespace FinalProject_3K1D.Controllers
             {
                 new Claim(ClaimTypes.Name, khachhang.HoTen),
                 new Claim(ClaimTypes.Email, khachhang.Email ?? string.Empty),
-                new Claim(ClaimTypes.Role, "KhachHang")
+                new Claim(ClaimTypes.Role, "KhachHang"),
+                new Claim("UserId", khachhang.IdKhachHang) // Add user Id claim
             };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -190,7 +192,7 @@ namespace FinalProject_3K1D.Controllers
                 }
                 else if (model.Role == "NhanVien")
                 {
-                    // Login logic for employee
+                    // Logic đăng nhập cho Nhân Viên
                     var nhanvien = await _context.NhanViens
                         .SingleOrDefaultAsync(nv => nv.UserNv == model.UserKh && nv.PassNv == model.PassKh);
 
@@ -200,7 +202,7 @@ namespace FinalProject_3K1D.Controllers
                         return View(model);
                     }
 
-                    // Store IdNhanVien in session
+                    // Lưu thông tin người dùng vào session hoặc ClaimsPrincipal
                     HttpContext.Session.SetString("UserId", nhanvien.IdNhanVien);
                     HttpContext.Session.SetString("UserName", nhanvien.HoTen);
                     HttpContext.Session.SetString("UserRole", "NhanVien");
@@ -209,7 +211,8 @@ namespace FinalProject_3K1D.Controllers
             {
                 new Claim(ClaimTypes.Name, nhanvien.HoTen),
                 new Claim(ClaimTypes.Email, nhanvien.Email ?? string.Empty),
-                new Claim(ClaimTypes.Role, "NhanVien")
+                new Claim(ClaimTypes.Role, "NhanVien"),
+                new Claim("UserId", nhanvien.IdNhanVien) // Add user Id claim
             };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -223,11 +226,10 @@ namespace FinalProject_3K1D.Controllers
             }
             return View(model);
         }
+ 
 
 
-
-
-        #endregion
+#endregion
 
         #region đăng xuất 
         [HttpPost]
@@ -290,75 +292,61 @@ namespace FinalProject_3K1D.Controllers
 
         #endregion
 
-        #region Change Password
+        #region ChangePassword
+        // GET: Hiển thị form thay đổi mật khẩu
         [HttpGet]
         public IActionResult ChangePassword()
         {
             return View();
         }
 
+        // POST: Xử lý yêu cầu thay đổi mật khẩu
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var userEmail = User.Identity?.Name;
-                if (string.IsNullOrEmpty(userEmail))
-                {
-                    ModelState.AddModelError("", "Người dùng không xác định.");
-                    return View(model);
-                }
-
-                var user = await _context.KhachHangs
-                    .FirstOrDefaultAsync(kh => kh.Email == userEmail);
-
-                if (user == null)
-                {
-                    ModelState.AddModelError("", "Người dùng không tồn tại.");
-                    return View(model);
-                }
-
-                // Using PasswordHasher for hashing passwords
-                var passwordHasher = new PasswordHasher<KhachHang>();
-
-                // Check current password
-                if (passwordHasher.VerifyHashedPassword(user, user.PassKh, model.OldPassword) == PasswordVerificationResult.Failed)
-                {
-                    ModelState.AddModelError("", "Mật khẩu hiện tại không đúng.");
-                    return View(model);
-                }
-
-                // Check if the new password is the same as the old one
-                if (passwordHasher.VerifyHashedPassword(user, user.PassKh, model.NewPassword) != PasswordVerificationResult.Failed)
-                {
-                    ModelState.AddModelError("", "Mật khẩu mới không thể giống mật khẩu cũ.");
-                    return View(model);
-                }
-
-                // Hash new password and update
-                user.PassKh = passwordHasher.HashPassword(user, model.NewPassword);
-
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Mật khẩu đã được thay đổi thành công!";
-                    return RedirectToAction("Profile");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", "Đã xảy ra lỗi khi thay đổi mật khẩu. Vui lòng thử lại.");
-                    Console.WriteLine($"Error: {ex.Message}");
-                }
+                return View(model);
             }
 
-            return View(model);
+            // Lấy IdKhachHang từ session
+            var userId = HttpContext.Session.GetString("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Lấy thông tin khách hàng từ cơ sở dữ liệu
+            var khachhang = await _context.KhachHangs
+                .SingleOrDefaultAsync(kh => kh.IdKhachHang == userId);
+
+            if (khachhang == null)
+            {
+                ModelState.AddModelError("", "Người dùng không tồn tại.");
+                TempData["ErrorMessage"] = "Người dùng không tồn tại.";
+                return View(model);
+            }
+
+            // Kiểm tra mật khẩu hiện tại
+            if (khachhang.PassKh != model.OldPassword)
+            {
+                ModelState.AddModelError("", "Mật khẩu hiện tại không đúng.");
+                TempData["ErrorMessage"] = "Mật khẩu hiện tại không đúng.";
+                return View(model);
+            }
+
+            // Cập nhật mật khẩu mới
+            khachhang.PassKh = model.NewPassword;
+            _context.KhachHangs.Update(khachhang);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Mật khẩu đã được thay đổi thành công!";
+            return RedirectToAction("Index", "Home");
         }
-
-
-
         #endregion
+
+
     }
 }
 

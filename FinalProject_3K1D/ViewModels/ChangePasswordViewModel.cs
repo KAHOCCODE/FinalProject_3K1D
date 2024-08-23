@@ -4,20 +4,19 @@ namespace FinalProject_3K1D.ViewModels
 {
     public class ChangePasswordViewModel
     {
-        [Required]
+  
         [DataType(DataType.Password)]
-        [Display(Name = "Mật khẩu hiện tại")]
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu hiện tại.")]
         public string OldPassword { get; set; }
 
-        [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Mật khẩu mới")]
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu mới.")]
+        [StringLength(100, ErrorMessage = "Mật khẩu phải ít nhất {2} ký tự.", MinimumLength = 6)]
         public string NewPassword { get; set; }
 
-        [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Nhập lại mật khẩu mới")]
-        [Compare("NewPassword", ErrorMessage = "Mật khẩu xác nhận không khớp.")]
+        [Required(ErrorMessage = "Vui lòng xác nhận mật khẩu mới.")]
+        [Compare("NewPassword", ErrorMessage = "Mật khẩu mới và xác nhận mật khẩu không khớp.")]
         public string ConfirmPassword { get; set; }
     }
 }
