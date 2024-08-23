@@ -30,6 +30,7 @@ namespace FinalProject_3K1D.Controllers
         }
         public IActionResult Index()
         {
+
             using (var db = new QlrapPhimContext())
             {
                 var phims = db.Phims
@@ -79,6 +80,7 @@ namespace FinalProject_3K1D.Controllers
 
         public IActionResult _Home()
         {
+            
             using (var db = new QlrapPhimContext())
             {
                 var phims = db.Phims
@@ -252,6 +254,7 @@ namespace FinalProject_3K1D.Controllers
 
         public IActionResult Huyve()
         {
+            UpdateTicketStatus();
             // Retrieve the user ID from the session
             var userId = HttpContext.Session.GetString("UserId");
 
@@ -312,7 +315,37 @@ namespace FinalProject_3K1D.Controllers
                 return View(tickets);
             }
         }
+        public IActionResult VeDaXem()
+        {
+            // Retrieve the user ID from the session
+            var userId = HttpContext.Session.GetString("UserId");
 
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Index", "Home"); // Redirect if UserId is not found in session
+            }
+
+            using (var db = new QlrapPhimContext())
+            {
+                // Fetch the user's tickets from the database with status = 1
+                var tickets = db.Ves
+                    .Include(v => v.IdLichChieuNavigation)
+                    .ThenInclude(lc => lc.IdPhongChieuNavigation)
+                    .Include(v => v.IdLichChieuNavigation.IdPhimNavigation)
+                    .Include(v => v.IdKhachHangNavigation)
+                    .Where(v => v.IdKhachHang == userId && v.TrangThai == 2)
+                    .ToList();
+
+                // If no tickets found, redirect to another view or show a message (optional)
+                if (!tickets.Any())
+                {
+                    return RedirectToAction("Index", "Home"); // Or you can return a view with a message
+                }
+
+                // Pass the tickets to the view
+                return View(tickets);
+            }
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CancelTicket([FromBody] CancelTicketRequest request)
@@ -408,6 +441,32 @@ namespace FinalProject_3K1D.Controllers
 
 
         }
+        public void UpdateTicketStatus()
+        {
+            using (var db = new QlrapPhimContext())
+            {
+                var now = DateTime.Now;
+
+                // Get all tickets with valid status (assuming 1 is valid)
+                var tickets = db.Ves
+                    .Include(v => v.IdLichChieuNavigation)
+                    .Where(v => v.TrangThai == 1) // Only consider tickets that are currently valid
+                    .ToList();
+
+                foreach (var ticket in tickets)
+                {
+                    if (ticket.IdLichChieuNavigation.GioChieu < now)
+                    {
+                        // If the showtime has passed, mark the ticket as invalid (assuming 0 is invalid)
+                        ticket.TrangThai = 2;
+                    }
+                }
+
+                // Save changes to the database
+                db.SaveChanges();
+            }
+        }
+
         #region MoviesShowing
 
         public IActionResult MoviesShowing(string searchString, string selectedGenre)
