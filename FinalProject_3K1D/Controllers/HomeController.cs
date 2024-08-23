@@ -77,7 +77,31 @@ namespace FinalProject_3K1D.Controllers
                 return View(phim);
             }
         }
-        
+        [HttpGet]
+        public IActionResult GetShowtimes(string cinemaId)
+        {
+            try
+            {
+                var showtimes = _context.LichChieus
+                    .Where(lc => lc.IdRap == cinemaId)
+                    .Select(lc => new
+                    {
+                        lc.IdLichChieu,
+                        lc.GioChieu,
+                        lc.TenPhong
+                    })
+                    .ToList();
+
+                return Json(showtimes);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (not shown here)
+                return Json(new { success = false, message = "Đã xảy ra lỗi khi lấy dữ liệu." });
+            }
+        }
+
+
 
         public IActionResult _Home()
         {
