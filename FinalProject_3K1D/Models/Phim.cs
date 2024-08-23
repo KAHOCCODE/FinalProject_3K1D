@@ -32,6 +32,7 @@ public partial class Phim
     public virtual ICollection<LichChieu> LichChieus { get; set; } = new List<LichChieu>();
 
     public virtual ICollection<TheLoai> IdTheLoais { get; set; } = new List<TheLoai>();
+
     // Thuộc tính để lưu trữ danh sách ID thể loại được chọn
     [NotMapped]
     public List<string> SelectedTheLoaiIds { get; set; } = new List<string>();
@@ -103,7 +104,20 @@ public partial class Phim
             return tenRap;
         }
     }
+    //idrap
+    public string IdRap
+    {
+        get
+        {
+            string idRap = "";
+            foreach (var lichChieu in LichChieus)
+            {
+                idRap += lichChieu.IdRap + ", ";
+            }
 
+            return idRap;
+        }
+    }
 
 
 }

@@ -77,6 +77,30 @@ namespace FinalProject_3K1D.Controllers
                 return View(phim);
             }
         }
+        [HttpGet]
+        public IActionResult GetShowtimes(string cinemaId)
+        {
+            if (string.IsNullOrEmpty(cinemaId))
+            {
+                return BadRequest("Invalid cinema ID");
+            }
+
+            using (var db = new QlrapPhimContext())
+            {
+                var showtimes = db.LichChieus
+                    .Where(lc => lc.IdRap == cinemaId)
+                    .Select(lc => new
+                    {
+                        lc.IdLichChieu,
+                        lc.GioChieu,
+                        TenPhong = lc.TenPhong,
+                        TenRap = lc.TenRap
+                    })
+                    .ToList();
+
+                return Json(showtimes);
+            }
+        }
 
         public IActionResult _Home()
         {
