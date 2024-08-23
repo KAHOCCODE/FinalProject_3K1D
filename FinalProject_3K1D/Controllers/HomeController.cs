@@ -77,27 +77,7 @@ namespace FinalProject_3K1D.Controllers
                 return View(phim);
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> GetShowtimes(string cinemaId)
-        {
-            if (string.IsNullOrEmpty(cinemaId))
-            {
-                return BadRequest("Invalid cinema ID");
-            }
-
-            var showtimes = await _context.LichChieus
-                .Where(lc => lc.IdRap == cinemaId)
-                .Select(lc => new
-                {
-                    lc.IdLichChieu,
-                    lc.GioChieu,
-                    TenPhong = lc.TenPhong,
-                    TenRap = lc.TenRap
-                })
-                .ToListAsync();
-
-            return Json(showtimes);
-        }
+        
 
         public IActionResult _Home()
         {
