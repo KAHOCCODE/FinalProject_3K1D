@@ -9,7 +9,6 @@
 <!-- Background overlay -->
 <div class="overlay"></div>
 
-<!-- Container for the title and buttons -->
 <div class="header-container">
     <h1 class="header-title">Vé đã đặt</h1>
     <div class="header-buttons">
@@ -21,7 +20,7 @@
 
 @if (Model.Any())
 {
-    <div class="tickets-container">
+    <div class="scrollable-tickets-container">
         @foreach (var ticket in Model)
         {
             <div class="ticket-item">
