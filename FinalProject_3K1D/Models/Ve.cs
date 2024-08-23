@@ -61,14 +61,14 @@ public partial class Ve
             }
         }
     }
-    //lấy tên khách hàng
+    //tên rạp
     public string TenRap
     {
         get
         {
-            if (IdLichChieuNavigation != null)
+            if (IdLichChieuNavigation != null && IdLichChieuNavigation.IdRapNavigation != null)
             {
-                return IdLichChieuNavigation.TenRap;
+                return IdLichChieuNavigation.IdRapNavigation.TenRap;
             }
             else
             {

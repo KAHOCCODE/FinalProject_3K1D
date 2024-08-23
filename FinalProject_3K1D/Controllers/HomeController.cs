@@ -77,6 +77,31 @@ namespace FinalProject_3K1D.Controllers
                 return View(phim);
             }
         }
+        [HttpGet]
+        public IActionResult GetShowtimes(string cinemaId)
+        {
+            try
+            {
+                var showtimes = _context.LichChieus
+                    .Where(lc => lc.IdRap == cinemaId)
+                    .Select(lc => new
+                    {
+                        lc.IdLichChieu,
+                        lc.GioChieu,
+                        lc.TenPhong
+                    })
+                    .ToList();
+
+                return Json(showtimes);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (not shown here)
+                return Json(new { success = false, message = "Đã xảy ra lỗi khi lấy dữ liệu." });
+            }
+        }
+
+
 
         public IActionResult _Home()
         {
@@ -147,6 +172,10 @@ namespace FinalProject_3K1D.Controllers
                     .Select(v => v.MaGheNgoi)
                     .ToList();
 
+                // Save cinema and room names into session
+                HttpContext.Session.SetString("TenRap", lichChieu.IdRapNavigation.TenRap); // Cinema Name
+                HttpContext.Session.SetString("TenPhong", lichChieu.IdPhongChieuNavigation.TenPhong); // Room Name
+
                 ViewBag.MovieId = movieId;
                 ViewBag.SelectedLichChieuId = selectedLichChieuId;
                 ViewBag.UserId = userId;
@@ -154,11 +183,13 @@ namespace FinalProject_3K1D.Controllers
                 ViewBag.TicketPrice = movie.GiaVe;
                 ViewBag.GioChieu = lichChieu.GioChieu;
                 ViewBag.TenPhong = lichChieu.IdPhongChieuNavigation.TenPhong;
+                ViewBag.TenRap = lichChieu.IdRapNavigation.TenRap;
                 ViewBag.TakenSeats = takenSeats;
 
                 return View();
             }
         }
+
 
 
         [HttpPost]
@@ -173,14 +204,26 @@ namespace FinalProject_3K1D.Controllers
             HttpContext.Session.SetString("SelectedSeatIds", string.Join(",", model.SeatIds));
             HttpContext.Session.SetInt32("TotalAmount", model.TotalAmount);
 
+            // Save the room and cinema names into session
+            if (model.TenRap != null)
+            {
+                HttpContext.Session.SetString("TenRap", model.TenRap);     // Save cinema name
+            }   // Save cinema name
+            if (model.TenPhong != null)
+            {
+                HttpContext.Session.SetString("TenPhong", model.TenPhong); // Save room name
+            }
             return Json(new { success = true });
         }
+
 
         // Model to receive data from the client
         public class PaymentDetailsModel
         {
             public List<string> SeatIds { get; set; }
             public int TotalAmount { get; set; }
+            public string TenRap { get;  set; }
+            public string TenPhong { get; set; }
         }
 
 
@@ -191,6 +234,8 @@ namespace FinalProject_3K1D.Controllers
             var movieId = HttpContext.Session.GetString("MovieId");
             var userId = HttpContext.Session.GetString("UserId");
             var selectedLichChieuId = HttpContext.Session.GetString("SelectedLichChieuId");
+            var tenRap = HttpContext.Session.GetString("TenRap");
+            var tenPhong = HttpContext.Session.GetString("TenPhong");
 
             if (string.IsNullOrEmpty(seatIds) || totalAmount == null || string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(userId))
             {
@@ -246,6 +291,8 @@ namespace FinalProject_3K1D.Controllers
                 ViewBag.CustomerId = userId;
                 ViewBag.LoaiVe = 0;
                 ViewBag.TrangThai = 1;
+                ViewBag.TenRap = tenRap;
+                ViewBag.TenPhong = tenPhong;
 
             }
             return View();
@@ -270,6 +317,8 @@ namespace FinalProject_3K1D.Controllers
                     .Include(v => v.IdLichChieuNavigation)
                     .ThenInclude(lc => lc.IdPhongChieuNavigation)
                     .Include(v => v.IdLichChieuNavigation.IdPhimNavigation)
+                    // Include the cinema name
+                    .Include(v => v.IdLichChieuNavigation.IdRapNavigation)
                     .Include(v => v.IdKhachHangNavigation)
                     .Where(v => v.IdKhachHang == userId && v.TrangThai == 1)
                     .ToList();
@@ -301,6 +350,7 @@ namespace FinalProject_3K1D.Controllers
                     .Include(v => v.IdLichChieuNavigation)
                     .ThenInclude(lc => lc.IdPhongChieuNavigation)
                     .Include(v => v.IdLichChieuNavigation.IdPhimNavigation)
+                    .Include(v => v.IdLichChieuNavigation.IdRapNavigation)
                     .Include(v => v.IdKhachHangNavigation)
                     .Where(v => v.IdKhachHang == userId && v.TrangThai == 0)
                     .ToList();
@@ -332,6 +382,7 @@ namespace FinalProject_3K1D.Controllers
                     .Include(v => v.IdLichChieuNavigation)
                     .ThenInclude(lc => lc.IdPhongChieuNavigation)
                     .Include(v => v.IdLichChieuNavigation.IdPhimNavigation)
+                    .Include(v => v.IdLichChieuNavigation.IdRapNavigation)
                     .Include(v => v.IdKhachHangNavigation)
                     .Where(v => v.IdKhachHang == userId && v.TrangThai == 2)
                     .ToList();

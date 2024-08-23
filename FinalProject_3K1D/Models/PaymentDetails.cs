@@ -4,5 +4,7 @@
     {
         public List<string> SeatIds { get; set; }
         public int TotalAmount { get; set; }
+        public string TenRap { get; set; }     // Added Cinema Name
+        public string TenPhong { get; set; }   // Added Room Name
     }
 }

@@ -138,15 +138,15 @@
         <div class="payment-methods">
             <h3>Phương thức thanh toán</h3>
             <div id="method1">
-                <img src="https://via.placeholder.com/40" alt="Momo">
+                <img src="~/image/MoMo_Logo.png" alt="Momo">
                 Thanh toán qua Momo
             </div>
             <div id="method2">
-                <img src="https://via.placeholder.com/40" alt="Thẻ nội địa">
+                <img src="~/image/noidia.png" alt="Thẻ nội địa">
                 Thanh toán qua Thẻ nội địa
             </div>
             <div id="method3">
-                <img src="https://via.placeholder.com/40" alt="Thẻ quốc tế">
+                <img src="~/image/visa.png" alt="Thẻ quốc tế">
                 Thanh toán qua thẻ quốc tế
             </div>
             <div id="discount-code" class="discount-code">
@@ -156,7 +156,7 @@
         <div class="order-summary">
             <h3>Tên phim: <span class="highlight">@ViewBag.MovieName</span></h3>
             <p>Tên khách hàng: @ViewBag.CustomerName</p>
-            <p>Giờ chiếu: @ViewBag.GioChieu</p>
+            <p>Giờ chiếu: @ViewBag.GioChieu - @ViewBag.TenPhong - @ViewBag.TenRap</p>
             <p>Ghế đã chọn: @ViewBag.SelectedSeatIds</p>
             <hr>
             <h3>SỐ TIỀN CẦN THANH TOÁN: <span class="highlight">@ViewBag.TotalAmount VND</span></h3>
