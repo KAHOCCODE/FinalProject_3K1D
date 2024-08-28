@@ -32,8 +32,13 @@
                         <a href="/Home/MoviesComingSoon">Phim Sắp Chiếu</a>
                     </div>
                 </li>
-                <li><a href="#"><i class="fas fa-utensils"></i> Đồ ăn & Nước</a></li>
-                <li><a href="#"><i class="fas fa-phone-alt"></i> Liên hệ</a></li>
+                <li class="dropdown"><a href="#"><i class="fas fa-utensils"></i> Đồ ăn & Nước</a>
+                    <div class="dropdown-content">
+                        <a href="#">Coming soon</a>
+                    </div>
+                </li>
+                <li><a href="#footer"><i class="fas fa-phone-alt"></i> Liên hệ</a></li>
+
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li class="dropdown">

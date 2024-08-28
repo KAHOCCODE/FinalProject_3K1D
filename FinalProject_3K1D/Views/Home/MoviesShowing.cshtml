@@ -4,23 +4,40 @@
     Layout = null;
 }
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        .title{
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .title {
             text-align: center;
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-top: 100px;
+            color: #343a40;
         }
 
         .containers {
-            margin-top: 20px;
             display: flex;
+            margin-top: 20px;
         }
 
         .left-nav {
-            position: fixed;
             width: 20%;
             padding: 1rem;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
         }
 
         .movie-list {
@@ -35,15 +52,22 @@
         .movie-card {
             position: relative;
             overflow: hidden;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
+
+            .movie-card:hover {
+                transform: scale(1.03);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            }
 
         .poster img {
             width: 100%;
             height: auto;
             display: block;
+            border-bottom: 4px solid #ff6f00;
         }
 
         .movie-info {
@@ -57,6 +81,7 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             box-sizing: border-box;
+            text-align: center;
         }
 
         .movie-card:hover .movie-info {
@@ -64,14 +89,12 @@
         }
 
         .movie-info .name {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: bold;
+            margin-bottom: 10px;
         }
 
-        .movie-info .date,
-        .movie-info .quality,
-        .movie-info .category,
-        .movie-info .time {
+        .movie-info p {
             margin: 5px 0;
         }
 
@@ -84,61 +107,63 @@
             }
     </style>
 </head>
-<header>
-    @Html.Partial("_Navbar");
-</header>
-<div class="title">
-    @ViewData["Title"]
-</div>
-<div class="containers">
-    <!-- Left Navigation for Genre Filter -->
-    <div class="left-nav">
-        <h4>Thể loại</h4>
-        <form method="get">
-            <div class="form-group">
-                <select id="genreSelect" name="selectedGenre" class="form-control" onchange="this.form.submit()">
-                    <option value="">-- Tất cả thể loại --</option>
-                    @foreach (var genre in ViewData["Genres"] as List<string>)
-                    {
-                        var isSelected = ViewData["SelectedGenre"]?.ToString() == genre ? "selected" : "";
-                        <option value="@genre" selected="@isSelected">@genre</option>
-                    }
-                </select>
-            </div>
-            <input type="hidden" name="searchString" value="@ViewData["SearchString"]" />
-        </form>
+<body>
+    <header>
+        @Html.Partial("_Navbar");
+    </header>
+    <div class="title">
+        @ViewData["Title"]
     </div>
-
-    <!-- Movie List -->
-    <div class="movie-list">
-        @foreach (var phim in Model)
-        {
-            <div class="movie-card">
-                <div class="poster">
-                    <img src="@Url.Content("~/image/ApPhich/" + phim.ApPhich)" alt="@phim.TenPhim">
+    <div class="containers">
+        <!-- Left Navigation for Genre Filter -->
+        <div class="left-nav">
+            <h4>Thể loại</h4>
+            <form method="get">
+                <div class="form-group">
+                    <select id="genreSelect" name="selectedGenre" class="form-control" onchange="this.form.submit()">
+                        <option value="">-- Tất cả thể loại --</option>
+                        @foreach (var genre in ViewData["Genres"] as List<string>)
+                        {
+                            var isSelected = ViewData["SelectedGenre"]?.ToString() == genre ? "selected" : "";
+                            <option value="@genre" selected="@isSelected">@genre</option>
+                        }
+                    </select>
                 </div>
-                <div class="movie-info">
-                    <p class="name">@phim.TenPhim</p>
-                    <p class="date">@phim.NamSx</p>
-                    <p class="quality">@phim.DinhDangPhim</p>
-                    <p class="category">
-                        @string.Join(", ", phim.IdTheLoais.Select(tl => tl.TenTheLoai))
-                    </p>
-                    <p class="time">
-                        <i class="fa-regular fa-clock"></i>
-                        @phim.ThoiLuong phút
-                    </p>
-                    <div class="btn-group">
-                        <a href="@Url.Action("Detail", "Home", new { id = phim.IdPhim })" class="btn btn-primary">Chi tiết phim</a>
-                        <a href="@Url.Action("Booking", "Home", new { id = phim.IdPhim })" class="btn btn-success">Đặt vé</a>
+                <input type="hidden" name="searchString" value="@ViewData["SearchString"]" />
+            </form>
+        </div>
+
+        <!-- Movie List -->
+        <div class="movie-list">
+            @foreach (var phim in Model)
+            {
+                <div class="movie-card">
+                    <div class="poster">
+                        <img src="@Url.Content("~/image/ApPhich/" + phim.ApPhich)" alt="@phim.TenPhim">
+                    </div>
+                    <div class="movie-info">
+                        <p class="name">@phim.TenPhim</p>
+                        <p class="date">@phim.NamSx</p>
+                        <p class="quality">@phim.DinhDangPhim</p>
+                        <p class="category">
+                            @string.Join(", ", phim.IdTheLoais.Select(tl => tl.TenTheLoai))
+                        </p>
+                        <p class="time">
+                            <i class="fa-regular fa-clock"></i>
+                            @phim.ThoiLuong phút
+                        </p>
+                        <div class="btn-group">
+                            <a href="@Url.Action("Detail", "Home", new { id = phim.IdPhim })" class="btn btn-primary">Chi tiết phim</a>
+                            <a href="@Url.Action("Booking", "Home", new { id = phim.IdPhim })" class="btn btn-success">Đặt vé</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
-</div>
 
-<!-- Bootstrap and jQuery -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
