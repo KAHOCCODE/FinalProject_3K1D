@@ -492,6 +492,11 @@ namespace FinalProject_3K1D.Controllers
 
 
         }
+        [Route("FAQ")]
+        public IActionResult FAQ()
+        {
+            return View();
+        }
         public void UpdateTicketStatus()
         {
             using (var db = new QlrapPhimContext())
