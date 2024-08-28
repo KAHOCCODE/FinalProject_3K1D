@@ -9,7 +9,6 @@ namespace _3K1D_Final.Areas.Admin.Controllers
     public class ManagementMovieController : Controller
     {
         private readonly QlrapPhimContext _context;
-
         public ManagementMovieController(QlrapPhimContext context)
         {
             _context = context;
@@ -71,7 +70,6 @@ namespace _3K1D_Final.Areas.Admin.Controllers
             return View(movies.ToList());
         }
         #endregion
-
 
         #region thêm phim mới 
         public IActionResult Create()
