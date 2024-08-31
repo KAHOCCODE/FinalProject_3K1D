@@ -324,10 +324,7 @@ namespace FinalProject_3K1D.Controllers
                     .ToList();
 
                 // If no tickets found, redirect to another view or show a message (optional)
-                if (!tickets.Any())
-                {
-                    return RedirectToAction("Index", "Home"); // Or you can return a view with a message
-                }
+                
 
                 // Pass the tickets to the view
                 return View(tickets);
@@ -355,11 +352,6 @@ namespace FinalProject_3K1D.Controllers
                     .Where(v => v.IdKhachHang == userId && v.TrangThai == 0)
                     .ToList();
 
-                // If no tickets found, redirect to another view or show a message (optional)
-                if (!tickets.Any())
-                {
-                    return RedirectToAction("Index", "Home"); // Or you can return a view with a message
-                }
 
                 // Pass the tickets to the view
                 return View(tickets);
@@ -387,11 +379,7 @@ namespace FinalProject_3K1D.Controllers
                     .Where(v => v.IdKhachHang == userId && v.TrangThai == 2)
                     .ToList();
 
-                // If no tickets found, redirect to another view or show a message (optional)
-                if (!tickets.Any())
-                {
-                    return RedirectToAction("Index", "Home"); // Or you can return a view with a message
-                }
+                
 
                 // Pass the tickets to the view
                 return View(tickets);

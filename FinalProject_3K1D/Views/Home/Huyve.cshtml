@@ -3,7 +3,15 @@
 @{
     Layout = null;
 }
+<style>
+    .no-tickets-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #ff0000; /* Highlight the text in red, or adjust the color as needed */
+}
 
+</style>
 @Html.AntiForgeryToken()
 <link rel="stylesheet" href="~/css/huyve.css" asp-append-version="true" />
 <!-- Background overlay -->
@@ -49,7 +57,9 @@
 }
 else
 {
-    <p>Không có dữ liệu vé để hiển thị.</p>
+        <div class="no-tickets-message">
+            <p>Không có dữ liệu vé để hiển thị.</p>
+        </div>
 }
 
 <script>
