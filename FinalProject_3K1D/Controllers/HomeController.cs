@@ -568,6 +568,84 @@ namespace FinalProject_3K1D.Controllers
         }
 
         #endregion
+
+        public IActionResult HoanVe(int idVe)
+        {
+            using (var _context = new QlrapPhimContext())
+            {
+                var ticket = _context.Ves
+                    .Include(v => v.IdLichChieuNavigation)
+                    .ThenInclude(lc => lc.IdPhimNavigation)
+                    .Include(v => v.IdLichChieuNavigation.IdRapNavigation)
+                    .Include(v => v.IdLichChieuNavigation.IdPhongChieuNavigation)
+                    .Include(v => v.IdKhachHangNavigation)
+                    .FirstOrDefault(v => v.IdVe == idVe);
+
+                if (ticket == null)
+                {
+                    return NotFound("Vé không tồn tại.");
+                }
+
+                return View("HoanVe", ticket); // Gọi view HoanVe
+            }
+        }
+        [HttpPost]
+        public IActionResult ProcessRefund(int IdVe, int refundReason)
+        {
+            var result = new { Success = false, Message = string.Empty };
+
+            try
+            {
+                using (var _context = new QlrapPhimContext())
+                {
+                    // Retrieve the ticket from the database
+                    var ticket = _context.Ves.Find(IdVe);
+                    if (ticket == null)
+                    {
+                        result = new { Success = false, Message = "Ticket not found." };
+                        return Json(result);
+                    }
+
+                    // Update the ticket status to 'Refunded' or a suitable status
+                    ticket.TrangThai = refundReason; // Save the refund reason
+                    _context.SaveChanges();
+
+                    result = new { Success = true, Message = "Refund processed successfully." };
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new { Success = false, Message = $"Error processing refund: {ex.Message}" };
+            }
+
+            return Json(result);
+        }
+        public IActionResult ViewRefundedTickets()
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Index", "Home"); // Redirect if UserId is not found in session
+            }
+
+            using (var db = new QlrapPhimContext())
+            {
+                // Fetch the user's tickets from the database with statuses 3, 4, or 5
+                var tickets = db.Ves
+                    .Include(v => v.IdLichChieuNavigation)
+                    .ThenInclude(lc => lc.IdPhongChieuNavigation)
+                    .Include(v => v.IdLichChieuNavigation.IdPhimNavigation)
+                    .Include(v => v.IdLichChieuNavigation.IdRapNavigation)
+                    .Include(v => v.IdKhachHangNavigation)
+                    .Where(v => v.IdKhachHang == userId && (v.TrangThai == 3 || v.TrangThai == 4 || v.TrangThai == 5))
+                    .ToList();
+
+                // Pass the tickets to the view
+                return View(tickets);
+            }
+        }
+
     }
 }
 

@@ -23,6 +23,7 @@
         <button onclick="window.location.href='@Url.Action("Index", "Home")'" class="back-button">Quay lại</button>
         <button onclick="window.location.href='@Url.Action("VeDaHuy", "Home")'" class="cancelled-button">Vé đã hủy</button>
         <button onclick="window.location.href='@Url.Action("VeDaXem", "Home")'" class="back-button">Vé đã xem</button>
+        <button onclick="window.location.href='@Url.Action("ViewRefundedTickets", "Home")'" class="back-button">Vé đã hoàn</button>
     </div>
 </div>
 
@@ -48,6 +49,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="cancel-button" onclick="cancelTicket(@ticket.IdVe)">Hủy vé</button>
+                            <button class="refund-button" onclick="window.location.href='@Url.Action("HoanVe", "Home", new { idVe = @ticket.IdVe })'">Hoàn vé</button>
                         </div>
                     </div>
                 </div>

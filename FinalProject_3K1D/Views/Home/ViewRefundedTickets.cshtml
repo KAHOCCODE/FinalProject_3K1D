@@ -1,0 +1,155 @@
+﻿@model IEnumerable<FinalProject_3K1D.Models.Ve>
+
+@{
+    Layout = null;
+}
+
+<style>
+    .no-tickets-message {
+        text-align: center;
+        padding: 20px;
+        font-size: 18px;
+        color: #ff0000; /* Highlight the text in red, or adjust the color as needed */
+    }
+
+    .header-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .header-title {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .header-buttons {
+        margin-top: 10px;
+    }
+
+    .header-buttons button {
+        margin: 5px;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .scrollable-tickets-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ticket-item {
+        border: 1px solid #ddd;
+        margin: 10px;
+        padding: 15px;
+        width: 80%;
+    }
+
+    .modal-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .ticket-modal {
+        width: 100%;
+    }
+
+    .modal-header, .modal-footer {
+        margin-bottom: 10px;
+    }
+
+    .modal-body p {
+        margin: 5px 0;
+    }
+
+    .refund-button, .cancel-button {
+        margin: 5px;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .refund-button {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .cancel-button {
+        background-color: #f44336;
+        color: white;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none; /* Hidden by default */
+    }
+</style>
+
+@Html.AntiForgeryToken()
+<link rel="stylesheet" href="~/css/huyve.css" asp-append-version="true" />
+
+<div class="overlay"></div>
+
+<div class="header-container">
+    <h1 class="header-title">Vé đã hoàn</h1>
+    <div class="header-buttons">
+        <button onclick="window.location.href='@Url.Action("Index", "Home")'" class="back-button">Quay lại</button>
+        <button onclick="window.location.href='@Url.Action("Huyve", "Home")'" class="back-button">Vé đã đặt</button>
+        <button onclick="window.location.href='@Url.Action("VeDaHuy", "Home")'" class="cancelled-button">Vé đã hủy</button>
+        <button onclick="window.location.href='@Url.Action("VeDaXem", "Home")'" class="back-button">Vé đã xem</button>
+
+    </div>
+</div>
+
+@if (Model.Any())
+{
+        <div class="scrollable-tickets-container">
+        @foreach (var ticket in Model)
+        {
+                    <div class="ticket-item">
+                        <div class="modal-container">
+                            <div class="ticket-modal">
+                                <div class="modal-header">
+                                    <h2 class="movie-title">@ticket.IdLichChieuNavigation.IdPhimNavigation.TenPhim</h2>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="ticket-id"><strong>Mã vé:</strong> @ticket.IdVe</p>
+                                    <p class="showtime"><strong>Giờ chiếu:</strong> @ticket.IdLichChieuNavigation.GioChieu.ToString()</p>
+                                    <p class="cinema"><strong>Rạp chiếu:</strong> @ticket.IdLichChieuNavigation.IdRapNavigation.TenRap</p>
+                                    <p class="room"><strong>Phòng chiếu:</strong> @ticket.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong</p>
+                                    <p class="seat"><strong>Mã ghế ngồi:</strong> @ticket.MaGheNgoi</p>
+                                    <p class="customer-name"><strong>Tên khách hàng:</strong> @ticket.IdKhachHangNavigation.HoTen</p>
+                                    <p class="price"><strong>Giá tiền:</strong> @ticket.TienBanVe VND</p>
+                                    <p class="refund-reason">
+                                @if (ticket.TrangThai == 3)
+                                {
+                                     <span><strong>Lý do hoàn vé:</strong> Đặt nhầm vé</span>
+                                }
+                                else if (ticket.TrangThai == 4)
+                                {
+                                     <span><strong>Lý do hoàn vé:</strong> Có việc bận không thể xem phim</span>
+                                }
+                                else if (ticket.TrangThai == 5)
+                                {
+                                     <span><strong>Lý do hoàn vé:</strong> Sự cố giao thông hoặc vấn đề di chuyển</span>
+                                }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        }
+        </div>
+}
+else
+{
+        <div class="no-tickets-message">
+            <p>Không có dữ liệu vé để hiển thị.</p>
+        </div>
+}

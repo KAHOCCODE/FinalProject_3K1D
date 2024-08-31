@@ -1,0 +1,108 @@
+﻿@model FinalProject_3K1D.Models.Ve
+
+@{
+    Layout = null;
+}
+
+<style>
+    .ticket-details {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .checkbox-options {
+        margin-top: 20px;
+    }
+
+    .checkbox-options label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .submit-button {
+        margin-top: 20px;
+    }
+</style>
+<link rel="stylesheet" href="~/css/huyve.css" asp-append-version="true" />
+<div class="overlay"></div>
+
+<div class="header-container">
+
+    <div class="header-buttons">
+        <button onclick="window.location.href='@Url.Action("Index", "Home")'" class="back-button">Quay lại</button>
+
+    </div>
+</div>
+<div class="ticket-details">
+    <h2>Chi tiết vé</h2>
+    <p><strong>Mã vé:</strong> @Model.IdVe</p>
+    <div class="ticket-item">
+        <div class="modal-container">
+            <div class="ticket-modal">
+                <div class="modal-header">
+                    <p><strong>Tên phim:</strong> @Model.IdLichChieuNavigation.IdPhimNavigation.TenPhim</p>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Giờ chiếu:</strong> @Model.IdLichChieuNavigation.GioChieu.ToString()</p>
+                    <p><strong>Rạp chiếu:</strong> @Model.IdLichChieuNavigation.IdRapNavigation.TenRap</p>
+                    <p><strong>Phòng chiếu:</strong> @Model.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong</p>
+                    <p><strong>Mã ghế ngồi:</strong> @Model.MaGheNgoi</p>
+                    <p><strong>Tên khách hàng:</strong> @Model.IdKhachHangNavigation.HoTen</p>
+                    <p><strong>Giá tiền:</strong> @Model.TienBanVe VND</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="checkbox-options">
+    <h3>Chọn lý do hoàn vé:</h3>
+    <form id="refundForm">
+        <input type="hidden" name="IdVe" value="@Model.IdVe" />
+
+        <label>
+            <input type="radio" name="refundReason" value="3" required /> Lý do 1: Đặt nhầm vé
+        </label>
+        <label>
+            <input type="radio" name="refundReason" value="4" required /> Lý do 2: Có việc bận không thể xem phim
+        </label>
+        <label>
+            <input type="radio" name="refundReason" value="5" required /> Lý do 3: Sự cố giao thông hoặc vấn đề di chuyển
+        </label>
+        @Html.AntiForgeryToken()
+    <input type="hidden" name="IdVe" value="@Model.IdVe" />
+    <!-- radio buttons here -->
+    <button type="button" class="submit-button" onclick="processRefund()">Hoàn vé</button>
+    </form>
+</div>
+
+<script>
+    function processRefund() {
+        const form = document.getElementById('refundForm');
+        const formData = new FormData(form);
+
+        fetch('/Home/ProcessRefund', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: new URLSearchParams(formData).toString()
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.Success) {
+                alert('Hoàn vé thành công.');
+                window.location.href = '@Url.Action("Index", "Home")'; // Redirect after success
+            } else {
+                alert('Hoàn vé thành công.');
+                 window.location.href = '@Url.Action("Index", "Home")';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Có lỗi xảy ra khi xử lý yêu cầu.');
+        });
+    }
+</script>
