@@ -265,7 +265,19 @@ namespace FinalProject_3K1D.Controllers
                 // Add the ticket to the database
                 db.Ves.Add(newTicket);
                 db.SaveChanges();
+                // Calculate loyalty points (1% of total amount)
+                int loyaltyPoints = (int)(totalAmount.Value * 0.001);
 
+                // Find the customer
+                var customer = db.KhachHangs.FirstOrDefault(k => k.IdKhachHang == userId);
+                if (customer != null)
+                {
+                    // Update the loyalty points
+                    customer.DienTichLuy = (customer.DienTichLuy ?? 0) + loyaltyPoints;
+
+                    // Save the changes to the customer
+                    db.SaveChanges();
+                }
                 // Save the new ticket ID to the session
                 HttpContext.Session.SetInt32("TicketId", newTicket.IdVe);
 
@@ -274,7 +286,7 @@ namespace FinalProject_3K1D.Controllers
                 var lichChieu = db.LichChieus
                     .Include(l => l.IdRapNavigation)
                     .FirstOrDefault(l => l.IdLichChieu == selectedLichChieuId);
-                var customer = db.KhachHangs.FirstOrDefault(u => u.IdKhachHang == userId);
+               
 
                 if (movie == null || lichChieu == null || customer == null)
                 {
@@ -330,6 +342,79 @@ namespace FinalProject_3K1D.Controllers
                 return View(tickets);
             }
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CancelTicket([FromBody] CancelTicketRequest request)
+        {
+            
+            using (var db = new QlrapPhimContext())
+            {
+                try
+                {
+                    // Lấy IdUser từ session
+                    var userId = HttpContext.Session.GetString("UserId");
+
+                    if (string.IsNullOrEmpty(userId))
+                    {
+                        return RedirectToAction("Index", "Home"); // Nếu không tìm thấy UserId, chuyển hướng về trang chủ
+                    }
+
+                    // Tìm khách hàng dựa trên IdUser
+                    var customer = db.KhachHangs.FirstOrDefault(kh => kh.IdKhachHang == userId);
+
+                    if (customer == null)
+                    {
+                        return NotFound("Không tìm thấy khách hàng.");
+                    }
+
+                    if (request == null || request.IdVe <= 0)
+                    {
+                        return BadRequest("Yêu cầu không hợp lệ.");
+                    }
+
+                    // Tìm vé dựa trên IdVe và IdKhachHang
+                    var ticket = db.Ves.FirstOrDefault(v => v.IdVe == request.IdVe && v.IdKhachHang == customer.IdKhachHang);
+
+                    if (ticket == null)
+                    {
+                        return NotFound("Không tìm thấy vé.");
+                    }
+
+                    if (ticket.TrangThai == 0)
+                    {
+                        return BadRequest("Vé đã bị hủy trước đó.");
+                    }
+
+                    // Đánh dấu vé là đã hủy (TrangThai = 0)
+                    ticket.TrangThai = 0;
+                    int totalAmount = (int)ticket.TienBanVe.Value;
+                    int loyaltyPointsToDeduct = (int)(totalAmount * 0.001);
+
+                    // Tính toán điểm tích lũy cần trừ
+
+
+                    // Trừ điểm tích lũy của khách hàng
+                    customer.DienTichLuy -= loyaltyPointsToDeduct;
+
+                    // Đảm bảo điểm không bị âm
+                    if (customer.DienTichLuy < 0)
+                    {
+                        customer.DienTichLuy = 0;
+                    }
+
+                    // Lưu thay đổi vào cơ sở dữ liệu
+                    db.SaveChanges();
+
+                    return Ok("Vé đã được hủy thành công và điểm tích lũy đã được trừ.");
+                }
+                catch (Exception ex)
+                {
+                    // Ghi lại log lỗi nếu cần
+                    return StatusCode(500, "Lỗi máy chủ nội bộ: " + ex.Message);
+                }
+            }
+        }
+
         public IActionResult VeDaHuy()
         {
             // Retrieve the user ID from the session
@@ -357,6 +442,7 @@ namespace FinalProject_3K1D.Controllers
                 return View(tickets);
             }
         }
+
         public IActionResult VeDaXem()
         {
             // Retrieve the user ID from the session
@@ -385,43 +471,7 @@ namespace FinalProject_3K1D.Controllers
                 return View(tickets);
             }
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult CancelTicket([FromBody] CancelTicketRequest request)
-        {
-            using (var _context = new QlrapPhimContext())
-            {
-                try
-                {
-                    if (request == null || request.IdVe <= 0)
-                    {
-                        return BadRequest("Invalid request.");
-                    }
-
-                    var ticket = _context.Ves.Find(request.IdVe);
-
-                    if (ticket == null)
-                    {
-                        return NotFound("Ticket not found.");
-                    }
-
-                    if (ticket.TrangThai == 0)
-                    {
-                        return BadRequest("Ticket is already cancelled.");
-                    }
-
-                    ticket.TrangThai = 0; // Mark as cancelled
-                    _context.SaveChanges();
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    // Log the exception (e.g., using a logging framework)
-                    return StatusCode(500, "Internal server error: " + ex.Message);
-                }
-            }
-        }
+        
 
         public class CancelTicketRequest
         {
@@ -631,17 +681,52 @@ namespace FinalProject_3K1D.Controllers
 
             using (var db = new QlrapPhimContext())
             {
-                // Fetch the user's tickets from the database with statuses 3, 4, or 5
+                // Lấy khách hàng dựa vào userId từ session
+                var customer = db.KhachHangs.FirstOrDefault(kh => kh. IdKhachHang== userId);
+
+                if (customer == null)
+                {
+                    return NotFound("Không tìm thấy khách hàng.");
+                }
+
+                // Lấy các vé có trạng thái 3, 4, hoặc 5 từ cơ sở dữ liệu
                 var tickets = db.Ves
                     .Include(v => v.IdLichChieuNavigation)
                     .ThenInclude(lc => lc.IdPhongChieuNavigation)
                     .Include(v => v.IdLichChieuNavigation.IdPhimNavigation)
                     .Include(v => v.IdLichChieuNavigation.IdRapNavigation)
                     .Include(v => v.IdKhachHangNavigation)
-                    .Where(v => v.IdKhachHang == userId && (v.TrangThai == 3 || v.TrangThai == 4 || v.TrangThai == 5))
+                    .Where(v => v.IdKhachHang == customer.IdKhachHang && (v.TrangThai == 3 || v.TrangThai == 4 || v.TrangThai == 5))
                     .ToList();
 
-                // Pass the tickets to the view
+                // Trừ điểm tích lũy dựa vào số vé đã hoàn
+                int totalLoyaltyPointsToDeduct = 0;
+
+                foreach (var ticket in tickets)
+                {
+                    if (ticket.TrangThai == 3) // Giả sử trạng thái 3 là trạng thái hoàn vé
+                    {
+                        int totalAmount = (int)ticket.TienBanVe.Value;
+                        int loyaltyPointsToDeduct = (int)(totalAmount * 0.001);
+
+                        totalLoyaltyPointsToDeduct += loyaltyPointsToDeduct;
+                    }
+                }
+
+                // Trừ điểm tích lũy của khách hàng một lần
+                customer.DienTichLuy -= totalLoyaltyPointsToDeduct;
+
+                // Đảm bảo điểm không bị âm
+                if (customer.DienTichLuy < 0)
+                {
+                    customer.DienTichLuy = 0;
+                }
+
+                // Lưu thay đổi vào cơ sở dữ liệu
+                db.SaveChanges();
+
+
+                // Trả về view với danh sách vé đã hoàn
                 return View(tickets);
             }
         }

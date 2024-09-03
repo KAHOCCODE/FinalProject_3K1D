@@ -168,29 +168,38 @@
     </div>
 
     <script>
-        document.querySelectorAll('.payment-methods div').forEach(method => {
-            method.addEventListener('click', () => {
-                // Xóa class 'selected' khỏi tất cả các phương thức thanh toán
-                document.querySelectorAll('.payment-methods div').forEach(item => {
-                    item.classList.remove('selected');
-                });
-
-                // Thêm class 'selected' vào phương thức đã chọn
-                method.classList.add('selected');
-
-                // Kích hoạt nút thanh toán
-                document.getElementById('pay-button').classList.add('enabled');
-                document.getElementById('pay-button').disabled = false;
+    // Bắt sự kiện click vào phương thức thanh toán
+    document.querySelectorAll('.payment-methods div').forEach(method => {
+        method.addEventListener('click', () => {
+            // Xóa class 'selected' khỏi tất cả các phương thức thanh toán
+            document.querySelectorAll('.payment-methods div').forEach(item => {
+                item.classList.remove('selected');
             });
-        });
 
-        document.getElementById('pay-button').addEventListener('click', function () {
-            // Xử lý thanh toán ở đây
-            alert("Thanh toán thành công!");
+            // Thêm class 'selected' vào phương thức đã chọn
+            method.classList.add('selected');
 
-            // Redirect đến trang home sau khi thanh toán thành công
-            window.location.href = '@Url.Action("Index", "Home")';
+            // Kích hoạt nút thanh toán
+            document.getElementById('pay-button').classList.add('enabled');
+            document.getElementById('pay-button').disabled = false;
         });
-    </script>
+    });
+
+    // Bắt sự kiện click vào nút thanh toán
+    document.getElementById('pay-button').addEventListener('click', function () {
+        // Lấy tổng tiền từ ViewBag
+        var totalAmount = @ViewBag.TotalAmount;
+
+        // Tính toán điểm tích lũy (0,1% của tổng tiền)
+        var loyaltyPoints = totalAmount * 0.001;
+
+        // Hiển thị thông báo thành công và số điểm tích lũy
+        alert("Thanh toán thành công và cộng " + loyaltyPoints.toFixed(0) + " điểm tích lũy!");
+
+        // Redirect đến trang home sau khi thanh toán thành công
+        window.location.href = '@Url.Action("Index", "Home")';
+    });
+</script>
+
 </body>
 </html>
