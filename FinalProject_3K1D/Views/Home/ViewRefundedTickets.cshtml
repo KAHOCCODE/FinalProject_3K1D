@@ -93,15 +93,17 @@
 
 @Html.AntiForgeryToken()
 <link rel="stylesheet" href="~/css/huyve.css" asp-append-version="true" />
-
+<header>
+    @Html.Partial("_Navbar")
+</header>
 <div class="overlay"></div>
 
 <div class="header-container">
-    <h1 class="header-title">Vé đã hoàn</h1>
+    <h1 class="header-title">Vé đang xử lý</h1>
     <div class="header-buttons">
         <button onclick="window.location.href='@Url.Action("Index", "Home")'" class="back-button">Quay lại</button>
         <button onclick="window.location.href='@Url.Action("Huyve", "Home")'" class="back-button">Vé đã đặt</button>
-        <button onclick="window.location.href='@Url.Action("VeDaHuy", "Home")'" class="cancelled-button">Vé đã hủy</button>
+        <button onclick="window.location.href='@Url.Action("VeDaHuy", "Home")'" class="cancelled-button">Vé đã hoàn</button>
         <button onclick="window.location.href='@Url.Action("VeDaXem", "Home")'" class="back-button">Vé đã xem</button>
 
     </div>
@@ -139,7 +141,8 @@
                                 {
                                      <span><strong>Lý do hoàn vé:</strong> Sự cố giao thông hoặc vấn đề di chuyển</span>
                                 }
-                                    </p>
+                               
+                                    
                                 </div>
                             </div>
                         </div>

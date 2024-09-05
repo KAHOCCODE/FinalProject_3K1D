@@ -635,12 +635,12 @@ namespace FinalProject_3K1D.Controllers
                 {
                     return NotFound("Vé không tồn tại.");
                 }
-
+                
                 return View("HoanVe", ticket); // Gọi view HoanVe
             }
         }
         [HttpPost]
-        public IActionResult ProcessRefund(int IdVe, int refundReason)
+        public IActionResult ProcessRefund(int IdVe, int refundReason, string customReason = null)
         {
             var result = new { Success = false, Message = string.Empty };
 
@@ -658,9 +658,28 @@ namespace FinalProject_3K1D.Controllers
 
                     // Update the ticket status to 'Refunded' or a suitable status
                     ticket.TrangThai = refundReason; // Save the refund reason
+
+                    // Save custom reason if applicable
+                    if (refundReason == 6 && !string.IsNullOrEmpty(customReason)) // Assuming 6 is for custom reason
+                    {
+                        ticket.NoiDung = customReason;
+                    }
+                    else
+                    {
+                        // Use predefined reasons
+                        ticket.NoiDung = refundReason switch
+                        {
+                            3 => "Đặt nhầm vé",
+                            4 => "Có việc bận không thể xem phim",
+                            5 => "Sự cố giao thông hoặc vấn đề di chuyển",
+                            _ => ticket.NoiDung
+                        };
+                    }
+
                     _context.SaveChanges();
 
                     result = new { Success = true, Message = "Refund processed successfully." };
+                   
                 }
             }
             catch (Exception ex)
@@ -669,7 +688,9 @@ namespace FinalProject_3K1D.Controllers
             }
 
             return Json(result);
+            
         }
+
         public IActionResult ViewRefundedTickets()
         {
             var userId = HttpContext.Session.GetString("UserId");
@@ -700,42 +721,7 @@ namespace FinalProject_3K1D.Controllers
                     .ToList();
 
                 // Trừ điểm tích lũy dựa vào số vé đã hoàn
-                int totalLoyaltyPointsToDeduct = 0;
-
-                foreach (var ticket in tickets)
-                {
-                    if (ticket.TrangThai == 3 ) // Giả sử trạng thái 3 là trạng thái hoàn vé
-                    {
-                        int totalAmount = (int)ticket.TienBanVe.Value;
-                        int loyaltyPointsToDeduct = (int)(totalAmount * 0.001);
-
-                        totalLoyaltyPointsToDeduct += loyaltyPointsToDeduct;
-                    }
-                    if (ticket.TrangThai == 4) // Giả sử trạng thái 4 là trạng thái hoàn vé
-                    {
-                        int totalAmount = (int)ticket.TienBanVe.Value;
-                        int loyaltyPointsToDeduct = (int)(totalAmount * 0.001);
-
-                        totalLoyaltyPointsToDeduct += loyaltyPointsToDeduct;
-                    }
-                    if (ticket.TrangThai == 5) // Giả sử trạng thái 5 là trạng thái hoàn vé
-                    {
-                        int totalAmount = (int)ticket.TienBanVe.Value;
-                        int loyaltyPointsToDeduct = (int)(totalAmount * 0.001);
-
-                        totalLoyaltyPointsToDeduct += loyaltyPointsToDeduct;
-                    }
-                }
-
-                // Trừ điểm tích lũy của khách hàng một lần
-                customer.DienTichLuy -= totalLoyaltyPointsToDeduct;
-
-                // Đảm bảo điểm không bị âm
-                if (customer.DienTichLuy < 0)
-                {
-                    customer.DienTichLuy = 0;
-                }
-
+               
                 // Lưu thay đổi vào cơ sở dữ liệu
                 db.SaveChanges();
 

@@ -51,50 +51,70 @@
 <div class="checkbox-options">
     <h3>Chọn lý do hoàn vé:</h3>
     <form id="refundForm">
-        <input type="hidden" name="IdVe" value="@Model.IdVe" />
-
-        <label>
-            <input type="radio" name="refundReason" value="3" required /> Lý do 1: Đặt nhầm vé
-        </label>
-        <label>
-            <input type="radio" name="refundReason" value="4" required /> Lý do 2: Có việc bận không thể xem phim
-        </label>
-        <label>
-            <input type="radio" name="refundReason" value="5" required /> Lý do 3: Sự cố giao thông hoặc vấn đề di chuyển
-        </label>
-        @Html.AntiForgeryToken()
     <input type="hidden" name="IdVe" value="@Model.IdVe" />
-    <!-- radio buttons here -->
+
+    <label>
+        <input type="radio" name="refundReason" value="3" required /> Lý do 1: Đặt nhầm vé
+    </label>
+    <label>
+        <input type="radio" name="refundReason" value="4" required /> Lý do 2: Có việc bận không thể xem phim
+    </label>
+    <label>
+        <input type="radio" name="refundReason" value="5" required /> Lý do 3: Sự cố giao thông hoặc vấn đề di chuyển
+    </label>
+    <label>
+        <input type="radio" name="refundReason" value="6" id="customReasonCheckbox" /> Lý do khác
+    </label>
+    <div id="customReasonText" style="display:none;">
+        <label for="customReason">Vui lòng nhập lý do:</label>
+        <input type="text" name="customReason" id="customReason" />
+    </div>
+        @Html.AntiForgeryToken()
     <button type="button" class="submit-button" onclick="processRefund()">Hoàn vé</button>
-    </form>
-</div>
+</form>
 
 <script>
     function processRefund() {
-        const form = document.getElementById('refundForm');
-        const formData = new FormData(form);
+    const form = document.getElementById('refundForm');
+    const formData = new FormData(form);
+    const refundReason = formData.get('refundReason');
 
-        fetch('/Home/ProcessRefund', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-            },
-            body: new URLSearchParams(formData).toString()
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.Success) {
-                alert('Hoàn vé thành công.');
-                window.location.href = '@Url.Action("Index", "Home")'; // Redirect after success
-            } else {
-                alert('Hoàn vé thành công.');
-                 window.location.href = '@Url.Action("Index", "Home")';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Có lỗi xảy ra khi xử lý yêu cầu.');
-        });
+    // Include custom reason if applicable
+    if (refundReason === '6') { // Assuming 6 is the value for custom reason
+        formData.set('customReason', document.getElementById('customReason').value);
+    } else {
+        formData.delete('customReason'); // Remove custom reason if not selected
     }
+
+    fetch('/Home/ProcessRefund', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+        },
+        body: new URLSearchParams(formData).toString()
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.Success) {
+            alert('Hoàn vé thành công.');
+            window.location.href = '@Url.Action("Index", "Home")'; // Redirect to homepage after success
+        } else {
+            alert(data.Message); // Display server error message
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Có lỗi xảy ra khi xử lý yêu cầu.');
+    });
+}
+
+    document.getElementById('customReasonCheckbox').addEventListener('change', function() {
+        var customReasonText = document.getElementById('customReasonText');
+        if (this.checked) {
+            customReasonText.style.display = 'block';
+        } else {
+            customReasonText.style.display = 'none';
+        }
+    });
 </script>
