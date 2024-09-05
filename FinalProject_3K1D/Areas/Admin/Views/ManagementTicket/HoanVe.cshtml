@@ -29,7 +29,9 @@
                             <th class="text-center">Giá Tiền</th>
                             <th class="text-center">Ngày Mua</th>
                             <th class="text-center">Tên Phòng</th>
-                            <th class="text-center">Lý Do Hoàn Vé</th> <!-- New column for refund reason -->
+                            <th class="text-center">Lý Do Hoàn Vé</th>
+                            <th class="text-center">Hành động</th>
+                            <!-- New column for refund reason -->
                         </tr>
                     </thead>
                     <tbody>
@@ -44,24 +46,11 @@
                                     <td class="align-middle text-center">@ticket.TienBanVe.ToString("C")</td>
                                     <td class="align-middle text-center">@ticket.NgayMua?.ToString("dd/MM/yyyy")</td>
                                     <td class="align-middle text-center">@ticket.TenPhong</td>
-                                    <td class="align-middle text-center">
-                                    @if (ticket.TrangThai == 3)
-                                    {
-                                                <p>Đặt nhầm vé</p>
-                                    }
-                                    else if (ticket.TrangThai == 4)
-                                    {
-                                                <p>Có việc bận không thể xem phim</p>
-                                    }
-                                    else if (ticket.TrangThai == 5)
-                                    {
-                                                <p> Sự cố giao thông hoặc vấn đề di chuyển</p>
-                                    }
-                                    else
-                                    {
-                                                <p>Không có lý do hoàn vé</p>
-                                    }
-                                    </td>
+                                    <td class="align-middle text-center">@ticket.NoiDung</td>
+                                   <td>
+                                   <button class="btn btn-success" onclick="confirmRefund(@ticket.IdVe)">✔</button>
+                                   <button class="btn btn-danger" onclick="cancelRefund(@ticket.IdVe)">✘</button>
+                                   </td>
                                 </tr>
                         }
                     </tbody>
@@ -74,3 +63,69 @@
 <!-- Font Awesome for icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Function to handle refund confirmation (tick button)
+    function confirmRefund(ticketId, ticketPrice, customerId) {
+        Swal.fire({
+            title: 'Bạn có chắc muốn hoàn vé?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Xác nhận',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Calculate loyalty points based on ticket price
+                const loyaltyPoints = ticketPrice * 0.001; // Convert 0.1% of the ticket price into loyalty points
+                updateTicketStatus(ticketId, 0, loyaltyPoints, customerId); // Status 0 for confirmed refund
+            }
+        });
+    }
+
+    // Function to update ticket status and add loyalty points
+    function updateTicketStatus(ticketId, status, loyaltyPoints = 0, customerId = null) {
+        fetch('/Home/UpdateTicketStatus', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: JSON.stringify({
+                IdVe: ticketId,
+                Status: status,
+                LoyaltyPoints: loyaltyPoints, // Pass loyalty points if it's a refund confirmation
+                CustomerId: customerId // Pass customer ID for updating points
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.Success) {
+                Swal.fire({
+                    title: 'Thành công',
+                    text: data.Message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    location.reload(); // Reload the page after success
+                });
+            } else {
+                Swal.fire({
+                    title: 'Lỗi',
+                    text: data.Message,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                title: 'Lỗi',
+                text: 'Có lỗi xảy ra khi xử lý yêu cầu.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            console.error('Error:', error);
+        });
+    }
+</script>

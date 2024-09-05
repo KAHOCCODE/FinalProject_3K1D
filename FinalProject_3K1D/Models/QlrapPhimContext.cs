@@ -36,9 +36,10 @@ public partial class QlrapPhimContext : DbContext
     public virtual DbSet<KhuyenMai> KhuyenMais { get; set; }
 
     public virtual DbSet<DanhGia> DanhGias { get; set; }
+    public virtual DbSet<GiaHoan> GiaHoans { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
-        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-QBAUIQJE\\PIEMON;Initial Catalog=QLRapPhim;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("");
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
