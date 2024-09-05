@@ -34,12 +34,12 @@ public partial class QlrapPhimContext : DbContext
     public virtual DbSet<Ve> Ves { get; set; }
 
     public virtual DbSet<KhuyenMai> KhuyenMais { get; set; }
-
+    public DbSet<Order> Orders { get; set; }
     public virtual DbSet<DanhGia> DanhGias { get; set; }
     public virtual DbSet<GiaHoan> GiaHoans { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
-        => optionsBuilder.UseSqlServer("");
+        => optionsBuilder.UseSqlServer("Data Source=ACERNITRO5\\ACERSERVER;Initial Catalog=QLRapPhim;Integrated Security=True;Trust Server Certificate=True");
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
