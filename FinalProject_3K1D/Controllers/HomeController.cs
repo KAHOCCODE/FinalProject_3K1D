@@ -167,11 +167,11 @@ namespace FinalProject_3K1D.Controllers
                 }
 
                 // Lấy danh sách chỗ ngồi đã ngồi
-                var takenSeats = db.Ves
-                    .Where(v => v.IdLichChieu == selectedLichChieuId)
-                    .Select(v => v.MaGheNgoi)
-                    .ToList();
 
+                var takenSeats = db.Ves
+                    .Where(ticket => ticket.IdLichChieu == selectedLichChieuId && ticket.TrangThai == 1)
+                    .Select(ticket => ticket.MaGheNgoi)
+                    .ToList();
                 // Save cinema and room names into session
                 HttpContext.Session.SetString("TenRap", lichChieu.IdRapNavigation.TenRap); // Cinema Name
                 HttpContext.Session.SetString("TenPhong", lichChieu.IdPhongChieuNavigation.TenPhong); // Room Name
@@ -704,7 +704,21 @@ namespace FinalProject_3K1D.Controllers
 
                 foreach (var ticket in tickets)
                 {
-                    if (ticket.TrangThai == 3) // Giả sử trạng thái 3 là trạng thái hoàn vé
+                    if (ticket.TrangThai == 3 ) // Giả sử trạng thái 3 là trạng thái hoàn vé
+                    {
+                        int totalAmount = (int)ticket.TienBanVe.Value;
+                        int loyaltyPointsToDeduct = (int)(totalAmount * 0.001);
+
+                        totalLoyaltyPointsToDeduct += loyaltyPointsToDeduct;
+                    }
+                    if (ticket.TrangThai == 4) // Giả sử trạng thái 4 là trạng thái hoàn vé
+                    {
+                        int totalAmount = (int)ticket.TienBanVe.Value;
+                        int loyaltyPointsToDeduct = (int)(totalAmount * 0.001);
+
+                        totalLoyaltyPointsToDeduct += loyaltyPointsToDeduct;
+                    }
+                    if (ticket.TrangThai == 5) // Giả sử trạng thái 5 là trạng thái hoàn vé
                     {
                         int totalAmount = (int)ticket.TienBanVe.Value;
                         int loyaltyPointsToDeduct = (int)(totalAmount * 0.001);

@@ -21,9 +21,13 @@ public partial class Ve
 
     public string? IdLichChieu { get; set; }
 
+    public string? NoiDung { get; set; }
+
     public virtual KhachHang? IdKhachHangNavigation { get; set; }
 
     public virtual LichChieu? IdLichChieuNavigation { get; set; }
+   
+
     //lấy tên khách hàng
     public string HoTen
     {
