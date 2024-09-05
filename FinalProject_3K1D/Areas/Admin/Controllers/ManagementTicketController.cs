@@ -95,21 +95,21 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         }
         public IActionResult HoanVe(string searchString3)
         {
- 
-                 var tickets = _context.Ves
-                 .Where(v => v.TrangThai == 3 || v.TrangThai == 4 || v.TrangThai == 5 || v.TrangThai==6)
-                .Select(v => new
-                {
-                    v.IdVe,
-                    TenPhim = v.IdLichChieuNavigation.IdPhimNavigation.TenPhim,
-                    HoTen = v.IdKhachHangNavigation.HoTen,
-                    v.MaGheNgoi,
-                    v.TienBanVe,
-                    v.NgayMua,
-                    GioChieu = v.IdLichChieuNavigation.GioChieu,
-                    TenPhong = v.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong,
-                    NoiDung = v.NoiDung
-                });
+
+            var tickets = _context.Ves
+            .Where(v => v.TrangThai == 3 || v.TrangThai == 4 || v.TrangThai == 5 || v.TrangThai == 6)
+           .Select(v => new
+           {
+               v.IdVe,
+               TenPhim = v.IdLichChieuNavigation.IdPhimNavigation.TenPhim,
+               HoTen = v.IdKhachHangNavigation.HoTen,
+               v.MaGheNgoi,
+               v.TienBanVe,
+               v.NgayMua,
+               GioChieu = v.IdLichChieuNavigation.GioChieu,
+               TenPhong = v.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong,
+               NoiDung = v.NoiDung
+           });
 
             // Filter tickets by movie name if a search string is provided
             if (!string.IsNullOrEmpty(searchString3))
@@ -120,67 +120,42 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             // Pass the data to the view
             return View(tickets.ToList());
         }
+        [HttpPost]
+        public IActionResult XLHoanVe(int idVe)
+        {
+            var ticket = _context.Ves.FirstOrDefault(v => v.IdVe == idVe);
+            if (ticket == null) return NotFound();
+
+            // Update ticket status
+            ticket.TrangThai = 7;
+
+            // Calculate accumulated points
+            var points = ticket.TienBanVe * 0.001m;
+
+            // Get current time and show time difference
+            var now = DateTime.Now;
+            var showTime = ticket.GioChieu;
+            var hoursDifference = (now - showTime).TotalHours;
+
+            // Get refund percentage from GiaHoan table
+            var refundPercentage = _context.GiaHoans
+                .Where(g => g.ThoiGianHoan <= hoursDifference)
+                .OrderByDescending(g => g.ThoiGianHoan)
+                .Select(g => g.PhanTramHoan)
+                .FirstOrDefault();
+
+            // Calculate refund amount
+            var refundAmount = (ticket.TienBanVe ?? 0) * (decimal)(refundPercentage);
+
+            // Update ticket price
+            ticket.TienBanVe = refundAmount;
+
+            // Save changes
+            _context.SaveChanges();
+
+            return Json(new { success = true });
+        }
+
 
     }
-    //[HttpPost]
-    //public IActionResult UpdateTicketStatus([FromBody] TicketStatusUpdateModel model)
-    //{
-    //    var result = new { Success = false, Message = string.Empty };
-
-    //    try
-    //    {
-    //        var ticket = _context.Ves.Find(model.IdVe);
-    //        if (ticket == null)
-    //        {
-    //            result = new { Success = false, Message = "Ticket not found." };
-    //            return Json(result);
-    //        }
-
-    //        // Check if this is a refund confirmation (status 0)
-    //        if (model.Status == 0)
-    //        {
-    //            // Calculate loyalty points based on ticket price
-    //            decimal loyaltyPoints = ticket.TienBanVe * 0.001m;
-
-    //            // Retrieve the customer
-    //            var customer = _context.KhachHangs.Find(ticket.IdKhachHang);
-    //            if (customer != null)
-    //            {
-    //                // Add the calculated points to the customer's existing loyalty points
-    //                customer.DiemTichLuy += loyaltyPoints;
-
-    //                // Save changes to customer loyalty points
-    //                _context.SaveChanges();
-    //            }
-    //        }
-    //        else if (model.Status == 7)
-    //        {
-    //            // In case of cancellation (status 7), subtract the loyalty points
-    //            decimal loyaltyPointsToDeduct = ticket.TienBanVe * 0.001m;
-
-    //            var customer = _context.KhachHangs.Find(ticket.IdKhachHang);
-    //            if (customer != null)
-    //            {
-    //                // Deduct the points if applicable
-    //                customer.DiemTichLuy = Math.Max(0, customer.DiemTichLuy - loyaltyPointsToDeduct);
-
-    //                // Save changes to customer loyalty points
-    //                _context.SaveChanges();
-    //            }
-    //        }
-
-    //        // Update the ticket status
-    //        ticket.TrangThai = model.Status;
-    //        _context.SaveChanges();
-
-    //        result = new { Success = true, Message = "Trạng thái vé và điểm tích lũy đã được cập nhật thành công." };
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        result = new { Success = false, Message = $"Error updating ticket status: {ex.Message}" };
-    //    }
-
-    //    return Json(result);
-    //}
-
 }
