@@ -5,116 +5,251 @@
 }
 
 <style>
-    .ticket-details {
-        margin-bottom: 20px;
-        padding: 10px;
-        border: 1px solid #ddd;
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #0b0b0b; /* Dark background for the page */
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #fff;
     }
+
+    .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+    }
+
+        .back-button button {
+            background: linear-gradient(to right, #ff7a18, #ffae00); /* Same color as other buttons */
+            border: none;
+            padding: 10px 20px;
+            color: #fff; /* White text */
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+            .back-button button:hover {
+                background: linear-gradient(to right, #ffae00, #ff7a18);
+                transform: translateY(-3px);
+            }
+
+            .back-button button:focus {
+                outline: none;
+            }
+
+    .ticket-container {
+        background-color: #202020; /* Darker background for the ticket */
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+        border-radius: 15px;
+        padding: 20px;
+        width: 400px;
+        margin: 20px;
+        transition: all 0.3s ease;
+    }
+
+        .ticket-container:hover {
+            transform: scale(1.05);
+        }
+
+    /* Title text (white) */
+    .ticket-header {
+        background: linear-gradient(to right, #ff7a18, #ffae00); /* Orange gradient */
+        padding: 15px;
+        color: #fff; /* White text */
+        text-align: center;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        font-weight: bold;
+        font-size: 1.5em;
+    }
+
+    /* Yellow text for details */
+    .ticket-details {
+        padding: 20px;
+        border-bottom: 1px solid #555;
+        color: #ffcc00; /* Bright yellow for all ticket details */
+    }
+
+        .ticket-details p {
+            margin: 10px 0;
+        }
+
+            .ticket-details p strong {
+                color: #ffcc00; /* Ensure emphasis text stays yellow */
+            }
 
     .checkbox-options {
         margin-top: 20px;
     }
 
+        .checkbox-options h3 {
+            margin-bottom: 15px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+    /* Custom Textbox styling */
+    .custom-reason input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        background-color: #303030;
+        color: #ffcc00; /* Yellow text inside textbox */
+        margin-top: 10px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+
+        .custom-reason input[type="text"]:focus {
+            border-color: #ffae00; /* Highlight the textbox with a gradient color when focused */
+        }
+
     .checkbox-options label {
         display: block;
+        background: #444;
+        padding: 10px;
+        border-radius: 8px;
         margin-bottom: 10px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        color: #ffcc00; /* Yellow for options text */
     }
 
+        .checkbox-options label:hover {
+            background: #555;
+        }
+
+    .checkbox-options input[type="radio"] {
+        margin-right: 10px;
+    }
+
+        /* Custom radio button colors */
+        .checkbox-options input[type="radio"]:checked + label {
+            background-color: #ffae00; /* Change background to orange when selected */
+            color: #fff; /* White text when selected */
+        }
+
+        .checkbox-options input[type="radio"]:checked {
+            accent-color: #ffae00; /* Change the color of the radio button circle */
+        }
+
+    .custom-reason {
+        display: none;
+        margin-top: 10px;
+    }
+
+    /* Button text (white) */
     .submit-button {
+        background: linear-gradient(to right, #ff7a18, #ffae00); /* Button matches the header gradient */
+        border: none;
+        padding: 10px 20px;
+        color: #fff; /* White text for button */
+        border-radius: 25px;
+        width: 100%;
         margin-top: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
     }
-</style>
-<link rel="stylesheet" href="~/css/huyve.css" asp-append-version="true" />
 
-<div class="ticket-details">
-    <h2>Chi tiết vé</h2>
-    <p><strong>Mã vé:</strong> @Model.IdVe</p>
-    <div class="ticket-item">
-        <div class="modal-container">
-            <div class="ticket-modal">
-                <div class="modal-header">
-                    <p><strong>Tên phim:</strong> @Model.IdLichChieuNavigation.IdPhimNavigation.TenPhim</p>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Giờ chiếu:</strong> @Model.IdLichChieuNavigation.GioChieu.ToString()</p>
-                    <p><strong>Rạp chiếu:</strong> @Model.IdLichChieuNavigation.IdRapNavigation.TenRap</p>
-                    <p><strong>Phòng chiếu:</strong> @Model.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong</p>
-                    <p><strong>Mã ghế ngồi:</strong> @Model.MaGheNgoi</p>
-                    <p><strong>Tên khách hàng:</strong> @Model.IdKhachHangNavigation.HoTen</p>
-                    <p><strong>Giá tiền:</strong> @Model.TienBanVe VND</p>
-                </div>
+        .submit-button:hover {
+            background: linear-gradient(to right, #ffae00, #ff7a18);
+            transform: translateY(-3px);
+        }
+
+        .submit-button:focus {
+            outline: none;
+        }
+</style>
+
+<div class="back-button">
+    <button onclick="history.back()">← Quay lại</button>
+</div>
+
+<div class="ticket-container">
+    <div class="ticket-header">
+        Cuộc Chiến Sinh Tồn
+    </div>
+    <div class="ticket-details">
+        <p><strong>Mã vé:</strong> @Model.IdVe</p>
+        <p><strong>Giờ chiếu:</strong> @Model.IdLichChieuNavigation.GioChieu.ToString()</p>
+        <p><strong>Rạp chiếu:</strong> @Model.IdLichChieuNavigation.IdRapNavigation.TenRap</p>
+        <p><strong>Phòng chiếu:</strong> @Model.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong</p>
+        <p><strong>Mã ghế ngồi:</strong> @Model.MaGheNgoi</p>
+        <p><strong>Tên khách hàng:</strong> @Model.IdKhachHangNavigation.HoTen</p>
+        <p><strong>Giá tiền:</strong> @Model.TienBanVe VND</p>
+    </div>
+
+    <div class="checkbox-options">
+        <h3>Chọn lý do hoàn vé:</h3>
+        <form id="refundForm">
+            <input type="hidden" name="IdVe" value="@Model.IdVe" />
+            <label>
+                <input type="radio" name="refundReason" value="3" required /> Lý do 1: Đặt nhầm vé
+            </label>
+            <label>
+                <input type="radio" name="refundReason" value="4" required /> Lý do 2: Có việc bận không thể xem phim
+            </label>
+            <label>
+                <input type="radio" name="refundReason" value="5" required /> Lý do 3: Sự cố giao thông hoặc vấn đề di chuyển
+            </label>
+            <label>
+                <input type="radio" name="refundReason" value="6" id="customReasonCheckbox" /> Lý do khác
+            </label>
+            <div id="customReasonText" class="custom-reason">
+                <label for="customReason">Vui lòng nhập lý do:</label>
+                <input type="text" name="customReason" id="customReason" class="form-control" />
             </div>
-        </div>
+            @Html.AntiForgeryToken()
+            <button type="button" class="submit-button" onclick="processRefund()">Hoàn vé</button>
+        </form>
     </div>
 </div>
 
-<div class="checkbox-options">
-    <h3>Chọn lý do hoàn vé:</h3>
-    <form id="refundForm">
-    <input type="hidden" name="IdVe" value="@Model.IdVe" />
-
-    <label>
-        <input type="radio" name="refundReason" value="3" required /> Lý do 1: Đặt nhầm vé
-    </label>
-    <label>
-        <input type="radio" name="refundReason" value="4" required /> Lý do 2: Có việc bận không thể xem phim
-    </label>
-    <label>
-        <input type="radio" name="refundReason" value="5" required /> Lý do 3: Sự cố giao thông hoặc vấn đề di chuyển
-    </label>
-    <label>
-        <input type="radio" name="refundReason" value="6" id="customReasonCheckbox" /> Lý do khác
-    </label>
-    <div id="customReasonText" style="display:none;">
-        <label for="customReason">Vui lòng nhập lý do:</label>
-        <input type="text" name="customReason" id="customReason" />
-    </div>
-        @Html.AntiForgeryToken()
-    <button type="button" class="submit-button" onclick="processRefund()">Hoàn vé</button>
-</form>
-
 <script>
     function processRefund() {
-    const form = document.getElementById('refundForm');
-    const formData = new FormData(form);
-    const refundReason = formData.get('refundReason');
+        const form = document.getElementById('refundForm');
+        const formData = new FormData(form);
+        const refundReason = formData.get('refundReason');
 
-    // Include custom reason if applicable
-    if (refundReason === '6') { // Assuming 6 is the value for custom reason
-        formData.set('customReason', document.getElementById('customReason').value);
-    } else {
-        formData.delete('customReason'); // Remove custom reason if not selected
+        if (refundReason === '6') {
+            formData.set('customReason', document.getElementById('customReason').value);
+        } else {
+            formData.delete('customReason');
+        }
+
+        fetch('/Home/ProcessRefund', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+            },
+            body: new URLSearchParams(formData).toString()
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.Success) {
+                    alert('Hoàn vé thành công.');
+                    window.location.href = '@Url.Action("Index", "Home")';
+                } else {
+                    alert(data.Message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi xử lý yêu cầu.');
+            });
     }
 
-    fetch('/Home/ProcessRefund', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-        },
-        body: new URLSearchParams(formData).toString()
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.Success) {
-            alert('Hoàn vé thành công.');
-            window.location.href = '@Url.Action("Index", "Home")'; // Redirect to homepage after success
-        } else {
-            alert(data.Message); // Display server error message
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Có lỗi xảy ra khi xử lý yêu cầu.');
-    });
-}
-
-    document.getElementById('customReasonCheckbox').addEventListener('change', function() {
+    document.getElementById('customReasonCheckbox').addEventListener('change', function () {
         var customReasonText = document.getElementById('customReasonText');
-        if (this.checked) {
-            customReasonText.style.display = 'block';
-        } else {
-            customReasonText.style.display = 'none';
-        }
+        customReasonText.style.display = this.checked ? 'block' : 'none';
     });
 </script>

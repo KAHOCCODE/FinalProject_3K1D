@@ -6,6 +6,7 @@
 
 @Html.AntiForgeryToken()
 <link rel="stylesheet" href="~/css/huyve.css" asp-append-version="true" />
+
 <!-- Background overlay -->
 <div class="overlay"></div>
 
@@ -22,31 +23,33 @@
 
 @if (Model.Any())
 {
-        <div class="tickets-container">
+    <!-- Ticket container -->
+    <div class="scrollable-tickets-container">
         @foreach (var ticket in Model)
         {
-                    <div class="ticket-item">
-                        <div class="modal-container">
-                            <div class="ticket-modal">
-                                <div class="modal-header">
-                                    <h2 class="movie-title">@ticket.IdLichChieuNavigation.IdPhimNavigation.TenPhim</h2>
-                                </div>
-                                <div class="modal-body">
-                                    <p class="ticket-id"><strong>Mã vé:</strong> @ticket.IdVe</p>
-                                    <p class="showtime"><strong>Giờ chiếu:</strong> @ticket.IdLichChieuNavigation.GioChieu.ToString()</p>
-                                    <p class="cinema"><strong>Rạp chiếu:</strong> @ticket.IdLichChieuNavigation.IdRapNavigation.TenRap</p>
-                                    <p class="room"><strong>Phòng chiếu:</strong> @ticket.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong</p>
-                                    <p class="seat"><strong>Mã ghế ngồi:</strong> @ticket.MaGheNgoi</p>
-                                    <p class="customer-name"><strong>Tên khách hàng:</strong> @ticket.IdKhachHangNavigation.HoTen</p>
-                                    <p class="price"><strong>Giá tiền:</strong> @ticket.TienBanVe VND</p>
-                                </div>
-                            </div>
+            <div class="ticket-item">
+                <!-- Modal container for each ticket -->
+                <div class="modal-container">
+                    <div class="ticket-modal">
+                        <div class="modal-header">
+                            <h2 class="movie-title">@ticket.IdLichChieuNavigation.IdPhimNavigation.TenPhim</h2>
+                        </div>
+                        <div class="modal-body">
+                            <p class="ticket-id"><strong>Mã vé:</strong> @ticket.IdVe</p>
+                            <p class="showtime"><strong>Giờ chiếu:</strong> @ticket.IdLichChieuNavigation.GioChieu.ToString()</p>
+                            <p class="cinema"><strong>Rạp chiếu:</strong> @ticket.IdLichChieuNavigation.IdRapNavigation.TenRap</p>
+                            <p class="room"><strong>Phòng chiếu:</strong> @ticket.IdLichChieuNavigation.IdPhongChieuNavigation.TenPhong</p>
+                            <p class="seat"><strong>Mã ghế ngồi:</strong> @ticket.MaGheNgoi</p>
+                            <p class="customer-name"><strong>Tên khách hàng:</strong> @ticket.IdKhachHangNavigation.HoTen</p>
+                            <p class="price"><strong>Giá tiền:</strong> @ticket.TienBanVe VND</p>
                         </div>
                     </div>
+                </div>
+            </div>
         }
-        </div>
+    </div>
 }
 else
 {
-        <p>Không có dữ liệu vé để hiển thị.</p>
+    <p class="no-tickets">Không có dữ liệu vé để hiển thị.</p>
 }
