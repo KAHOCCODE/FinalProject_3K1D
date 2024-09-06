@@ -1,0 +1,61 @@
+﻿@model IEnumerable<FinalProject_3K1D.Models.Order>
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Order List</h2>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Create New Order</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Idsanpham)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tensanpham)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mota)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apphich)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PLoai)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+                <tr>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Idsanpham)
+                    </td>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Tensanpham)
+                    </td>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Mota)
+                    </td>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Apphich)
+                    </td>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.PLoai)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", new { id = item.Idsanpham })" class="btn btn-warning">Edit</a> |
+                        <a href="@Url.Action("Details", new { id = item.Idsanpham })" class="btn btn-info">Details</a> |
+                        <a href="@Url.Action("Delete", new { id = item.Idsanpham })" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>
