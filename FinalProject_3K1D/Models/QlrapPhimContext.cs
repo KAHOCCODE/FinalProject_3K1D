@@ -38,6 +38,7 @@ public partial class QlrapPhimContext : DbContext
     public virtual DbSet<DanhGia> DanhGias { get; set; }
     public virtual DbSet<GiaHoan> GiaHoans { get; set; }
     public virtual DbSet<OrderFood> OrderFoods { get; set; }
+    public virtual DbSet<Food> Foods { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 

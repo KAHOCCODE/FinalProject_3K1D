@@ -1,69 +1,58 @@
-﻿@model FinalProject_3K1D.Models.Order
+﻿@model FinalProject_3K1D.Models.Food
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "Create Order";
+    ViewData["Title"] = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
-    var nextId = ViewData["NextId"] as int?;
+    var nextId = ViewData["NextId"] ;
 }
-
 <div class="container mt-4">
     <div class="card border-0 shadow-lg rounded-3">
-        <div class="card-header" style="background-color: #4CAF50; color: white;">
-            <h4 class="mb-0 text-center">Create New Order</h4>
+        <div class="card-header" style="background-color: #b66dff; color: white;">
+            <h4 class="mb-0 text-center">Create New Phim</h4>
         </div>
         <div class="card-body p-4">
-            <form id="createOrderForm" asp-action="Create" enctype="multipart/form-data">
+            <form id="createForm" asp-action="Create" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="Idsanpham" class="form-control border-primary" id="floatingIdSanPham" placeholder="ID Sản Phẩm" readonly value="@nextId" />
-                            <label for="floatingIdSanPham">Mã Sản Phẩm</label>
+                            <input asp-for="IdSanPham" class="form-control border-primary" readonly value="@nextId" />
+                            <label for="floatingIdSanPham">Mã sản phẩm</label>
                             <div class="form-text text-danger">
-                                <span asp-validation-for="Idsanpham"></span>
+                                <span asp-validation-for="IdSanPham"></span>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="Tensanpham" class="form-control border-primary" id="floatingTenSanPham" placeholder="Tên Sản Phẩm" />
-                            <label for="floatingTenSanPham">Tên Sản Phẩm</label>
+                            <input asp-for="TenSanPham" class="form-control border-primary" />
+                            <label for="floatingTenSanPham">Tên sản phẩm</label>
                             <div class="form-text text-danger">
-                                <span asp-validation-for="Tensanpham"></span>
+                                <span asp-validation-for="TenSanPham"></span>
                             </div>
                         </div>
                     </div>
-                    @* <div class="col-md-6">
+
+                    <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="Gia" type="number" step="0.01" min="0" class="form-control border-primary" id="floatingGia" placeholder="Giá" />
-                            <label for="floatingGia">Giá (VNĐ)</label>
+                            <input asp-for="Gia" type="number" min="1" class="form-control border-primary" />
+                            <label for="floatingGia">Giá</label>
                             <div class="form-text text-danger">
                                 <span asp-validation-for="Gia"></span>
                             </div>
                         </div>
-                    </div> *@
+                    </div>
+
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <textarea asp-for="Mota" class="form-control border-primary" id="floatingMota" placeholder="Mô Tả"></textarea>
-                            <label for="floatingMota">Mô Tả</label>
+                            <textarea asp-for="MoTa" class="form-control border-primary"></textarea>
+                            <label for="floatingMoTa">Mô Tả</label>
                             <div class="form-text text-danger">
-                                <span asp-validation-for="Mota"></span>
+                                <span asp-validation-for="MoTa"></span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-floating mb-3">
-                            <select asp-for="PLoai" class="form-control border-primary" id="floatingPLoai">
-                                <option value="nước">Nước</option>
-                                <option value="bắp">Bắp</option>
-                                <option value="combo">Combo</option>
-                            </select>
-                            <label for="floatingPLoai">Phân Loại</label>
-                            <div class="form-text text-danger">
-                                <span asp-validation-for="PLoai"></span>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="Apphich" type="file" class="form-control border-primary" id="floatingApphich" />
@@ -76,10 +65,23 @@
                             <!-- Preview image will be displayed here -->
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <select asp-for="PLoai" class="form-control border-primary">
+                                <option value="Bắp">Bắp</option>
+                                <option value="Nước">Nước</option>
+                                <option value="Combo">Combo</option>
+                            </select>
+                            <label for="floatingPloai">Phân Loại</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="PLoai"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-center mt-4">
-                    <button type="submit" class="btn btn-success">Create</button>
+                    <button type="submit" class="btn" style="background-color: #b66dff; color: white;">Create</button>
                     <a class="btn btn-secondary ms-3" asp-action="Index">Back to List</a>
                 </div>
             </form>
@@ -87,7 +89,11 @@
     </div>
 </div>
 
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
+    // JavaScript to handle image preview
     document.getElementById('floatingApphich').addEventListener('change', function (event) {
         const file = event.target.files[0];
         const preview = document.getElementById('imagePreview');
@@ -106,6 +112,37 @@
             reader.readAsDataURL(file);
         } else {
             preview.innerHTML = '<span>Chưa có ảnh</span>';
+        }
+    });
+
+    // JavaScript for form submission with validation and SweetAlert2
+    document.getElementById('createForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+        const form = event.target;
+        const formData = new FormData(form);
+
+        // Example validation: Check if all fields are filled (customize as needed)
+        let isValid = true;
+        formData.forEach((value, key) => {
+            if (!value) {
+                isValid = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please fill out all fields.'
+                });
+            }
+        });
+
+        if (isValid) {
+            // Submit the form if valid (or simulate a successful submission)
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Sản phẩm created successfully!'
+            }).then(() => {
+                form.submit(); // Submit the form after showing the success message
+            });
         }
     });
 </script>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FinalProject_3K1D.Models.Order>
+﻿@model IEnumerable<FinalProject_3K1D.Models.Food>
 
 @{
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
@@ -14,13 +14,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Idsanpham)
+                @Html.DisplayNameFor(model => model.IdSanPham)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tensanpham)
+                @Html.DisplayNameFor(model => model.TenSanPham)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Mota)
+                @Html.DisplayNameFor(model => model.Gia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MoTa)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Apphich)
@@ -36,24 +39,31 @@
         {
                 <tr>
                     <td>
-                    @Html.DisplayFor(modelItem => item.Idsanpham)
+                    @Html.DisplayFor(modelItem => item.IdSanPham)
                     </td>
                     <td>
-                    @Html.DisplayFor(modelItem => item.Tensanpham)
+                    @Html.DisplayFor(modelItem => item.TenSanPham)
                     </td>
                     <td>
-                    @Html.DisplayFor(modelItem => item.Mota)
+                    @Html.DisplayFor(modelItem => item.MoTa)
                     </td>
-                    <td>
-                    @Html.DisplayFor(modelItem => item.Apphich)
-                    </td>
+                        <td class="align-middle text-center">
+                    @if (!string.IsNullOrEmpty(item.Apphich))
+                    {
+                       <img src="@Url.Content("~/image/Order/" + item.Apphich)" alt="Poster" style="max-height: 100px; max-width: 100px;" />
+                    }
+                    else
+                    {
+                      <span>Chưa có ảnh</span>
+                    }
+                        </td>
                     <td>
                     @Html.DisplayFor(modelItem => item.PLoai)
                     </td>
                     <td>
-                        <a href="@Url.Action("Edit", new { id = item.Idsanpham })" class="btn btn-warning">Edit</a> |
-                        <a href="@Url.Action("Details", new { id = item.Idsanpham })" class="btn btn-info">Details</a> |
-                        <a href="@Url.Action("Delete", new { id = item.Idsanpham })" class="btn btn-danger">Delete</a>
+                        <a href="@Url.Action("Edit", new { id = item.IdSanPham })" class="btn btn-warning">Edit</a> |
+                        <a href="@Url.Action("Details", new { id = item.IdSanPham })" class="btn btn-info">Details</a> |
+                        <a href="@Url.Action("Delete", new { id = item.IdSanPham })" class="btn btn-danger">Delete</a>
                     </td>
                 </tr>
         }

@@ -1,34 +1,122 @@
-﻿@model FinalProject_3K1D.Models.Order
+﻿@model FinalProject_3K1D.Models.Food
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
+    ViewData["Title"] = "Edit Food";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
-    ViewData["Title"] = "Edit Order";
 }
 
-<h2>Edit Order</h2>
+<div class="container mt-4">
+    <div class="card border-0 shadow-lg rounded-3">
+        <div class="card-header" style="background-color: #b66dff; color: white;">
+            <h4 class="mb-0 text-center">Edit Food</h4>
+        </div>
+        <div class="card-body p-4">
+            <form id="editForm" asp-action="Edit" enctype="multipart/form-data">
+                <input type="hidden" asp-for="IdSanPham" />
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="Idsanpham" />
-    <div class="form-group">
-        <label asp-for="Tensanpham" class="control-label"></label>
-        <input asp-for="Tensanpham" class="form-control" />
-        <span asp-validation-for="Tensanpham" class="text-danger"></span>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="row g-3">
+                    <!-- Cột bên trái -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input asp-for="IdSanPham" class="form-control border-primary" id="floatingIdSanPham" placeholder="ID Food" readonly />
+                            <label for="floatingIdSanPham">Mã Sản Phẩm</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="TenSanPham" class="form-control border-primary" id="floatingTenSanPham" placeholder="Tên Sản Phẩm" />
+                            <label for="floatingTenSanPham">Tên Sản Phẩm</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="TenSanPham"></span>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Gia" type="number" min="0" class="form-control border-primary" id="floatingGia" placeholder="Giá" />
+                            <label for="floatingGia">Giá</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="Gia"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cột bên phải -->
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="MoTa" class="form-control border-primary" id="floatingMoTa" placeholder="Mô Tả"></textarea>
+                            <label for="floatingMoTa">Mô Tả</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="MoTa"></span>
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="PLoai" class="form-control border-primary" id="floatingPLoai" placeholder="Phân Loại" />
+                            <label for="floatingPLoai">Phân Loại</label>
+                            <div class="form-text text-danger">
+                                <span asp-validation-for="PLoai"></span>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="currentApphich">Current Poster</label>
+                            @if (!string.IsNullOrEmpty(Model.Apphich))
+                            {
+                                    <div>
+                                        <img src="@Url.Content("~/image/ApPhich/" + Model.Apphich)" alt="Food Poster" style="max-width: 150px; max-height: 150px; object-fit: contain;" />
+                                    </div>
+                            }
+                            else
+                            {
+                                    <p>No poster available.</p>
+                            }
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="newApphich">Upload New Poster (optional)</label>
+                            <input type="file" name="newApphich" class="form-control-file" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn" style="background-color: #b66dff; color: white;">Save Changes</button>
+                    <a class="btn btn-secondary ms-3" asp-action="Index">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Mota" class="control-label"></label>
-        <input asp-for="Mota" class="form-control" />
-        <span asp-validation-for="Mota" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Apphich" class="control-label"></label>
-        <input asp-for="Apphich" class="form-control" />
-        <span asp-validation-for="Apphich" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="PLoai" class="control-label"></label>
-        <input asp-for="PLoai" class="form-control" />
-        <span asp-validation-for="PLoai" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a href="@Url.Action("Index")" class="btn btn-secondary">Back to List</a>
-</form>
+</div>
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.getElementById('editForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const form = document.getElementById('editForm');
+        const formData = new FormData(form);
+
+        // Example validation: Check if all fields are filled (customize as needed)
+        let isValid = true;
+        formData.forEach((value, key) => {
+            if (!value && key !== 'newApphich') {
+                isValid = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please fill out all fields.'
+                });
+            }
+        });
+
+        if (isValid) {
+            // Submit the form if valid (or simulate a successful submission)
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Food updated successfully!'
+            }).then(() => {
+                form.submit(); // Submit the form after showing the success message
+            });
+        }
+    });
+</script>
