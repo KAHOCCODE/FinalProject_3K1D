@@ -227,8 +227,92 @@ namespace FinalProject_3K1D.Controllers
         }
 
 
+        //public IActionResult Payment()
+        //{
+        //    var seatIds = HttpContext.Session.GetString("SelectedSeatIds");
+        //    var totalAmount = HttpContext.Session.GetInt32("TotalAmount");
+        //    var movieId = HttpContext.Session.GetString("MovieId");
+        //    var userId = HttpContext.Session.GetString("UserId");
+        //    var selectedLichChieuId = HttpContext.Session.GetString("SelectedLichChieuId");
+        //    var tenRap = HttpContext.Session.GetString("TenRap");
+        //    var tenPhong = HttpContext.Session.GetString("TenPhong");
+
+        //    if (string.IsNullOrEmpty(seatIds) || totalAmount == null || string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(userId))
+        //    {
+        //        // If data is missing, display an error message
+        //        ViewBag.ErrorMessage = "Dữ liệu không hợp lệ. Vui lòng chọn lại.";
+        //        return View("ChonGhe"); // Redirect to the seat selection page
+        //    }
+
+        //    using (var db = new QlrapPhimContext())
+        //    {
+        //        // Generate a new ticket ID
+        //        int newTicketId = GenerateTicketId();
+
+        //        // Create a new ticket object
+        //        var newTicket = new Ve
+        //        {
+        //            IdVe = newTicketId,
+        //            IdKhachHang = userId,
+        //            TrangThai = 1,
+        //            LoaiVe = 0,
+        //            IdLichChieu = selectedLichChieuId,
+        //            TienBanVe = totalAmount,
+        //            MaGheNgoi = seatIds,
+        //            NgayMua = DateTime.Now
+        //        };
+
+        //        // Add the ticket to the database
+        //        db.Ves.Add(newTicket);
+        //        db.SaveChanges();
+        //        // Calculate loyalty points (1% of total amount)
+        //        int loyaltyPoints = (int)(totalAmount.Value * 0.001);
+
+        //        // Find the customer
+        //        var customer = db.KhachHangs.FirstOrDefault(k => k.IdKhachHang == userId);
+        //        if (customer != null)
+        //        {
+        //            // Update the loyalty points
+        //            customer.DienTichLuy = (customer.DienTichLuy ?? 0) + loyaltyPoints;
+
+        //            // Save the changes to the customer
+        //            db.SaveChanges();
+        //        }
+        //        // Save the new ticket ID to the session
+        //        HttpContext.Session.SetInt32("TicketId", newTicket.IdVe);
+
+        //        // Fetch additional details for display
+        //        var movie = db.Phims.FirstOrDefault(p => p.IdPhim == movieId);
+        //        var lichChieu = db.LichChieus
+        //            .Include(l => l.IdRapNavigation)
+        //            .FirstOrDefault(l => l.IdLichChieu == selectedLichChieuId);
+
+        //        var foods = db.Foods.ToList();
+        //        if (movie == null || lichChieu == null || customer == null)
+        //        {
+        //            return RedirectToAction("Index", "Home"); // Redirect if data not found
+        //        }
+
+        //        // Pass data to the ViewBag
+        //        ViewBag.MovieName = movie.TenPhim;
+        //        ViewBag.CustomerName = customer.HoTen;
+        //        ViewBag.GioChieu = lichChieu.GioChieu;
+        //        ViewBag.SelectedSeatIds = seatIds;
+        //        ViewBag.TotalAmount = totalAmount;
+        //        ViewBag.TicketId = newTicketId; // Pass the generated ticket ID to the view
+        //        ViewBag.CustomerId = userId;
+        //        ViewBag.LoaiVe = 0;
+        //        ViewBag.TrangThai = 1;
+        //        ViewBag.TenRap = tenRap;
+        //        ViewBag.TenPhong = tenPhong;
+        //        ViewBag.Foods = foods;
+
+        //    }
+        //    return View();
+        //}
         public IActionResult Payment()
         {
+            // Retrieve session data
             var seatIds = HttpContext.Session.GetString("SelectedSeatIds");
             var totalAmount = HttpContext.Session.GetInt32("TotalAmount");
             var movieId = HttpContext.Session.GetString("MovieId");
@@ -237,13 +321,15 @@ namespace FinalProject_3K1D.Controllers
             var tenRap = HttpContext.Session.GetString("TenRap");
             var tenPhong = HttpContext.Session.GetString("TenPhong");
 
+            // Validate session data
             if (string.IsNullOrEmpty(seatIds) || totalAmount == null || string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(userId))
             {
                 // If data is missing, display an error message
                 ViewBag.ErrorMessage = "Dữ liệu không hợp lệ. Vui lòng chọn lại.";
-                return View("ChonGhe"); // Redirect to the seat selection page
+                return RedirectToAction("ChonGhe"); // Redirect to the seat selection page
             }
 
+            // Process payment and save ticket
             using (var db = new QlrapPhimContext())
             {
                 // Generate a new ticket ID
@@ -257,7 +343,7 @@ namespace FinalProject_3K1D.Controllers
                     TrangThai = 1,
                     LoaiVe = 0,
                     IdLichChieu = selectedLichChieuId,
-                    TienBanVe = totalAmount,
+                    TienBanVe = totalAmount.Value,
                     MaGheNgoi = seatIds,
                     NgayMua = DateTime.Now
                 };
@@ -265,19 +351,18 @@ namespace FinalProject_3K1D.Controllers
                 // Add the ticket to the database
                 db.Ves.Add(newTicket);
                 db.SaveChanges();
+
                 // Calculate loyalty points (1% of total amount)
                 int loyaltyPoints = (int)(totalAmount.Value * 0.001);
 
-                // Find the customer
+                // Find the customer and update loyalty points
                 var customer = db.KhachHangs.FirstOrDefault(k => k.IdKhachHang == userId);
                 if (customer != null)
                 {
-                    // Update the loyalty points
                     customer.DienTichLuy = (customer.DienTichLuy ?? 0) + loyaltyPoints;
-
-                    // Save the changes to the customer
                     db.SaveChanges();
                 }
+
                 // Save the new ticket ID to the session
                 HttpContext.Session.SetInt32("TicketId", newTicket.IdVe);
 
@@ -286,8 +371,8 @@ namespace FinalProject_3K1D.Controllers
                 var lichChieu = db.LichChieus
                     .Include(l => l.IdRapNavigation)
                     .FirstOrDefault(l => l.IdLichChieu == selectedLichChieuId);
-               
 
+                var foods = db.Foods.ToList();
                 if (movie == null || lichChieu == null || customer == null)
                 {
                     return RedirectToAction("Index", "Home"); // Redirect if data not found
@@ -305,11 +390,99 @@ namespace FinalProject_3K1D.Controllers
                 ViewBag.TrangThai = 1;
                 ViewBag.TenRap = tenRap;
                 ViewBag.TenPhong = tenPhong;
-
+                ViewBag.Foods = foods;
             }
+
             return View();
         }
 
+       
+        [HttpPost]
+        public IActionResult SubmitOrder(Dictionary<string, string> formData)
+        {
+            var seatIds = HttpContext.Session.GetString("SelectedSeatIds");
+            var movieId = HttpContext.Session.GetString("MovieId");
+            var userId = HttpContext.Session.GetString("UserId");
+            var selectedLichChieuId = HttpContext.Session.GetString("SelectedLichChieuId");
+            var tenRap = HttpContext.Session.GetString("TenRap");
+            var tenPhong = HttpContext.Session.GetString("TenPhong");
+
+            if (string.IsNullOrEmpty(seatIds) || string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(userId))
+            {
+                ViewBag.ErrorMessage = "Dữ liệu không hợp lệ. Vui lòng chọn lại.";
+                return View("ChonGhe");
+            }
+
+            using (var db = new QlrapPhimContext())
+            {
+                int newTicketId = GenerateTicketId();
+                decimal totalAmount = 0;
+
+                foreach (var key in formData.Keys)
+                {
+                    if (key.StartsWith("quantity_"))
+                    {
+                        var idSanPham = int.Parse(key.Substring(9));
+                        var quantity = int.Parse(formData[key]);
+
+                        var food = db.Foods.Find(idSanPham);
+                        if (food != null)
+                        {
+                            totalAmount += food.Gia * quantity;
+                        }
+                    }
+                }
+
+                var newTicket = new Ve
+                {
+                    IdVe = newTicketId,
+                    IdKhachHang = userId,
+                    TrangThai = 1,
+                    LoaiVe = 0,
+                    IdLichChieu = selectedLichChieuId,
+                    TienBanVe = totalAmount,
+                    MaGheNgoi = seatIds,
+                    NgayMua = DateTime.Now
+                };
+
+                db.Ves.Add(newTicket);
+                db.SaveChanges();
+
+                int loyaltyPoints = (int)(totalAmount * 0.001m);
+                var customer = db.KhachHangs.FirstOrDefault(k => k.IdKhachHang == userId);
+                if (customer != null)
+                {
+                    customer.DienTichLuy = (customer.DienTichLuy ?? 0) + loyaltyPoints;
+                    db.SaveChanges();
+                }
+
+                HttpContext.Session.SetInt32("TicketId", newTicket.IdVe);
+
+                var movie = db.Phims.FirstOrDefault(p => p.IdPhim == movieId);
+                var lichChieu = db.LichChieus
+                    .Include(l => l.IdRapNavigation)
+                    .FirstOrDefault(l => l.IdLichChieu == selectedLichChieuId);
+
+                if (movie == null || lichChieu == null || customer == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ViewBag.MovieName = movie.TenPhim;
+                ViewBag.CustomerName = customer.HoTen;
+                ViewBag.GioChieu = lichChieu.GioChieu;
+                ViewBag.SelectedSeatIds = seatIds;
+                ViewBag.TotalAmount = totalAmount;
+                ViewBag.TicketId = newTicketId;
+                ViewBag.CustomerId = userId;
+                ViewBag.LoaiVe = 0;
+                ViewBag.TrangThai = 1;
+                ViewBag.TenRap = tenRap;
+                ViewBag.TenPhong = tenPhong;
+
+                return View("Payment");
+            }
+        }
 
         public IActionResult Huyve()
         {

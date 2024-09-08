@@ -1,4 +1,7 @@
-﻿@{
+﻿@model dynamic
+@using FinalProject_3K1D.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
     ViewBag.Title = "Payment";
     Layout = null;
 }
@@ -189,53 +192,26 @@
 </head>
 <body>
     <h1 class="payment-page-title">Order</h1>
-    <div class="order-container">
-        <div class="order-section">
-            <h3>Combo</h3>
-            <div class="order-item">
-                <img src="~/image/combo1.png" alt="Combo 1">
-                <div class="details">
-                    <p><strong>Combo 1</strong></p>
-                    <p>Mô tả: Combo bao gồm 1 burger, 1 khoai tây chiên và 1 nước uống</p>
-                    <p>Giá: 150.000 VND</p>
-                </div>
-                <div class="quantity">
-                    <input type="number" value="0" min="0" step="1">
-                </div>
-            </div>
-            <!-- Add more combo items here -->
-        </div>
-        <div class="order-section">
-            <h3>Đồ ăn</h3>
-            <div class="order-item">
-                <img src="~/image/food1.png" alt="Food 1">
-                <div class="details">
-                    <p><strong>Food 1</strong></p>
-                    <p>Mô tả: Bánh pizza nhỏ với phô mai</p>
-                    <p>Giá: 80.000 VND</p>
-                </div>
-                <div class="quantity">
-                    <input type="number" value="0" min="0" step="1">
+    @foreach (var item in ViewBag.Foods as IEnumerable<Food>)
+    {
+        <div class="order-container">
+            <div class="order-section">
+                <h3>Combo</h3>
+                <div class="order-item">
+                    <img src="~/image/Order/@item.Apphich" alt="Apphich">
+                    <div class="details">
+                        <p><strong>@item.TenSanPham</strong></p>
+                        <p>Mô tả: @item.MoTa</p>
+                        <p>Giá: @item.Gia.ToString("C0") VND</p>
+                    </div>
+                    <div class="quantity">
+                        <input type="number" class="food-quantity" data-id="@item.IdSanPham" value="0" min="0" step="1">
+                    </div>
                 </div>
             </div>
-            <!-- Add more food items here -->
         </div>
-        <div class="order-section">
-            <h3>Nước</h3>
-            <div class="order-item">
-                <img src="~/image/drink1.png" alt="Drink 1">
-                <div class="details">
-                    <p><strong>Drink 1</strong></p>
-                    <p>Mô tả: Nước ngọt 500ml</p>
-                    <p>Giá: 20.000 VND</p>
-                </div>
-                <div class="quantity">
-                    <input type="number" value="0" min="0" step="1">
-                </div>
-            </div>
-            <!-- Add more drink items here -->
-        </div>
-    </div>
+    }
+
 
     <h4 class="payment-page-title">Payment</h4>
     <div class="payment-container">
@@ -262,6 +238,8 @@
             <p>Tên khách hàng: @ViewBag.CustomerName</p>
             <p>Giờ chiếu: @ViewBag.GioChieu - @ViewBag.TenPhong - @ViewBag.TenRap</p>
             <p>Ghế đã chọn: @ViewBag.SelectedSeatIds</p>
+            <p>Order đã chọn: <span id="selected-orders"></span></p>
+
             <hr>
             <h3>SỐ TIỀN CẦN THANH TOÁN: <span class="highlight">@ViewBag.TotalAmount VND</span></h3>
             <div class="buttons">
@@ -272,6 +250,53 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const quantityInputs = document.querySelectorAll('.food-quantity');
+    const selectedOrdersContainer = document.getElementById('selected-orders');
+
+    // Function to update the displayed selected orders and quantities
+    function updateSelectedOrders() {
+        let selectedOrders = [];
+        quantityInputs.forEach(input => {
+            const id = input.getAttribute('data-id');
+            const quantity = parseInt(input.value, 10);
+
+            if (quantity > 0) {
+                selectedOrders.push(`ID: ${id} (Số lượng: ${quantity})`);
+            }
+        });
+
+        selectedOrdersContainer.innerHTML = selectedOrders.join(', ');
+    }
+
+    // Attach event listeners to quantity inputs
+    quantityInputs.forEach(input => {
+        input.addEventListener('input', updateSelectedOrders);
+    });
+
+    // Handle payment method selection
+    document.querySelectorAll('.payment-methods div').forEach(method => {
+        method.addEventListener('click', () => {
+            document.querySelectorAll('.payment-methods div').forEach(item => {
+                item.classList.remove('selected');
+            });
+            method.classList.add('selected');
+
+            document.getElementById('pay-button').classList.add('enabled');
+            document.getElementById('pay-button').disabled = false;
+        });
+    });
+
+    // Handle payment button click
+    document.getElementById('pay-button').addEventListener('click', function () {
+        alert("Thanh toán thành công!");
+        window.location.href = '@Url.Action("Index", "Home")';
+    });
+
+    // Initial update of selected orders
+    updateSelectedOrders();
+});
+
         document.querySelectorAll('.payment-methods div').forEach(method => {
             method.addEventListener('click', () => {
                 // Xóa class 'selected' khỏi tất cả các phương thức thanh toán
@@ -295,6 +320,7 @@
             // Redirect đến trang home sau khi thanh toán thành công
             window.location.href = '@Url.Action("Index", "Home")';
         });
+
     </script>
 </body>
 </html>
