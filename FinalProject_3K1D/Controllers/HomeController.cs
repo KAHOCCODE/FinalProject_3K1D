@@ -310,7 +310,7 @@ namespace FinalProject_3K1D.Controllers
         //    }
         //    return View();
         //}
-        public IActionResult Payment()
+        public IActionResult Payment(string selectedOrders)
         {
             // Retrieve session data
             var seatIds = HttpContext.Session.GetString("SelectedSeatIds");
@@ -345,7 +345,8 @@ namespace FinalProject_3K1D.Controllers
                     IdLichChieu = selectedLichChieuId,
                     TienBanVe = totalAmount.Value,
                     MaGheNgoi = seatIds,
-                    NgayMua = DateTime.Now
+                    NgayMua = DateTime.Now,
+                    NoiDung = selectedOrders
                 };
 
                 // Add the ticket to the database
