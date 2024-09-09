@@ -34,15 +34,13 @@ public partial class QlrapPhimContext : DbContext
     public virtual DbSet<Ve> Ves { get; set; }
 
     public virtual DbSet<KhuyenMai> KhuyenMais { get; set; }
-    public DbSet<Order> Orders { get; set; }
     public virtual DbSet<DanhGia> DanhGias { get; set; }
     public virtual DbSet<GiaHoan> GiaHoans { get; set; }
-    public virtual DbSet<OrderFood> OrderFoods { get; set; }
     public virtual DbSet<Food> Foods { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-0U55SOV\\SQLEXPRESS;Initial Catalog=QLRapPhim;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-3TRF427\\HOANGKA;Initial Catalog=QLRapPhim;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
