@@ -5,23 +5,26 @@
     ViewData["Title"] = "Danh sách hoàn vé";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
-<form method="get" asp-action="HoanVe">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" name="searchString3" placeholder="Tìm kiếm theo tên phim" value="@ViewData["SearchString3"]" />
-        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
-    </div>
-</form>
 
-<div class="container mt-4">
-    <h1 class="text-center text-primary mb-4">@ViewData["Title"]</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: #4B0082; font-weight: bold; font-size: 2.5rem;">@ViewData["Title"]</h1>
 
-    <div class="card shadow-lg border-0 rounded-3">
+    <!-- Form tìm kiếm -->
+    <form method="get" asp-action="HoanVe" class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control search-input" name="searchString3" placeholder="Tìm kiếm theo tên phim" value="@ViewData["SearchString3"]" aria-label="Search" />
+            <button class="btn btn-search" type="submit">Tìm kiếm</button>
+        </div>
+    </form>
+
+    <!-- Bảng danh sách hoàn vé -->
+    <div class="card border-0 shadow-lg rounded-3">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
-                    <thead class="table-warning">
+                    <thead class="table-header">
                         <tr>
-                            <th class="text-center">IdVe</th>
+                            <th class="text-center">Id Vé</th>
                             <th class="text-center">Tên Phim</th>
                             <th class="text-center">Tên Khách Hàng</th>
                             <th class="text-center">Giờ Chiếu</th>
@@ -31,27 +34,28 @@
                             <th class="text-center">Tên Phòng</th>
                             <th class="text-center">Lý Do Hoàn Vé</th>
                             <th class="text-center">Hành động</th>
-                            <!-- New column for refund reason -->
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var ticket in Model)
                         {
-                                <tr>
-                                    <td class="align-middle text-center">@ticket.IdVe</td>
-                                    <td class="align-middle text-center">@ticket.TenPhim</td>
-                                    <td class="align-middle text-center">@ticket.HoTen</td>
-                                    <td class="align-middle text-center">@ticket.GioChieu.ToString("HH:mm:ss")</td>
-                                    <td class="align-middle text-center">@ticket.MaGheNgoi</td>
-                                    <td class="align-middle text-center">@ticket.TienBanVe.ToString("C")</td>
-                                    <td class="align-middle text-center">@ticket.NgayMua?.ToString("dd/MM/yyyy")</td>
-                                    <td class="align-middle text-center">@ticket.TenPhong</td>
-                                    <td class="align-middle text-center">@ticket.NoiDung</td>
-                                   <td>
-                                   <button class="btn btn-success" onclick="confirmRefund(@ticket.IdVe)">✔</button>
-                                   <button class="btn btn-danger" onclick="cancelRefund(@ticket.IdVe)">✘</button>
-                                   </td>
-                                </tr>
+                            <tr class="table-row">
+                                <td class="align-middle text-center">@ticket.IdVe</td>
+                                <td class="align-middle text-center">@ticket.TenPhim</td>
+                                <td class="align-middle text-center">@ticket.HoTen</td>
+                                <td class="align-middle text-center">@ticket.GioChieu.ToString("HH:mm:ss")</td>
+                                <td class="align-middle text-center">@ticket.MaGheNgoi</td>
+                                <td class="align-middle text-center">@ticket.TienBanVe.ToString("C")</td>
+                                <td class="align-middle text-center">@ticket.NgayMua?.ToString("dd/MM/yyyy")</td>
+                                <td class="align-middle text-center">@ticket.TenPhong</td>
+                                <td class="align-middle text-center">@ticket.NoiDung</td>
+                                <td class="align-middle text-center">
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-edit mx-1" onclick="confirmRefund(@ticket.IdVe)"><i class="fas fa-check"></i></button>
+                                        <button class="btn btn-delete mx-1" onclick="cancelRefund(@ticket.IdVe)"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -63,6 +67,8 @@
 <!-- Font Awesome for icons -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- JavaScript xử lý hoàn vé -->
 <script>
     function confirmRefund(idVe) {
         Swal.fire({
@@ -76,40 +82,40 @@
             cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Send POST request to the server to process the refund
+                // Gửi yêu cầu POST đến server để xử lý hoàn vé
                 fetch(`Admin/ManagementTicket/XLHoanVe`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
                     },
-                    body: JSON.stringify({ idVe:idVe })
+                    body: JSON.stringify({ idVe: idVe })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire(
-                            'Hoàn thành!',
-                            'Vé đã được hoàn.',
-                            'success'
-                        ).then(() => {
-                            location.reload(); // Reload page to update the list
-                        });
-                    } else {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire(
+                                'Hoàn thành!',
+                                'Vé đã được hoàn.',
+                                'success'
+                            ).then(() => {
+                                location.reload(); // Reload page to update the list
+                            });
+                        } else {
+                            Swal.fire(
+                                'Lỗi!',
+                                'Có lỗi xảy ra khi hoàn vé.',
+                                'error'
+                            );
+                        }
+                    })
+                    .catch(error => {
                         Swal.fire(
                             'Lỗi!',
-                            'Có lỗi xảy ra khi hoàn vé.',
+                            'Có lỗi xảy ra khi gửi yêu cầu.',
                             'error'
                         );
-                    }
-                })
-                .catch(error => {
-                    Swal.fire(
-                        'Lỗi!',
-                        'Có lỗi xảy ra khi gửi yêu cầu.',
-                        'error'
-                    );
-                });
+                    });
             }
         });
     }
@@ -126,7 +132,7 @@
             cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Handle refund cancellation
+                // Xử lý hủy hoàn vé
                 Swal.fire(
                     'Hủy thành công!',
                     'Vé đã được hủy hoàn.',
@@ -137,5 +143,57 @@
     }
 </script>
 
+<!-- CSS tùy chỉnh -->
+<style>
+    .btn-search {
+        background: #FFD700;
+        border: none;
+        color: #4B0082;
+        font-weight: bold;
+        border-radius: 0 20px 20px 0;
+        transition: all 0.3s;
+    }
 
+        .btn-search:hover {
+            background: #E6C200;
+        }
 
+    .table-header {
+        background: #4B0082;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .table-row:hover {
+        background: #F8F9FA;
+        transition: background 0.3s;
+    }
+
+    .btn-edit {
+        background: #28A745;
+        color: #fff;
+        border-radius: 50%;
+        padding: 8px;
+        transition: all 0.3s;
+    }
+
+        .btn-edit:hover {
+            background: #218838;
+        }
+
+    .btn-delete {
+        background: #DC3545;
+        color: #fff;
+        border-radius: 50%;
+        padding: 8px;
+        transition: all 0.3s;
+    }
+
+        .btn-delete:hover {
+            background: #C82333;
+        }
+
+    .search-input {
+        border-radius: 20px 0 0 20px;
+    }
+</style>

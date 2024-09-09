@@ -6,24 +6,24 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<!-- Tìm kiếm -->
-<form method="get" asp-action="VeDaXem" class="d-flex justify-content-center mb-4">
-    <div class="input-group" style="max-width: 500px;">
-        <input type="text" class="form-control" name="searchString2" placeholder="Tìm kiếm theo tên phim" value="@ViewData["SearchString2"]" />
-        <button class="btn btn-primary" type="submit">
-            <i class="fas fa-search"></i> Tìm kiếm
-        </button>
-    </div>
-</form>
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: #4B0082; font-weight: bold; font-size: 2.5rem;">@ViewData["Title"]</h1>
 
-<!-- Tiêu đề và bảng dữ liệu -->
-<div class="container mt-4">
-    <h1 class="text-center text-primary mb-4" style="font-weight: bold;">@ViewData["Title"]</h1>
+    <!-- Form tìm kiếm -->
+    <form method="get" asp-action="VeDaXem" class="d-flex justify-content-center mb-4">
+        <div class="input-group" style="max-width: 500px;">
+            <input type="text" class="form-control search-input" name="searchString2" placeholder="Tìm kiếm theo tên phim" value="@ViewData["SearchString2"]" aria-label="Search" />
+            <button class="btn btn-search" type="submit">
+                <i class="fas fa-search"></i> Tìm kiếm
+            </button>
+        </div>
+    </form>
 
-    <div class="card shadow border-0 rounded-3">
+    <!-- Bảng danh sách vé đã xem -->
+    <div class="card border-0 shadow-lg rounded-3">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-striped table-hover mb-0">
+                <table class="table table-hover mb-0">
                     <thead class="table-header">
                         <tr>
                             <th class="text-center">ID Vé</th>
@@ -63,6 +63,19 @@
 
 <!-- Custom CSS -->
 <style>
+    .btn-search {
+        background: #FFD700;
+        border: none;
+        color: #4B0082;
+        font-weight: bold;
+        border-radius: 0 20px 20px 0;
+        transition: all 0.3s;
+    }
+
+        .btn-search:hover {
+            background: #E6C200;
+        }
+
     .table-header {
         background: #4B0082;
         color: #fff;
@@ -70,19 +83,11 @@
     }
 
     .table-row:hover {
-        background: #f2f2f2;
+        background: #F8F9FA;
         transition: background 0.3s;
     }
 
-    .btn-primary {
-        background-color: #4B0082;
-        border: none;
-        transition: background-color 0.3s, transform 0.3s;
+    .search-input {
+        border-radius: 20px 0 0 20px;
     }
-
-        .btn-primary:hover {
-            background-color: #6A0DAD;
-            transform: scale(1.05);
-        }
 </style>
-
