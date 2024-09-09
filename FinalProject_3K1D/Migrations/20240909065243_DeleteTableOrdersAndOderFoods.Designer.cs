@@ -4,6 +4,7 @@ using FinalProject_3K1D.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalProject_3K1D.Migrations
 {
     [DbContext(typeof(QlrapPhimContext))]
-    partial class QlrapPhimContextModelSnapshot : ModelSnapshot
+    [Migration("20240909065243_DeleteTableOrdersAndOderFoods")]
+    partial class DeleteTableOrdersAndOderFoods
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
