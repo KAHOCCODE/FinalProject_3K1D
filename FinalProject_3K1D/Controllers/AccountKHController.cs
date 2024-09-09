@@ -12,19 +12,28 @@ using Microsoft.AspNetCore.Authentication;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
 using Microsoft.AspNetCore.Identity;
 using FinalProject_3K1D.ViewModels;
+using Microsoft.CodeAnalysis.Scripting;
+using System.Net.Mail;
+using System.Net;
+using BCrypt.Net;
+using Microsoft.Extensions.Options;
+
 
 namespace FinalProject_3K1D.Controllers
 {
     public class AccountKHController : Controller
     {
         private readonly QlrapPhimContext _context;
+        private readonly SmtpSettings _smtpSettings;
 
-        public AccountKHController(QlrapPhimContext context)
+        public AccountKHController(QlrapPhimContext context, IOptions<SmtpSettings> smtpSettings)
         {
             _context = context;
+            _smtpSettings = smtpSettings.Value;
+
         }
 
-        #region
+        #region Register
         [HttpGet]
         public IActionResult Register(string? ReturnUrl)
         {
@@ -159,17 +168,17 @@ namespace FinalProject_3K1D.Controllers
             {
                 if (model.Role == "KhachHang")
                 {
-                    // Logic đăng nhập cho Khách Hàng
+                    // Tìm kiếm khách hàng bằng UserKh (username)
                     var khachhang = await _context.KhachHangs
-                        .SingleOrDefaultAsync(kh => kh.UserKh == model.UserKh && kh.PassKh == model.PassKh);
+                        .SingleOrDefaultAsync(kh => kh.UserKh == model.UserKh);
 
-                    if (khachhang == null)
+                    if (khachhang == null || !BCrypt.Net.BCrypt.Verify(model.PassKh, khachhang.PassKh))
                     {
                         ModelState.AddModelError("", "Tài khoản hoặc mật khẩu không đúng.");
                         return View(model);
                     }
 
-                    // Lưu thông tin người dùng vào session hoặc ClaimsPrincipal
+                    // Logic lưu trữ session và claims
                     HttpContext.Session.SetString("UserId", khachhang.IdKhachHang);
                     HttpContext.Session.SetString("UserName", khachhang.HoTen);
                     HttpContext.Session.SetString("UserRole", "KhachHang");
@@ -179,7 +188,7 @@ namespace FinalProject_3K1D.Controllers
                 new Claim(ClaimTypes.Name, khachhang.HoTen),
                 new Claim(ClaimTypes.Email, khachhang.Email ?? string.Empty),
                 new Claim(ClaimTypes.Role, "KhachHang"),
-                new Claim("UserId", khachhang.IdKhachHang) // Add user Id claim
+                new Claim("UserId", khachhang.IdKhachHang)
             };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -192,17 +201,15 @@ namespace FinalProject_3K1D.Controllers
                 }
                 else if (model.Role == "NhanVien")
                 {
-                    // Logic đăng nhập cho Nhân Viên
                     var nhanvien = await _context.NhanViens
-                        .SingleOrDefaultAsync(nv => nv.UserNv == model.UserKh && nv.PassNv == model.PassKh);
+                        .SingleOrDefaultAsync(nv => nv.UserNv == model.UserKh);
 
-                    if (nhanvien == null)
+                    if (nhanvien == null || !BCrypt.Net.BCrypt.Verify(model.PassKh, nhanvien.PassNv))
                     {
                         ModelState.AddModelError("", "Tài khoản hoặc mật khẩu không đúng.");
                         return View(model);
                     }
 
-                    // Lưu thông tin người dùng vào session hoặc ClaimsPrincipal
                     HttpContext.Session.SetString("UserId", nhanvien.IdNhanVien);
                     HttpContext.Session.SetString("UserName", nhanvien.HoTen);
                     HttpContext.Session.SetString("UserRole", "NhanVien");
@@ -212,7 +219,7 @@ namespace FinalProject_3K1D.Controllers
                 new Claim(ClaimTypes.Name, nhanvien.HoTen),
                 new Claim(ClaimTypes.Email, nhanvien.Email ?? string.Empty),
                 new Claim(ClaimTypes.Role, "NhanVien"),
-                new Claim("UserId", nhanvien.IdNhanVien) // Add user Id claim
+                new Claim("UserId", nhanvien.IdNhanVien)
             };
 
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -226,10 +233,9 @@ namespace FinalProject_3K1D.Controllers
             }
             return View(model);
         }
- 
 
 
-#endregion
+        #endregion
 
         #region đăng xuất 
         [HttpPost]
@@ -346,8 +352,74 @@ namespace FinalProject_3K1D.Controllers
         }
         #endregion
 
+        #region ForgotPassword
+        [HttpGet]
+        public IActionResult QuenMatKhau()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> QuenMatKhau(string email)
+        {
+            var khachHang = await _context.KhachHangs.SingleOrDefaultAsync(kh => kh.Email == email);
+            if (khachHang == null)
+            {
+                ViewBag.ErrorMessage = "Email không tồn tại.";
+                return View();
+            }
+
+            var newPassword = GenerateRandomPassword();
+            khachHang.PassKh = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _context.SaveChangesAsync();
+
+            await SendEmail(khachHang.Email, "Mật khẩu mới của bạn", $"Mật khẩu mới của bạn là: {newPassword}");
+
+            ViewBag.SuccessMessage = "Mật khẩu mới đã được gửi đến email của bạn.";
+            return View();
+        }
+
+        private string GenerateRandomPassword(int length = 8)
+        {
+            const string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+            var random = new Random();
+            return new string(Enumerable.Repeat(validChars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        private async Task SendEmail(string toEmail, string subject, string message)
+        {
+            var client = new SmtpClient("smtp.gmail.com")
+            {
+                Port = 587,
+                Credentials = new NetworkCredential("truongminhduc4002@gmail.com", "hocekpuhklqvkniu"),
+                EnableSsl = true,
+            };
+
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("truongminhduc4002@gmail.com"),
+                Subject = subject,
+                Body = message,
+                IsBodyHtml = true
+            };
+            mailMessage.To.Add(toEmail);
+
+            try
+            {
+                await client.SendMailAsync(mailMessage);
+            }
+            catch (SmtpException ex)
+            {
+                // Xử lý lỗi gửi email
+                Console.WriteLine($"SMTP Exception: {ex.Message}");
+                throw;
+            }
+        }
+
+        #endregion
     }
 }
+
 
 

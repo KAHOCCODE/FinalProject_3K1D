@@ -11,6 +11,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<QlrapPhimContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("QLRapPhim")));
 
+// Cấu hình SMTP
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+
 // Cấu hình xác thực Cookie
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

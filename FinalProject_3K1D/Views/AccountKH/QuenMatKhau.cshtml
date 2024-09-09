@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Quên Mật Khẩu";
+    Layout = null;
+}
+
+<h2>Quên Mật Khẩu</h2>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
+
+<form asp-action="QuenMatKhau" method="post">
+    <div class="form-group">
+        <label for="email">Nhập địa chỉ Email của bạn</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Xác nhận</button>
+</form>
