@@ -237,7 +237,7 @@ namespace FinalProject_3K1D.Controllers
 
         #endregion
 
-        #region đăng xuất 
+        #region logoutt
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
