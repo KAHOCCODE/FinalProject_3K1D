@@ -116,6 +116,9 @@ namespace FinalProject_3K1D.Controllers
                     }
                 }
 
+                // Mã hóa mật khẩu trước khi lưu
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.PassKH);
+
                 var newUser = new KhachHang
                 {
                     IdKhachHang = newId,
@@ -125,7 +128,7 @@ namespace FinalProject_3K1D.Controllers
                     Cccd = model.CCCD,
                     Email = model.Email,
                     UserKh = model.UserKH,
-                    PassKh = model.PassKH
+                    PassKh = hashedPassword // Lưu mật khẩu đã mã hóa
                 };
 
                 try
@@ -145,6 +148,7 @@ namespace FinalProject_3K1D.Controllers
 
             return View(model);
         }
+
 
 
 
