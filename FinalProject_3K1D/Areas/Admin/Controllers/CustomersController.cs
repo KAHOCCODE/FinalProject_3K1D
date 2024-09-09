@@ -18,9 +18,20 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         }
 
         [Route("Admin/Customers")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.KhachHangs.ToListAsync());
+            var customers = _context.KhachHangs.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                customers = customers.Where(c => c.HoTen.Contains(searchString) ||
+                                                 c.Email.Contains(searchString) ||
+                                                 c.Sdt.Contains(searchString));
+            }
+
+            ViewData["SearchString"] = searchString;
+
+            return View(await customers.ToListAsync());
         }
 
         [Route("Admin/Customers/Details/{id}")]

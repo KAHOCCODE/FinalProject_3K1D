@@ -1,31 +1,78 @@
 ﻿@model FinalProject_3K1D.Models.KhuyenMai
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
-    ViewData["Title"] = "Create Discount";
+    ViewData["Title"] = "Tạo Khuyến Mãi";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">Create Discount</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: #4B0082; font-weight: bold; font-size: 2.5rem;">@ViewData["Title"]</h1>
 
-    <form asp-action="Create" method="post">
-        <div class="mb-3">
-            <label for="TenKhuyenMai" class="form-label">Discount Name</label>
-            <input type="text" class="form-control" id="TenKhuyenMai" name="TenKhuyenMai" required />
+    <div class="card border-0 shadow-lg rounded-3">
+        <div class="card-header" style="background-color: #4B0082; color: #fff;">
+            <h4 class="mb-0 text-center">Tạo Khuyến Mãi</h4>
         </div>
-        <div class="mb-3">
-            <label for="GiaTri" class="form-label">Discount Value</label>
-            <input type="number" class="form-control" id="GiaTri" name="GiaTri" step="0.01" required />
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label for="TenKhuyenMai" class="form-label">Tên Khuyến Mãi</label>
+                    <input type="text" class="form-control form-control-lg border-warning" id="TenKhuyenMai" name="TenKhuyenMai" required />
+                </div>
+                <div class="mb-3">
+                    <label for="GiaTri" class="form-label">Giá Trị Khuyến Mãi</label>
+                    <input type="number" class="form-control form-control-lg border-warning" id="GiaTri" name="GiaTri" step="0.01" required />
+                </div>
+                <div class="mb-3">
+                    <label for="NgayBatDau" class="form-label">Ngày Bắt Đầu</label>
+                    <input type="date" class="form-control form-control-lg border-warning" id="NgayBatDau" name="NgayBatDau" required />
+                </div>
+                <div class="mb-3">
+                    <label for="NgayKetThuc" class="form-label">Ngày Kết Thúc</label>
+                    <input type="date" class="form-control form-control-lg border-warning" id="NgayKetThuc" name="NgayKetThuc" required />
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg me-2">Tạo</button>
+                    <a class="btn btn-secondary btn-lg" asp-action="Index">Quay Lại Danh Sách</a>
+                </div>
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="NgayBatDau" class="form-label">Start Date</label>
-            <input type="date" class="form-control" id="NgayBatDau" name="NgayBatDau" required />
-        </div>
-        <div class="mb-3">
-            <label for="NgayKetThuc" class="form-label">End Date</label>
-            <input type="date" class="form-control" id="NgayKetThuc" name="NgayKetThuc" required />
-        </div>
-        <button type="submit" class="btn btn-primary">Create</button>
-        <a class="btn btn-secondary" asp-action="Index">Back to List</a>
-    </form>
+    </div>
 </div>
+
+<!-- CSS tùy chỉnh -->
+<style>
+    .form-control-lg {
+        border-radius: 10px;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary {
+        background-color: #4B0082;
+        border-color: #4B0082;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+
+        .btn-primary:hover {
+            background-color: #6A0DAD;
+            border-color: #6A0DAD;
+        }
+
+    .btn-secondary {
+        background-color: #6C757D;
+        border-color: #6C757D;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5A6268;
+            border-color: #5A6268;
+        }
+
+    .card-header {
+        background-color: #4B0082;
+        color: #fff;
+    }
+</style>

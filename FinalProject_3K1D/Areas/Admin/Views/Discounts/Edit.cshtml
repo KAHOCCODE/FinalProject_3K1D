@@ -1,42 +1,86 @@
 ﻿@model FinalProject_3K1D.Models.KhuyenMai
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "Edit Discount";
+    ViewData["Title"] = "Chỉnh Sửa Khuyến Mãi";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Edit Discount</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: #4B0082; font-weight: bold; font-size: 2.5rem;">@ViewData["Title"]</h1>
 
-<h4>KhuyenMai</h4>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Edit">
-            <input type="hidden" asp-for="IdKhuyenMai" />
-            <div class="form-group">
-                <label asp-for="TenKhuyenMai" class="control-label"></label>
-                <input asp-for="TenKhuyenMai" class="form-control" />
-                <span asp-validation-for="TenKhuyenMai" class="text-danger"></span>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-0 shadow-lg rounded-3">
+                <div class="card-body">
+                    <h4 class="card-title mb-4" style="color: #4B0082;">Khuyến Mãi</h4>
+                    <hr />
+
+                    <form asp-action="Edit">
+                        <input type="hidden" asp-for="IdKhuyenMai" />
+
+                        <div class="form-group mb-3">
+                            <label asp-for="TenKhuyenMai" class="form-label"></label>
+                            <input asp-for="TenKhuyenMai" class="form-control form-control-lg" placeholder="Nhập tên khuyến mãi" />
+                            <span asp-validation-for="TenKhuyenMai" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="GiaTri" class="form-label"></label>
+                            <input asp-for="GiaTri" class="form-control form-control-lg" placeholder="Nhập giá trị" />
+                            <span asp-validation-for="GiaTri" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="NgayBatDau" class="form-label"></label>
+                            <input asp-for="NgayBatDau" type="date" class="form-control form-control-lg" />
+                            <span asp-validation-for="NgayBatDau" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="NgayKetThuc" class="form-label"></label>
+                            <input asp-for="NgayKetThuc" type="date" class="form-control form-control-lg" />
+                            <span asp-validation-for="NgayKetThuc" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary btn-lg me-2">Lưu</button>
+                            <a asp-action="Index" class="btn btn-secondary btn-lg">Hủy</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="GiaTri" class="control-label"></label>
-                <input asp-for="GiaTri" class="form-control" />
-                <span asp-validation-for="GiaTri" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NgayBatDau" class="control-label"></label>
-                <input asp-for="NgayBatDau" class="form-control" />
-                <span asp-validation-for="NgayBatDau" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NgayKetThuc" class="control-label"></label>
-                <input asp-for="NgayKetThuc" class="form-control" />
-                <span asp-validation-for="NgayKetThuc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
+<!-- CSS tùy chỉnh -->
+<style>
+    .form-control-lg {
+        border-radius: 10px;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary {
+        background-color: #4B0082;
+        border-color: #4B0082;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+
+        .btn-primary:hover {
+            background-color: #6A0DAD;
+            border-color: #6A0DAD;
+        }
+
+    .btn-secondary {
+        background-color: #6C757D;
+        border-color: #6C757D;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5A6268;
+            border-color: #5A6268;
+        }
+</style>

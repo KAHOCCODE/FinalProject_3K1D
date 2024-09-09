@@ -6,38 +6,103 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Doanh Thu Theo Phim</h1>
+<!-- Phần bao bọc nội dung chính -->
+<div class="dashboard-revenue" style="padding: 3rem; background: #ffffff; border-radius: 10px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+    <h1 class="text-center mb-4 fw-bold" style="color: #4B0082; font-size: 2.5rem;">Doanh Thu Theo Phim</h1>
 
-<form method="get" class="form-inline mb-3">
-    <div class="form-group mr-2">
-        <label for="startDate" class="mr-2">Ngày Bắt Đầu:</label>
-        <input type="date" id="startDate" name="startDate" class="form-control" value="@startDate?.ToString("yyyy-MM-dd")" />
-    </div>
-    <div class="form-group mr-2">
-        <label for="endDate" class="mr-2">Ngày Kết Thúc:</label>
-        <input type="date" id="endDate" name="endDate" class="form-control" value="@endDate?.ToString("yyyy-MM-dd")" />
-    </div>
-    <button type="submit" class="btn btn-primary">Lọc</button>
-</form>
+    <!-- Form lọc ngày -->
+    <form method="get" class="filter-form d-flex justify-content-center align-items-center mb-4">
+        <div class="form-group mx-3">
+            <label for="startDate" class="form-label fw-bold" style="color: #4B0082;">Ngày Bắt Đầu:</label>
+            <input type="date" id="startDate" name="startDate" class="form-control" value="@startDate?.ToString("yyyy-MM-dd")" style="border: 2px solid #FFD700; border-radius: 8px;" />
+        </div>
+        <div class="form-group mx-3">
+            <label for="endDate" class="form-label fw-bold" style="color: #4B0082;">Ngày Kết Thúc:</label>
+            <input type="date" id="endDate" name="endDate" class="form-control" value="@endDate?.ToString("yyyy-MM-dd")" style="border: 2px solid #FFD700; border-radius: 8px;" />
+        </div>
+        <button type="submit" class="btn-filter">Lọc</button>
+    </form>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Tên Phim</th>
-            <th>Tổng Doanh Thu</th>
-            <th>Hành Động</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.MovieName</td>
-                <td>@item.TotalRevenue.ToString("C2")</td>
-                <td>
-                    <a href="@Url.Action("Details", new { movieName = item.MovieName, startDate = startDate, endDate = endDate })" class="btn btn-info">Xem Chi Tiết</a>
-                </td>
-            </tr>
+    <!-- Bảng doanh thu -->
+    <div class="table-responsive">
+        <table class="table table-hover" style="background: #ffffff; border-radius: 12px; overflow: hidden;">
+            <thead class="table-header" style="background: #4B0082; color: #ffffff;">
+                <tr>
+                    <th style="padding: 15px;">Tên Phim</th>
+                    <th style="padding: 15px;">Tổng Doanh Thu</th>
+                    <th style="padding: 15px;">Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr class="table-row" style="transition: all 0.3s;">
+                            <td style="padding: 15px; color: #4B0082; font-weight: bold;">@item.MovieName</td>
+                            <td style="padding: 15px; color: #FFD700; font-size: 1.1rem;">@String.Format("{0:N0} VND", item.TotalRevenue)</td>
+                            <td style="padding: 15px;">
+                                <a href="@Url.Action("Details", new { movieName = item.MovieName, startDate = startDate, endDate = endDate })" class="btn-details">Xem Chi Tiết</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-4">Không có dữ liệu.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- CSS tùy chỉnh -->
+<style>
+    .btn-filter {
+        background: #FFD700;
+        border: none;
+        padding: 10px 20px;
+        color: #4B0082;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .btn-filter:hover {
+            background: #E6C200;
+            transform: translateY(-3px);
         }
-    </tbody>
-</table>
+
+    .btn-details {
+        background-color: #4B0082;
+        color: #ffffff;
+        padding: 8px 16px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background 0.3s ease;
+    }
+
+        .btn-details:hover {
+            background-color: #FFD700;
+            color: #4B0082;
+        }
+
+    .table-row:hover {
+        background: #f8f9fa;
+        transform: translateY(-5px);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .filter-form input {
+        transition: border-color 0.3s ease;
+    }
+
+        .filter-form input:focus {
+            border-color: #4B0082;
+            outline: none;
+        }
+</style>

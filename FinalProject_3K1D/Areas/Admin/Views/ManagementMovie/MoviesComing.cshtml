@@ -2,85 +2,89 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    ViewData["Title"] = "MoviesComing";
+    ViewData["Title"] = "Danh Sách Phim Sắp Chiếu";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1 class="text-center text-primary mb-4">Danh sách phim sắp chiếu</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: #4B0082; font-weight: bold;">@ViewData["Title"]</h1>
 
-<form method="get" asp-action="MoviesComing">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" name="searchString" placeholder="Tìm kiếm theo tên phim" value="@ViewData["SearchString"]" />
-        <button class="btn btn-primary" type="submit">Tìm kiếm</button>
-    </div>
-</form>
+    <!-- Form tìm kiếm -->
+    <form method="get" asp-action="MoviesComing" class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control search-input" name="searchString" placeholder="Tìm kiếm theo tên phim" value="@ViewData["SearchString"]" />
+            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+        </div>
+    </form>
 
-<div class="card shadow-lg border-0 rounded-3">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-warning">
-                    <tr>
-                        <th class="text-center">ID Phim</th>
-                        <th class="text-center">Tên Phim</th>
-                        <th class="text-center">Mô Tả</th>
-                        <th class="text-center">Thời Lượng</th>
-                        <th class="text-center">Ngày Khởi Chiếu</th>
-                        <th class="text-center">Ngày Kết Thúc</th>
-                        <th class="text-center">Quốc Gia Sản Xuất</th>
-                        <th class="text-center">Đạo Diễn</th>
-                        <th class="text-center">Năm SX</th>
-                        <th class="text-center">Định Dạng Phim</th>
-                        <th class="text-center">Áp Phích</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+    <!-- Danh sách phim -->
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <thead class="table-header">
                         <tr>
-                            <td class="align-middle text-center">@item.IdPhim</td>
-                            <td class="align-middle text-center">@item.TenPhim</td>
-                            <td class="align-middle text-center" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@item.MoTa</td>
-                            <td class="align-middle text-center">@item.ThoiLuong</td>
-                            <td class="align-middle text-center">@item.NgayKhoiChieu.ToShortDateString()</td>
-                            <td class="align-middle text-center">@item.NgayKetThuc.ToShortDateString()</td>
-                            <td class="align-middle text-center">@item.QuocGiaSanXuat</td>
-                            <td class="align-middle text-center">@item.DaoDien</td>
-                            <td class="align-middle text-center">@item.NamSx</td>
-                            <td class="align-middle text-center">@item.DinhDangPhim</td>
-                            <td class="align-middle text-center">
-                                @if (!string.IsNullOrEmpty(item.ApPhich))
-                                {
-                                    <img src="@Url.Content("~/image/ApPhich/" + item.ApPhich)" alt="Poster" style="max-height: 100px; max-width: 100px;" />
-                                }
-                                else
-                                {
-                                    <span>Chưa có ảnh</span>
-                                }
-                            </td>
-                            <td class="align-middle text-center">
-                                <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.IdPhim">Edit</a>
-                                <form asp-action="Delete" asp-route-id="@item.IdPhim" method="post" class="d-inline">
-                                    <input type="hidden" name="id" value="@item.IdPhim" />
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                            </td>
+                            <th class="text-center">ID Phim</th>
+                            <th class="text-center">Tên Phim</th>
+                            <th class="text-center">Mô Tả</th>
+                            <th class="text-center">Thời Lượng</th>
+                            <th class="text-center">Ngày Khởi Chiếu</th>
+                            <th class="text-center">Ngày Kết Thúc</th>
+                            <th class="text-center">Quốc Gia</th>
+                            <th class="text-center">Đạo Diễn</th>
+                            <th class="text-center">Năm SX</th>
+                            <th class="text-center">Định Dạng</th>
+                            <th class="text-center">Áp Phích</th>
+                            <th class="text-center">Hành Động</th>
                         </tr>
-                    }
-                    @if (!Model.Any())
-                    {
-                        <tr>
-                            <td colspan="12" class="text-center text-danger">Không có phim nào để hiển thị.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="align-middle text-center">@item.IdPhim</td>
+                                <td class="align-middle text-center">@item.TenPhim</td>
+                                <td class="align-middle text-center" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">@item.MoTa</td>
+                                <td class="align-middle text-center">@item.ThoiLuong</td>
+                                <td class="align-middle text-center">@item.NgayKhoiChieu.ToShortDateString()</td>
+                                <td class="align-middle text-center">@item.NgayKetThuc.ToShortDateString()</td>
+                                <td class="align-middle text-center">@item.QuocGiaSanXuat</td>
+                                <td class="align-middle text-center">@item.DaoDien</td>
+                                <td class="align-middle text-center">@item.NamSx</td>
+                                <td class="align-middle text-center">@item.DinhDangPhim</td>
+                                <td class="align-middle text-center">
+                                    @if (!string.IsNullOrEmpty(item.ApPhich))
+                                    {
+                                        <img src="@Url.Content("~/image/ApPhich/" + item.ApPhich)" alt="Poster" class="img-thumbnail" style="max-height: 100px; max-width: 100px;" />
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa có ảnh</span>
+                                    }
+                                </td>
+                                <td class="align-middle text-center">
+                                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.IdPhim">Sửa</a>
+                                    <form asp-action="Delete" asp-route-id="@item.IdPhim" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@item.IdPhim" />
+                                        <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="12" class="text-center text-danger">Không có phim nào để hiển thị.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
-<a href="javascript:history.back()" class="btn btn-secondary mt-3">Quay về</a>
+    <a href="javascript:history.back()" class="btn btn-secondary mt-3">Quay về</a>
+</div>
 
 <!-- SweetAlert2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -94,14 +98,14 @@
             const movieId = form.querySelector('input[name="id"]').value;
 
             Swal.fire({
-                title: 'Are you sure?',
-                text: `Do you really want to delete the movie with ID: "${movieId}"?`,
+                title: 'Bạn có chắc chắn?',
+                text: `Bạn có chắc muốn xóa phim với ID: "${movieId}" không?`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel'
+                confirmButtonText: 'Có, xóa nó!',
+                cancelButtonText: 'Hủy'
             }).then((result) => {
                 if (result.isConfirmed) {
                     form.submit(); // Submit the form if confirmed
@@ -110,3 +114,74 @@
         });
     });
 </script>
+
+<!-- CSS tùy chỉnh -->
+<style>
+    .btn-primary {
+        background-color: #4B0082;
+        border: none;
+        font-weight: bold;
+        border-radius: 20px;
+        transition: background 0.3s;
+    }
+
+        .btn-primary:hover {
+            background-color: #6A0D91;
+        }
+
+    .search-input {
+        border-radius: 20px 0 0 20px;
+    }
+
+    .table-header {
+        background-color: #4B0082;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #F9F9F9;
+    }
+
+    .table-striped tbody tr:hover {
+        background-color: #E9ECEF;
+    }
+
+    .btn-warning {
+        background-color: #FFC107;
+        border: none;
+        color: #000;
+        font-weight: bold;
+        border-radius: 20px;
+        transition: background 0.3s;
+    }
+
+        .btn-warning:hover {
+            background-color: #FFD54F;
+        }
+
+    .btn-danger {
+        background-color: #DC3545;
+        border: none;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 20px;
+        transition: background 0.3s;
+    }
+
+        .btn-danger:hover {
+            background-color: #C82333;
+        }
+
+    .btn-secondary {
+        background-color: #6C757D;
+        color: #fff;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5A6268;
+        }
+</style>
