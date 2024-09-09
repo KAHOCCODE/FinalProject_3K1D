@@ -1,27 +1,59 @@
 ﻿@{
     ViewBag.Title = "Quên Mật Khẩu";
-    Layout = null;
+    Layout = "_Layout";  // Include your main layout if needed
 }
 
-<h2>Quên Mật Khẩu</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/quenmk.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Loading Message -->
+    <div id="loading-message">
+        Đang kiểm tra vui lòng chờ một xíu ...
+    </div>
 
-@if (ViewBag.ErrorMessage != null)
-{
-    <div class="alert alert-danger">
-        @ViewBag.ErrorMessage
-    </div>
-}
-@if (ViewBag.SuccessMessage != null)
-{
-    <div class="alert alert-success">
-        @ViewBag.SuccessMessage
-    </div>
-}
+    <div class="form-container">
+        <h2>Quên Mật Khẩu</h2>
 
-<form asp-action="QuenMatKhau" method="post">
-    <div class="form-group">
-        <label for="email">Nhập địa chỉ Email của bạn</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required />
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger">
+                @ViewBag.ErrorMessage
+            </div>
+        }
+        @if (ViewBag.SuccessMessage != null)
+        {
+            <div class="alert alert-success">
+                @ViewBag.SuccessMessage
+            </div>
+        }
+
+        <form asp-action="QuenMatKhau" method="post" id="password-reset-form">
+            <div class="form-group">
+                <label for="email">Nhập địa chỉ Email của bạn</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Xác nhận</button>
+        </form>
     </div>
-    <button type="submit" class="btn btn-primary">Xác nhận</button>
-</form>
+
+    <script>
+        document.getElementById("password-reset-form").addEventListener("submit", function () {
+            document.getElementById("loading-message").style.display = "flex";
+        });
+
+        // Optionally hide the message once the page is fully loaded
+        window.addEventListener("load", function () {
+            document.getElementById("loading-message").style.display = "none";
+        });
+    </script>
+
+
+</body>
+</html>
