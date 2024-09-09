@@ -1,37 +1,111 @@
 ﻿@model FinalProject_3K1D.Models.KhuyenMai
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
-    ViewData["Title"] = "Discount Details";
+    ViewData["Title"] = "Chi Tiết Khuyến Mãi";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h1>Discount Details</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4" style="color: #4A4A9F; font-weight: bold;">@ViewData["Title"]</h1>
 
-<div>
-    <h4>KhuyenMai</h4>
-    <hr />
-    <div class="form-group">
-        <label>Discount ID</label>
-        <p>@Model.IdKhuyenMai</p>
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0 text-center">Chi Tiết Khuyến Mãi</h4>
+        </div>
+        <div class="card-body p-5">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 border rounded bg-light">
+                        <h6 class="text-primary mb-2">Mã Khuyến Mãi</h6>
+                        <p class="mb-0">@Model.IdKhuyenMai</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 border rounded bg-light">
+                        <h6 class="text-primary mb-2">Tên Khuyến Mãi</h6>
+                        <p class="mb-0">@Model.TenKhuyenMai</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 border rounded bg-light">
+                        <h6 class="text-primary mb-2">Giá Trị</h6>
+                        <p class="mb-0">@Model.GiaTri</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 border rounded bg-light">
+                        <h6 class="text-primary mb-2">Ngày Bắt Đầu</h6>
+                        <p class="mb-0">@Model.NgayBatDau.ToShortDateString()</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="p-3 border rounded bg-light">
+                        <h6 class="text-primary mb-2">Ngày Kết Thúc</h6>
+                        <p class="mb-0">@Model.NgayKetThuc.ToShortDateString()</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center mt-4">
+                <a asp-action="Edit" asp-route-id="@Model.IdKhuyenMai" class="btn btn-primary me-2">Sửa</a>
+                <a asp-action="Index" class="btn btn-secondary">Quay Lại Danh Sách</a>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label>Name</label>
-        <p>@Model.TenKhuyenMai</p>
-    </div>
-    <div class="form-group">
-        <label>Value</label>
-        <p>@Model.GiaTri</p>
-    </div>
-    <div class="form-group">
-        <label>Start Date</label>
-        <p>@Model.NgayBatDau.ToShortDateString()</p>
-    </div>
-    <div class="form-group">
-        <label>End Date</label>
-        <p>@Model.NgayKetThuc.ToShortDateString()</p>
-    </div>
-    <p>
-        <a asp-action="Edit" asp-route-id="@Model.IdKhuyenMai" class="btn btn-primary">Edit</a>
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </p>
 </div>
+
+<!-- CSS tùy chỉnh -->
+<style>
+    .card-header {
+        border-radius: 0.75rem 0.75rem 0 0;
+    }
+
+    .btn-primary {
+        background-color: #4A4A9F;
+        border-color: #4A4A9F;
+    }
+
+        .btn-primary:hover {
+            background-color: #37377a;
+            border-color: #37377a;
+        }
+
+    .btn-secondary {
+        background-color: #6C757D;
+        border-color: #6C757D;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+    .card {
+        border-radius: 1rem;
+    }
+
+    .card-body {
+        background-color: #f8f9fa;
+    }
+
+    .p-3 {
+        padding: 1rem;
+    }
+
+    .border {
+        border: 1px solid #dee2e6;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa;
+    }
+
+    .text-primary {
+        color: #4A4A9F !important;
+    }
+
+    h6 {
+        font-weight: bold;
+    }
+</style>
