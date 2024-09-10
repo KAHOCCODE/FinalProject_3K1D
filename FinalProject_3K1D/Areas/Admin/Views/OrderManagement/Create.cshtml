@@ -1,4 +1,4 @@
-﻿@model FinalProject_3K1D.Models.Order
+﻿@model FinalProject_3K1D.Models.Fô
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Create Order";
@@ -17,23 +17,23 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="Idsanpham" class="form-control border-primary" id="floatingIdSanPham" placeholder="ID Sản Phẩm" readonly value="@nextId" />
+                            <input asp-for="IdSanPham" class="form-control border-primary" id="floatingIdSanPham" placeholder="ID Sản Phẩm" readonly value="@nextId" />
                             <label for="floatingIdSanPham">Mã Sản Phẩm</label>
                             <div class="form-text text-danger">
-                                <span asp-validation-for="Idsanpham"></span>
+                                <span asp-validation-for="IdSanPham"></span>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <input asp-for="Tensanpham" class="form-control border-primary" id="floatingTenSanPham" placeholder="Tên Sản Phẩm" />
+                            <input asp-for="TenSanPham" class="form-control border-primary" id="floatingTenSanPham" placeholder="Tên Sản Phẩm" />
                             <label for="floatingTenSanPham">Tên Sản Phẩm</label>
                             <div class="form-text text-danger">
-                                <span asp-validation-for="Tensanpham"></span>
+                                <span asp-validation-for="TenSanPham"></span>
                             </div>
                         </div>
                     </div>
-                    @* <div class="col-md-6">
+                     <div class="col-md-6">
                         <div class="form-floating mb-3">
                             <input asp-for="Gia" type="number" step="0.01" min="0" class="form-control border-primary" id="floatingGia" placeholder="Giá" />
                             <label for="floatingGia">Giá (VNĐ)</label>
@@ -41,13 +41,13 @@
                                 <span asp-validation-for="Gia"></span>
                             </div>
                         </div>
-                    </div> *@
+                    </div> 
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
-                            <textarea asp-for="Mota" class="form-control border-primary" id="floatingMota" placeholder="Mô Tả"></textarea>
-                            <label for="floatingMota">Mô Tả</label>
+                            <textarea asp-for="MoTa" class="form-control border-primary" id="floatingMoTa" placeholder="Mô Tả"></textarea>
+                            <label for="floatingMoTa">Mô Tả</label>
                             <div class="form-text text-danger">
-                                <span asp-validation-for="Mota"></span>
+                                <span asp-validation-for="MoTa"></span>
                             </div>
                         </div>
                     </div>

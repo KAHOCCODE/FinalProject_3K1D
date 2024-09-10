@@ -854,7 +854,12 @@ namespace FinalProject_3K1D.Controllers
         #region OrderFood
         public IActionResult OrderFood()
         {
-            return View();
+            using (var db = new QlrapPhimContext())
+            {
+                var foods = db.Foods.ToList();
+                ViewBag.Foods = foods;
+            }
+                return View();
         }
         #endregion
     }

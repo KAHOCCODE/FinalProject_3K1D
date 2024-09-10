@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FinalProject_3K1D.Models.Order>
+﻿@model IEnumerable<FinalProject_3K1D.Models.Food>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
@@ -42,16 +42,16 @@
                         @foreach (var item in Model)
                         {
                             <tr class="table-row">
-                                <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.Idsanpham)</td>
-                                <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.Tensanpham)</td>
-                                <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.Mota)</td>
+                                <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.IdSanPham)</td>
+                                <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.TenSanPham)</td>
+                                <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.MoTa)</td>
                                 <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.Apphich)</td>
                                 <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.PLoai)</td>
                                 <td class="align-middle text-center">
                                     <div class="btn-group" role="group">
-                                        <a class="btn btn-edit mx-1" asp-action="Edit" asp-route-id="@item.Idsanpham"><i class="fas fa-edit"></i></a>
-                                        <a class="btn btn-detail mx-1" asp-action="Details" asp-route-id="@item.Idsanpham"><i class="fas fa-info-circle"></i></a>
-                                        <a class="btn btn-delete mx-1" asp-action="Delete" asp-route-id="@item.Idsanpham"><i class="fas fa-trash"></i></a>
+                                        <a class="btn btn-edit mx-1" asp-action="Edit" asp-route-id="@item.IdSanPham"><i class="fas fa-edit"></i></a>
+                                        <a class="btn btn-detail mx-1" asp-action="Details" asp-route-id="@item.IdSanPham"><i class="fas fa-info-circle"></i></a>
+                                        <a class="btn btn-delete mx-1" asp-action="Delete" asp-route-id="@item.IdSanPham"><i class="fas fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>

@@ -227,25 +227,20 @@
     <div class="main-content">
 
         <div class="container mt-4">
-            <div class="dropdown-container">
-                <label for="theater-select">Chọn Rạp:</label>
-                <select id="theater-select" class="form-select">
-                    <option value="" selected>Chọn rạp...</option>
-                    <option value="theater1">Rạp 1</option>
-                    <option value="theater2">Rạp 2</option>
-                    <option value="theater3">Rạp 3</option>
-                </select>
-            </div>
+            
 
+           
+            @foreach (var item in ViewBag.foods as IEnumerable<Food>)
+            {
 
-            <!-- Combo Section -->
-            <div class="section">
-                <h3 class="section-title">Combo</h3>
+                <!-- Combo Section -->
+                <div class="section">
+                    <h3 class="section-title">Combo</h3>
                 <div class="order-container">
-                    <div class="food-item" data-name="Combo 1" data-price="200000">
-                        <img src="/images/arrow.jpg" alt="Combo Image">
-                        <h3 class="name">Combo 1</h3>
-                        <p class="price">200,000 VND</p>
+                    <div class="food-item">
+                            <img src="~/image/Order/@item.Apphich" alt="Apphich">
+                            <h3 class="name">@item.TenSanPham</h3>
+                            <p class="price">@item.Gia.ToString() VND</p>
                         <div class="quantity-buttons">
                             <button class="btn btn-danger">-</button>
                             <input type="text" value="0" readonly>
@@ -255,42 +250,9 @@
                     <!-- Thêm nhiều mục Combo ở đây -->
                 </div>
             </div>
+            }
 
-            <!-- Food Section -->
-            <div class="section">
-                <h3 class="section-title">Đồ ăn</h3>
-                <div class="order-container">
-                    <div class="food-item" data-name="Popcorn" data-price="50000">
-                        <img src="food-image.jpg" alt="Food Image">
-                        <h3 class="name">Popcorn</h3>
-                        <p class="price">50,000 VND</p>
-                        <div class="quantity-buttons">
-                            <button class="btn btn-danger">-</button>
-                            <input type="text" value="0" readonly>
-                            <button class="btn btn-success">+</button>
-                        </div>
-                    </div>
-                    <!-- Thêm nhiều mục Đồ ăn ở đây -->
-                </div>
-            </div>
-
-            <!-- Drinks Section -->
-            <div class="section">
-                <h3 class="section-title">Nước uống</h3>
-                <div class="order-container">
-                    <div class="food-item" data-name="Coke" data-price="30000">
-                        <img src="drink-image.jpg" alt="Drink Image">
-                        <h3 class="name">Coke</h3>
-                        <p class="price">30,000 VND</p>
-                        <div class="quantity-buttons">
-                            <button class="btn btn-danger">-</button>
-                            <input type="text" value="0" readonly>
-                            <button class="btn btn-success">+</button>
-                        </div>
-                    </div>
-                    <!-- Thêm nhiều mục Nước uống ở đây -->
-                </div>
-            </div>
+            
         </div>
     </div>
 

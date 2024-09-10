@@ -1,4 +1,4 @@
-﻿@model FinalProject_3K1D.Models.Order
+﻿@model FinalProject_3K1D.Models.Food
 
 @{
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
@@ -14,22 +14,28 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Idsanpham)
+            @Html.DisplayNameFor(model => model.IdSanPham)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Idsanpham)
+            @Html.DisplayFor(model => model.IdSanPham)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Tensanpham)
+            @Html.DisplayNameFor(model => model.TenSanPham)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Tensanpham)
+            @Html.DisplayFor(model => model.TenSanPham)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Mota)
+            @Html.DisplayNameFor(model => model.Gia)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Mota)
+            @Html.DisplayFor(model => model.Gia)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MoTa)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MoTa)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Apphich)

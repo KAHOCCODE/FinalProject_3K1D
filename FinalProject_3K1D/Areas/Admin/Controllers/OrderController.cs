@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 namespace FinalProject_3K1D.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class OrderManagementController : Controller
+    public class FoodManagementController : Controller
     {
         private readonly QlrapPhimContext _context;
-        private readonly ILogger<OrderManagementController> _logger;
+        private readonly ILogger<FoodManagementController> _logger;
 
         // Constructor with ILogger injected
-        public OrderManagementController(QlrapPhimContext context, ILogger<OrderManagementController> logger)
+        public FoodManagementController(QlrapPhimContext context, ILogger<FoodManagementController> logger)
         {
             _context = context;
             _logger = logger; // Initialize the logger
@@ -23,13 +23,13 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         #region Index
         public async Task<IActionResult> Index()
         {
-            var orders = await _context.Orders.ToListAsync();
-            return View(orders);
+            var Foods = await _context.Foods.ToListAsync();
+            return View(Foods);
         }
         #endregion
 
         #region Details
-        [Route("Admin/OrderManagement/Details/{id}")]
+        [Route("Admin/FoodManagement/Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
             if (id == 0)
@@ -37,49 +37,49 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders.FirstOrDefaultAsync(m => m.Idsanpham == id);
+            var Food = await _context.Foods.FirstOrDefaultAsync(m => m.IdSanPham == id);
 
-            if (order == null)
+            if (Food == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            return View(Food);
         }
         #endregion
 
         #region Create
-        [Route("Admin/OrderManagement/Create")]
+        [Route("Admin/FoodManagement/Create")]
         public IActionResult Create()
         {
-            // Assuming you have a database or collection to get the last order ID.
-            var lastOrder = _context.Orders.OrderByDescending(o => o.Idsanpham).FirstOrDefault();
-            var nextId = (lastOrder != null) ? lastOrder.Idsanpham + 1 : 1; // Generate the next ID (auto-increment)
+            // Assuming you have a database or collection to get the last Food ID.
+            var lastFood = _context.Foods.OrderByDescending(f => f.IdSanPham).FirstOrDefault(); // Get the last Food
+            var nextId = (lastFood != null) ? lastFood.IdSanPham + 1 : 1; // Generate the next ID (auto-increment)
 
             ViewData["NextId"] = nextId.ToString("D5"); // Formatting the ID as needed (e.g., 00001)
           
             return View();
         }
 
-        [Route("Admin/OrderManagement/Create")]
+        [Route("Admin/FoodManagement/Create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Idsanpham,Tensanpham,Mota,Apphich,PLoai")] Order order)
+        public async Task<IActionResult> Create([Bind("IdSanPham,TenSanPham,Gia,MoTa,Apphich,PLoai")] Food Food)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(order);
+                _context.Add(Food);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Order has been created successfully!";
+                TempData["SuccessMessage"] = "Food has been created successfully!";
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            return View(Food);
         }
         #endregion
         
 
         #region Edit
-        [Route("Admin/OrderManagement/Edit/{id}")]
+        [Route("Admin/FoodManagement/Edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
             if (id == 0)
@@ -87,21 +87,21 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
+            var Food = await _context.Foods.FindAsync(id);
+            if (Food == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            return View(Food);
         }
 
-        [Route("Admin/OrderManagement/Edit/{id}")]
+        [Route("Admin/FoodManagement/Edit/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Idsanpham,Tensanpham,Mota,Apphich,PLoai")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("IdSanPham,TenSanPham,Gia,MoTa,Apphich,PLoai")] Food food)
         {
-            if (id != order.Idsanpham)
+            if (id != food.IdSanPham)
             {
                 return NotFound();
             }
@@ -110,12 +110,12 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(order);
+                    _context.Update(food);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderExists(order.Idsanpham))
+                    if (!FoodExists(food.IdSanPham))
                     {
                         return NotFound();
                     }
@@ -126,12 +126,12 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(order);
+            return View(food);
         }
         #endregion
 
         #region Delete
-        [Route("Admin/OrderManagement/Delete/{id}")]
+        [Route("Admin/FoodManagement/Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             if (id == 0)
@@ -139,33 +139,33 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders.FirstOrDefaultAsync(m => m.Idsanpham == id);
+            var Food = await _context.Foods.FirstOrDefaultAsync(m => m.IdSanPham == id);
 
-            if (order == null)
+            if (Food == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            return View(Food);
         }
 
-        [Route("Admin/OrderManagement/Delete/{id}")]
+        [Route("Admin/FoodManagement/Delete/{id}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
+            var Food = await _context.Foods.FindAsync(id);
+            if (Food != null)
             {
-                _context.Orders.Remove(order);
+                _context.Foods.Remove(Food);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrderExists(int id)
+        private bool FoodExists(int id)
         {
-            return _context.Orders.Any(e => e.Idsanpham == id);
+            return _context.Foods.Any(e => e.IdSanPham == id);
         }
         #endregion
     }
