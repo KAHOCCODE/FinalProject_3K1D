@@ -67,7 +67,6 @@ namespace FinalProject_3K1D.Controllers
                         .ThenInclude(l => l.IdPhongChieuNavigation)
                     .Include(p => p.LichChieus)
                         .ThenInclude(l => l.IdRapNavigation)
-                    .Include(p => p.DanhGias) // Ensure the related data is included
                     .FirstOrDefault(p => p.IdPhim == id);
 
                 if (phim == null)
@@ -75,16 +74,9 @@ namespace FinalProject_3K1D.Controllers
                     return NotFound(); // Handle case where movie is not found
                 }
 
-                // Calculate average rating or set default value of 5
-                var averageRating = phim.DanhGias.Any() ? phim.DanhGias.Average(d => d.Diem) : 5;
-                ViewBag.AverageRating = averageRating;
-
                 return View(phim);
             }
         }
-
-
-
 
         [HttpGet]
         public IActionResult GetShowtimes(string cinemaId)
