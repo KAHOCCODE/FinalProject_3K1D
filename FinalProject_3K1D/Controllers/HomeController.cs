@@ -51,9 +51,9 @@ namespace FinalProject_3K1D.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public IActionResult Detail()
+        [Route("Home/Detail/{id}")]
+        public IActionResult Detail(string id)
         {
-            var id = Request.Query["id"].ToString();
             if (string.IsNullOrEmpty(id))
             {
                 return NotFound(); // Handle case where id is not provided
@@ -77,6 +77,7 @@ namespace FinalProject_3K1D.Controllers
                 return View(phim);
             }
         }
+
         [HttpGet]
         public IActionResult GetShowtimes(string cinemaId)
         {
