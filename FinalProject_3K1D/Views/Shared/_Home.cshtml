@@ -14,6 +14,7 @@
     @* <link rel="stylesheet" href="~/css/site.css"> *@
     @* <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" /> *@
     @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" /> *@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
     <!-- Header -->
@@ -86,10 +87,14 @@
                                     }
                                     else
                                     {
-                                        <div class="alert alert-warning" role="alert">
-                                            Bạn cần đăng nhập để đánh giá phim.
+                                        <div class="review-booking">
+                                            <a href="javascript:void(0);" onclick="showLoginAlert()">
+                                                <i class="fa-solid fa-star"></i>
+                                                <span>Đánh giá</span>
+                                            </a>
                                         </div>
                                     }
+
                                 </div>
                             </div>
                             <img src="~/image/ApPhich/@phim.ApPhich" alt="@phim.TenPhim">
@@ -185,5 +190,17 @@
             swiper.appendSlide(slideHTML);
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        function showLoginAlert() {
+            Swal.fire({
+                title: 'Chú ý!',
+                text: 'Bạn cần đăng nhập để thực hiện đánh giá.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+        }
+    </script>
+
 </body>
 </html>
