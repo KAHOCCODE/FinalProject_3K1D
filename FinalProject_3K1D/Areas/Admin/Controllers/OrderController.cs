@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 namespace FinalProject_3K1D.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class FoodManagementController : Controller
+    public class OrderManagementController : Controller
     {
         private readonly QlrapPhimContext _context;
-        private readonly ILogger<FoodManagementController> _logger;
+        private readonly ILogger<OrderManagementController> _logger;
 
         // Constructor with ILogger injected
-        public FoodManagementController(QlrapPhimContext context, ILogger<FoodManagementController> logger)
+        public OrderManagementController(QlrapPhimContext context, ILogger<OrderManagementController> logger)
         {
             _context = context;
             _logger = logger; // Initialize the logger
