@@ -380,12 +380,20 @@
                 })
             }).then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to save booking session');
+                    throw new Error('Có lỗi xảy ra');
                 }
-                window.location.href = '@Url.Action("Book", "Booking")'; // Chuyển hướng tới trang đặt vé
+                return response.json();
+            }).then(data => {
+                if (!data.success) {
+                    alert(data.message);
+                    window.location.href = "/AccountKH/Login";
+                } else {
+                    alert(data.message);
+                    window.location.href = "/Home/ChonGhe";
+                }
             }).catch(error => {
                 console.error('Error:', error);
-                alert("Đã xảy ra lỗi khi lưu thông tin đặt vé.");
+                alert("Đã xảy ra lỗi khi lưu thông tin.");
             });
         }
     </script>
