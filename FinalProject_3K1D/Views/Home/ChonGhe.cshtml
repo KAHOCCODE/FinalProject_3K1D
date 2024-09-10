@@ -263,11 +263,11 @@
         {
                     <div class="order-container">
                         <div class="order-item">
-                            <img src="~/image/Order/@item.Apphich" alt="Apphich">
+                                <img src="~/image/Order/@item.Apphich" alt="Apphich">
                             <div class="details">
                                 <p><strong>@item.TenSanPham</strong></p>
                                 <p>Mô tả: @item.MoTa</p>
-                                <p>Giá: @item.Gia.ToString("C0") VND</p>
+                                <p>Giá: @item.Gia.ToString() VND</p>
                             </div>
                             <div class="quantity">
                                 <input type="number" class="food-quantity" data-gia="@item.Gia" data-name="@item.TenSanPham" data-id="@item.IdSanPham" value="0" min="0" step="1">
