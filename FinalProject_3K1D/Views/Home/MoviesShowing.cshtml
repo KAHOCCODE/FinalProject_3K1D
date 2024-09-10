@@ -153,8 +153,7 @@
                             @phim.ThoiLuong phút
                         </p>
                         <div class="btn-group">
-                            <a href="@Url.Action("Detail", "Home", new { id = phim.IdPhim })" class="btn btn-primary">Chi tiết phim</a>
-                            <a href="@Url.Action("Booking", "Home", new { id = phim.IdPhim })" class="btn btn-success">Đặt vé</a>
+                            <a href="/Home/Detail?id=@phim.IdPhim" class="btn btn-success">Đặt vé & Chi tiết phim</a>
                         </div>
                     </div>
                 </div>
