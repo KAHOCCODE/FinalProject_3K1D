@@ -2,7 +2,7 @@
 body {
     background: linear-gradient(135deg, #ff6b6b, #f3ff6b);
     background-size: 300% 300%;
-    animation: gradientAnimation 10s ease infinite; /* Moving gradient effect */
+    animation: gradientAnimation 10s ease infinite;
     color: white;
     font-family: 'Poppins', sans-serif;
     height: 100vh;
@@ -10,6 +10,7 @@ body {
     justify-content: center;
     align-items: center;
     margin: 0;
+    flex-direction: column; /* Stack content vertically */
 }
 
 /* Keyframes for moving background gradient */
@@ -157,3 +158,20 @@ body {
         transform: translateY(-50%) translateX(0);
     }
 }
+
+#countdown-message {
+    opacity: 0;
+    animation: fadeIn 2s forwards; /* Fade-in animation */
+}
+
+/* Countdown number scaling effect */
+#countdown {
+    display: inline-block;
+    animation: pulse 1s infinite; /* Pulsing effect */
+}
+
+
+
+
+
+

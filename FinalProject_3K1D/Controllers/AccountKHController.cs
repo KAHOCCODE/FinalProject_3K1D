@@ -312,48 +312,49 @@ namespace FinalProject_3K1D.Controllers
 
         // POST: Xử lý yêu cầu thay đổi mật khẩu
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+{
+    if (!ModelState.IsValid)
+    {
+        return View(model);
+    }
 
-            // Lấy IdKhachHang từ session
-            var userId = HttpContext.Session.GetString("UserId");
-            if (userId == null)
-            {
-                return RedirectToAction("Login");
-            }
+    // Lấy IdKhachHang từ session
+    var userId = HttpContext.Session.GetString("UserId");
+    if (userId == null)
+    {
+        return RedirectToAction("Login");
+    }
 
-            // Lấy thông tin khách hàng từ cơ sở dữ liệu
-            var khachhang = await _context.KhachHangs
-                .SingleOrDefaultAsync(kh => kh.IdKhachHang == userId);
+    // Lấy thông tin khách hàng từ cơ sở dữ liệu
+    var khachhang = await _context.KhachHangs
+        .SingleOrDefaultAsync(kh => kh.IdKhachHang == userId);
 
-            if (khachhang == null)
-            {
-                ModelState.AddModelError("", "Người dùng không tồn tại.");
-                TempData["ErrorMessage"] = "Người dùng không tồn tại.";
-                return View(model);
-            }
+    if (khachhang == null)
+    {
+        ModelState.AddModelError("", "Người dùng không tồn tại.");
+        TempData["ErrorMessage"] = "Người dùng không tồn tại.";
+        return View(model);
+    }
 
-            // Kiểm tra mật khẩu hiện tại
-            if (khachhang.PassKh != model.OldPassword)
-            {
-                ModelState.AddModelError("", "Mật khẩu hiện tại không đúng.");
-                TempData["ErrorMessage"] = "Mật khẩu hiện tại không đúng.";
-                return View(model);
-            }
+    // Kiểm tra mật khẩu hiện tại (so sánh mật khẩu băm)
+    if (!BCrypt.Net.BCrypt.Verify(model.OldPassword, khachhang.PassKh))
+    {
+        ModelState.AddModelError("", "Mật khẩu hiện tại không đúng.");
+        TempData["ErrorMessage"] = "Mật khẩu hiện tại không đúng.";
+        return View(model);
+    }
 
-            // Cập nhật mật khẩu mới
-            khachhang.PassKh = model.NewPassword;
-            _context.KhachHangs.Update(khachhang);
-            await _context.SaveChangesAsync();
+    // Cập nhật mật khẩu mới (mã hóa mật khẩu)
+    khachhang.PassKh = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+    _context.KhachHangs.Update(khachhang);
+    await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Mật khẩu đã được thay đổi thành công!";
-            return RedirectToAction("Index", "Home");
-        }
+    TempData["SuccessMessage"] = "Mật khẩu đã được thay đổi thành công!";
+    return RedirectToAction("ChangePassword");
+}
+
         #endregion
 
         #region ForgotPassword
@@ -377,7 +378,12 @@ namespace FinalProject_3K1D.Controllers
             khachHang.PassKh = BCrypt.Net.BCrypt.HashPassword(newPassword);
             await _context.SaveChangesAsync();
 
-            await SendEmail(khachHang.Email, "Mật khẩu mới của bạn", $"Mật khẩu mới của bạn là: {newPassword}");
+            string message = $@"
+        <p>Xin chào: {khachHang.HoTen},</p>
+        <p>Mật khẩu mới của bạn là: <strong>{newPassword}</strong></p>
+        <p>Vui lòng đăng nhập lại và đổi mật khẩu mới để đảm bảo an toàn.</p>";
+
+            await SendEmail(khachHang.Email, "Mật khẩu mới của bạn", message);
 
             ViewBag.SuccessMessage = "Mật khẩu mới đã được gửi đến email của bạn.";
             return View();
