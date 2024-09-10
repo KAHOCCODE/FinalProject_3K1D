@@ -7,6 +7,7 @@ namespace FinalProject_3K1D.Models;
 
 public partial class Phim
 {
+
     public string IdPhim { get; set; } = null!;
     [Display(Name = "Tên Phim")]
     public string TenPhim { get; set; } = null!;
@@ -32,6 +33,8 @@ public partial class Phim
     public virtual ICollection<LichChieu> LichChieus { get; set; } = new List<LichChieu>();
 
     public virtual ICollection<TheLoai> IdTheLoais { get; set; } = new List<TheLoai>();
+
+    public virtual ICollection<DanhGia> DanhGias { get; set; } = new List<DanhGia>();
 
     // Thuộc tính để lưu trữ danh sách ID thể loại được chọn
     [NotMapped]

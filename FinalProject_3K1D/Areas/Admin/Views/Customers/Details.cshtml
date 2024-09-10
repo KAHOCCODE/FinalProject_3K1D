@@ -78,19 +78,7 @@
                             <p class="form-control-plaintext">@Html.DisplayFor(model => model.UserKh)</p>
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <h5 class="text-muted">Password</h5>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <input type="password" id="passwordField" class="form-control" value="@Model.PassKh" readonly />
-                                <button class="btn" type="button" id="togglePassword">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                   
                 </div>
                 <div class="card-footer text-center">
                     <a asp-action="Edit" asp-route-id="@Model?.IdKhachHang" class="btn btn-primary me-2">

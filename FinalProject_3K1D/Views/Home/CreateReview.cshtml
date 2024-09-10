@@ -1,0 +1,143 @@
+﻿@model FinalProject_3K1D.Models.DanhGia
+@{
+    ViewData["Title"] = "Đánh Giá Phim";
+    var userName = Context.Session.GetString("UserName") ?? "Khách";
+    var idPhim = Context.Request.Query["idPhim"];
+    var userId = Context.Session.GetString("UserId");
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            font-size: 2em;
+            color: #d3d3d3;
+            direction: rtl;
+            unicode-bidi: bidi-override;
+        }
+
+            .star-rating input {
+                display: none;
+            }
+
+            .star-rating label {
+                cursor: pointer;
+                transition: color 0.2s;
+            }
+
+            .star-rating input:checked ~ label {
+                color: #ffd700;
+            }
+
+            .star-rating input:checked ~ input ~ label {
+                color: #d3d3d3;
+            }
+
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: #ffb700;
+            }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+
+        .form-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-footer {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="form-container">
+            <div class="form-header text-center">
+                <h2>@ViewData["Title"]</h2>
+                <p>Xin chào, <strong>@userName</strong>!</p>
+                <p>ID Phim: <strong>@idPhim</strong></p>
+            </div>
+
+            <form id="reviewForm" asp-action="CreateReview" method="post">
+                <div class="mb-3">
+                    <label for="Diem" class="form-label">Mức độ hài lòng</label>
+                    <div class="star-rating">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <input type="radio" id="star@i" name="Diem" value="@i" />
+                            <label for="star@i" title="@i sao">&#9733;</label>
+                        }
+                    </div>
+                    <span asp-validation-for="Diem" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="NoiDung" class="form-label">Nội dung</label>
+                    <textarea asp-for="NoiDung" class="form-control" rows="4" placeholder="Nhập nội dung đánh giá..."></textarea>
+                    <span asp-validation-for="NoiDung" class="text-danger"></span>
+                </div>
+
+                <input type="hidden" name="IdPhim" value="@idPhim" />
+                <input type="hidden" name="IdKhachHang" value="@userId" />
+
+                <div class="form-footer">
+                    <button type="submit" class="btn btn-primary">Gửi Đánh Giá</button>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $('#reviewForm').on('submit', function (e) {
+                    e.preventDefault(); // Prevent the form from submitting the default way
+
+                    $.ajax({
+                        type: 'POST',
+                        url: $(this).attr('action'),
+                        data: $(this).serialize(),
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thành công',
+                                    text: response.message
+                                }).then(() => {
+                                    window.location.href = '@Url.Action("Index", "Home")'; // Redirect to home page or other page
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: response.message
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: 'Đã xảy ra lỗi khi gửi đánh giá.'
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

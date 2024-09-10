@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using FinalProject_3K1D.Models;
+using BCrypt.Net;
 
 namespace FinalProject_3K1D.Areas.Admin.Controllers
 {
@@ -73,6 +74,12 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             {
                 try
                 {
+                    // Hash the password before saving
+                    if (!string.IsNullOrEmpty(nhanVien.PassNv))
+                    {
+                        nhanVien.PassNv = BCrypt.Net.BCrypt.HashPassword(nhanVien.PassNv);
+                    }
+
                     // Check if an image file is provided
                     if (HinhAnhFile != null && HinhAnhFile.Length > 0)
                     {
@@ -116,6 +123,7 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             ViewData["IdRap"] = new SelectList(_context.Raps, "IdRap", "TenRap", nhanVien.IdRap);
             return View(nhanVien);
         }
+
 
 
         // GET: Admin/Employees/Edit/5
