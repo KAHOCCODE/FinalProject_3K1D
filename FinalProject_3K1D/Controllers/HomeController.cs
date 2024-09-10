@@ -786,6 +786,12 @@ namespace FinalProject_3K1D.Controllers
 
         #endregion
 
+        #region OrderFood
+        public IActionResult OrderFood()
+        {
+            return View();
+        }
+        #endregion
     }
 }
 
