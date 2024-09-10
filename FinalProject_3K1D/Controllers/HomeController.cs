@@ -730,6 +730,60 @@ namespace FinalProject_3K1D.Controllers
                 return View(tickets);
             }
         }
+        #region review 
+        // GET: Home/CreateReview
+        public IActionResult CreateReview(string idPhim)
+        {
+            var userName = HttpContext.Session.GetString("UserName");
+            var userId = HttpContext.Session.GetString("UserId");
+
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "AccountKH");
+            }
+
+            // Gán IdPhim vào ViewBag
+            ViewBag.IdPhim = idPhim;
+            ViewBag.UserName = userName;
+            ViewBag.UserId = userId;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateReview([Bind("IdDanhGia,IdPhim,NoiDung,Diem,TrangThaiDanhGia")] DanhGia danhGia)
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json(new { success = false, message = "Bạn cần đăng nhập để đánh giá." });
+            }
+
+            if (string.IsNullOrEmpty(danhGia.IdPhim))
+            {
+                return Json(new { success = false, message = "ID phim không hợp lệ." });
+            }
+
+            danhGia.NgayDanhGia = DateTime.Now;
+            danhGia.IdKhachHang = userId;
+
+            var existingReview = await _context.DanhGias
+                .FirstOrDefaultAsync(r => r.IdPhim == danhGia.IdPhim && r.IdKhachHang == userId);
+
+            if (existingReview != null)
+            {
+                return Json(new { success = false, message = "Bạn đã đánh giá phim này rồi." });
+            }
+
+            _context.Add(danhGia);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "Đánh giá của bạn đã được gửi thành công." });
+        }
+
+        #endregion
 
     }
 }
