@@ -188,54 +188,7 @@
     </style>
 </head>
 <body>
-    <h1 class="payment-page-title">Order</h1>
-    <div class="order-container">
-        <div class="order-section">
-            <h3>Combo</h3>
-            <div class="order-item">
-                <img src="~/image/combo1.png" alt="Combo 1">
-                <div class="details">
-                    <p><strong>Combo 1</strong></p>
-                    <p>Mô tả: Combo bao gồm 1 burger, 1 khoai tây chiên và 1 nước uống</p>
-                    <p>Giá: 150.000 VND</p>
-                </div>
-                <div class="quantity">
-                    <input type="number" value="0" min="0" step="1">
-                </div>
-            </div>
-            <!-- Add more combo items here -->
-        </div>
-        <div class="order-section">
-            <h3>Đồ ăn</h3>
-            <div class="order-item">
-                <img src="~/image/food1.png" alt="Food 1">
-                <div class="details">
-                    <p><strong>Food 1</strong></p>
-                    <p>Mô tả: Bánh pizza nhỏ với phô mai</p>
-                    <p>Giá: 80.000 VND</p>
-                </div>
-                <div class="quantity">
-                    <input type="number" value="0" min="0" step="1">
-                </div>
-            </div>
-            <!-- Add more food items here -->
-        </div>
-        <div class="order-section">
-            <h3>Nước</h3>
-            <div class="order-item">
-                <img src="~/image/drink1.png" alt="Drink 1">
-                <div class="details">
-                    <p><strong>Drink 1</strong></p>
-                    <p>Mô tả: Nước ngọt 500ml</p>
-                    <p>Giá: 20.000 VND</p>
-                </div>
-                <div class="quantity">
-                    <input type="number" value="0" min="0" step="1">
-                </div>
-            </div>
-            <!-- Add more drink items here -->
-        </div>
-    </div>
+    
 
     <h4 class="payment-page-title">Payment</h4>
     <div class="payment-container">
@@ -262,8 +215,11 @@
             <p>Tên khách hàng: @ViewBag.CustomerName</p>
             <p>Giờ chiếu: @ViewBag.GioChieu - @ViewBag.TenPhong - @ViewBag.TenRap</p>
             <p>Ghế đã chọn: @ViewBag.SelectedSeatIds</p>
+            <P>Nội dung: @ViewBag.NoiDung</P>
             <hr>
-            <h3>SỐ TIỀN CẦN THANH TOÁN: <span class="highlight">@ViewBag.TotalAmount VND</span></h3>
+            <h3>GIÁ ORDER: <span class="highlight">@ViewBag.OrderAmount VND</span></h3>
+            <h3>GIÁ VÉ: <span class="highlight">@ViewBag.TotalAmount VND</span></h3>
+            <h3>SỐ TIỀN CẦN THANH TOÁN: <span class="highlight">@ViewBag.Total VND</span></h3>
             <div class="buttons">
                 <button class="back-button" onclick="window.history.back()">QUAY LẠI</button>
                 <button id="pay-button" class="pay-button" disabled>THANH TOÁN</button>
