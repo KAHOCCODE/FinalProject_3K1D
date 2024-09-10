@@ -1,6 +1,8 @@
 ﻿using FinalProject_3K1D.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using NuGet.Packaging.Signing;
 using System.Diagnostics;
 
 namespace FinalProject_3K1D.Controllers
@@ -147,7 +149,8 @@ namespace FinalProject_3K1D.Controllers
             var movieId = HttpContext.Session.GetString("MovieId");
             var selectedLichChieuId = HttpContext.Session.GetString("SelectedLichChieuId");
             var userId = HttpContext.Session.GetString("UserId");
-
+            var selectedOrders = HttpContext.Session.GetString("SelectedOrders");
+            var orderAmount = HttpContext.Session.GetInt32("OrderAmount");
             if (string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(selectedLichChieuId) || string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Index", "Home");
@@ -167,7 +170,7 @@ namespace FinalProject_3K1D.Controllers
                 }
 
                 // Lấy danh sách chỗ ngồi đã ngồi
-
+                var foods = db.Foods.ToList();
                 var takenSeats = db.Ves
                     .Where(ticket => ticket.IdLichChieu == selectedLichChieuId && ticket.TrangThai == 1)
                     .Select(ticket => ticket.MaGheNgoi)
@@ -175,6 +178,7 @@ namespace FinalProject_3K1D.Controllers
                 // Save cinema and room names into session
                 HttpContext.Session.SetString("TenRap", lichChieu.IdRapNavigation.TenRap); // Cinema Name
                 HttpContext.Session.SetString("TenPhong", lichChieu.IdPhongChieuNavigation.TenPhong); // Room Name
+
 
                 ViewBag.MovieId = movieId;
                 ViewBag.SelectedLichChieuId = selectedLichChieuId;
@@ -185,6 +189,11 @@ namespace FinalProject_3K1D.Controllers
                 ViewBag.TenPhong = lichChieu.IdPhongChieuNavigation.TenPhong;
                 ViewBag.TenRap = lichChieu.IdRapNavigation.TenRap;
                 ViewBag.TakenSeats = takenSeats;
+                ViewBag.Foods = foods;
+                ViewBag.Select = selectedOrders;
+                ViewBag.totalorder = orderAmount;
+
+
 
                 return View();
             }
@@ -195,26 +204,35 @@ namespace FinalProject_3K1D.Controllers
         [HttpPost]
         public IActionResult SavePaymentDetails([FromBody] PaymentDetailsModel model)
         {
-            if (model.SeatIds == null || model.TotalAmount <= 0)
+            // Kiểm tra tính hợp lệ của dữ liệu ghế và tổng cộng
+            if (model == null || model.SeatIds == null || model.SeatIds.Count == 0 || model.TotalAmount <= 0)
             {
-                return Json(new { success = false, message = "Dữ liệu ghế hoặc tổng cộng không hợp lệ." });
+                return Json(new
+                {
+                    success = false,
+                    message = "Dữ liệu ghế hoặc tổng cộng không hợp lệ."
+                });
             }
 
-            // Save the seat IDs and total amount into session
+            // Lưu danh sách ID ghế và tổng cộng vào session
             HttpContext.Session.SetString("SelectedSeatIds", string.Join(",", model.SeatIds));
             HttpContext.Session.SetInt32("TotalAmount", model.TotalAmount);
 
-            // Save the room and cinema names into session
-            if (model.TenRap != null)
+            // Lưu tên rạp và tên phòng vào session nếu có
+            if (!string.IsNullOrEmpty(model.TenRap))
             {
-                HttpContext.Session.SetString("TenRap", model.TenRap);     // Save cinema name
-            }   // Save cinema name
-            if (model.TenPhong != null)
-            {
-                HttpContext.Session.SetString("TenPhong", model.TenPhong); // Save room name
+                HttpContext.Session.SetString("TenRap", model.TenRap);
             }
+            if (!string.IsNullOrEmpty(model.TenPhong))
+            {
+                HttpContext.Session.SetString("TenPhong", model.TenPhong);
+            }
+
+            
+
             return Json(new { success = true });
         }
+
 
 
         // Model to receive data from the client
@@ -224,8 +242,48 @@ namespace FinalProject_3K1D.Controllers
             public int TotalAmount { get; set; }
             public string TenRap { get;  set; }
             public string TenPhong { get; set; }
+            
+        }
+        public IActionResult Order()
+        {
+            using (var db = new QlrapPhimContext())
+            {
+                var foods = db.Foods.ToList();
+                ViewBag.Foods = foods;
+            }
+            return View();
+        }
+        
+
+        [HttpPost]
+        public IActionResult SaveOrderDetails([FromBody] SaveOrderDetailsl model)
+        {
+            if (model == null || model.OrderAmount <= 0)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "Dữ liệu đơn hàng hoặc tổng cộng không hợp lệ."
+                });
+            }
+
+            // Lưu danh sách đơn hàng đã chọn vào session
+            if (model.SelectedOrders != null && model.SelectedOrders.Any())
+            {
+                HttpContext.Session.SetString("SelectedOrders", JsonConvert.SerializeObject(model.SelectedOrders));
+            }
+
+            // Lưu tổng số tiền đơn hàng vào session
+            HttpContext.Session.SetInt32("OrderAmount", model.OrderAmount);
+
+            return Json(new { success = true });
         }
 
+        public class SaveOrderDetailsl
+        {
+            public List<string> SelectedOrders { get; set; }
+            public int OrderAmount { get; set; }
+        }
 
         public IActionResult Payment()
         {
@@ -236,6 +294,8 @@ namespace FinalProject_3K1D.Controllers
             var selectedLichChieuId = HttpContext.Session.GetString("SelectedLichChieuId");
             var tenRap = HttpContext.Session.GetString("TenRap");
             var tenPhong = HttpContext.Session.GetString("TenPhong");
+            var selectedOrders = HttpContext.Session.GetString("SelectedOrders");
+            var orderAmount = HttpContext.Session.GetInt32("OrderAmount");
 
             if (string.IsNullOrEmpty(seatIds) || totalAmount == null || string.IsNullOrEmpty(movieId) || string.IsNullOrEmpty(userId))
             {
@@ -248,7 +308,7 @@ namespace FinalProject_3K1D.Controllers
             {
                 // Generate a new ticket ID
                 int newTicketId = GenerateTicketId();
-
+                int total = totalAmount.Value + orderAmount.Value;
                 // Create a new ticket object
                 var newTicket = new Ve
                 {
@@ -257,9 +317,11 @@ namespace FinalProject_3K1D.Controllers
                     TrangThai = 1,
                     LoaiVe = 0,
                     IdLichChieu = selectedLichChieuId,
-                    TienBanVe = totalAmount,
+                    
                     MaGheNgoi = seatIds,
-                    NgayMua = DateTime.Now
+                    NgayMua = DateTime.Now,
+                    NoiDung= selectedOrders,
+                    TienBanVe = total
                 };
 
                 // Add the ticket to the database
@@ -305,6 +367,9 @@ namespace FinalProject_3K1D.Controllers
                 ViewBag.TrangThai = 1;
                 ViewBag.TenRap = tenRap;
                 ViewBag.TenPhong = tenPhong;
+                ViewBag.NoiDung = selectedOrders;
+                ViewBag.OrderAmount = orderAmount;
+                ViewBag.Total = total;
 
             }
             return View();
@@ -419,7 +484,7 @@ namespace FinalProject_3K1D.Controllers
         {
             // Retrieve the user ID from the session
             var userId = HttpContext.Session.GetString("UserId");
-
+            
             if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Index", "Home"); // Redirect if UserId is not found in session

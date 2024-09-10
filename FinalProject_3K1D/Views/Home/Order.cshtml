@@ -261,19 +261,19 @@
         <h1 class="payment-page-title">Order</h1>
         @foreach (var item in ViewBag.foods as IEnumerable<Food>)
         {
-                    <div class="order-container">
-                        <div class="order-item">
-                            <img src="~/image/Order/@item.Apphich" alt="Apphich">
-                            <div class="details">
-                                <p><strong>@item.TenSanPham</strong></p>
-                                <p>Mô tả: @item.MoTa</p>
-                                <p>Giá: @item.Gia.ToString("C0") VND</p>
-                            </div>
-                            <div class="quantity">
-                                <input type="number" class="food-quantity" data-gia="@item.Gia" data-name="@item.TenSanPham" data-id="@item.IdSanPham" value="0" min="0" step="1">
+                        <div class="order-container">
+                            <div class="order-item">
+                                <img src="~/image/Order/@item.Apphich" alt="Apphich">
+                                <div class="details">
+                                    <p><strong>@item.TenSanPham</strong></p>
+                                    <p>Mô tả: @item.MoTa</p>
+                                    <p>Giá: @item.Gia.ToString("C0") VND</p>
+                                </div>
+                                <div class="quantity">
+                                    <input type="number" class="food-quantity" data-gia="@item.Gia" data-name="@item.TenSanPham" data-id="@item.IdSanPham" value="0" min="0" step="1">
+                                </div>
                             </div>
                         </div>
-                    </div>
         }
         <div class="footer mt-4">
             <div class="footer-content">
@@ -291,7 +291,7 @@
                         <p><strong>Tổng cộng:</strong> <span id="total-price">0 VND</span></p>
                     </div>
                     <div class="btn-container">
-                        <button type="button" class="btn btn-select btn-warning">chọn</button>
+                        <button type="button" class="btn btn-order btn-warning">chọn</button>
                         <button type="button" class="btn btn-cancel" onclick="cancelSelection()">Hủy</button>
                         <button type="button" class="btn btn-pay btn-warning">Thanh Toán</button>
                     </div>
@@ -487,64 +487,29 @@
             input.addEventListener('input', updateSelectedOrders);
         });
         document.querySelector('.btn-cancel').addEventListener('click', cancelSelection);
-         document.querySelector('.btn-cancel').addEventListener('click', cancelSelection);
 
-    document.querySelector('.btn-select').addEventListener('click', () => {
-        const selectedOrdersText = document.getElementById('selected-orders').innerText;
-        if (!selectedOrdersText) {
-            alert("Bạn chưa chọn order.");
-            return;
-        }
 
-        const selectedOrders = selectedOrdersText.split(', '); // Assuming orders are separated by commas
-        const orderAmountText = document.getElementById('order-amount').innerText;
-        const orderAmount = parseFloat(orderAmountText.replace(/[^0-9.-]+/g, "")) || 0;
-
-        if (orderAmount === 0) {
-            alert("Tổng cộng không hợp lệ.");
-            return;
-        }
-
-        const payload = {
-            selectedOrders: selectedOrders,
-            orderAmount: orderAmount
-        };
-
-        fetch('/Home/SaveOrderDetails', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'RequestVerificationToken': '@Html.AntiForgeryToken()' // CSRF protection
-            },
-            body: JSON.stringify(payload)
-        }).then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Đã lưu đơn hàng thành công.");
-                } else {
-                    alert(data.message);
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Có lỗi xảy ra khi lưu dữ liệu. Vui lòng thử lại.');
-            });
-    });
-       
          // Add event listener for the payment button
             document.querySelector('.btn-pay').addEventListener('click', () => {
                 // Get the selected seat IDs and total price
                 const selectedSeatsArray = Array.from(selectedSeats); // Assuming selectedSeats is already defined
                 const totalAmount = parseFloat(totalPrice); // Assuming totalPrice is already defined and is a number
 
+                // Lấy danh sách đơn hàng và số tiền đơn hàng
+                const selectedOrdersText = document.getElementById('selected-orders').innerText;
+                const selectedOrders = selectedOrdersText ? JSON.parse(selectedOrdersText) : []; // Convert text to JSON array
                 if (selectedSeatsArray.length === 0 || totalAmount === 0) {
                                 alert("Bạn chưa chọn ghế hoặc tổng cộng không hợp lệ.");
                                 return;
                             }
+                const orderAmountText = document.getElementById('order-amount').innerText;
+                const orderAmount = parseFloat(orderAmountText) || 0; // Convert orderAmount to a number
 
                 const payload = {
                     seatIds: selectedSeatsArray,
                     totalAmount: totalAmount,
-                    
+                    selectedOrders: selectedOrders,
+                    orderAmount: orderAmount
                 };
 
                 // Save the data to the session via an API call
@@ -568,9 +533,10 @@
                         alert('Có lỗi xảy ra khi lưu dữ liệu. Vui lòng thử lại.');
                     });
             });
-            
-   
-
+            document.querySelector('.btn-order').addEventListener('click', () => {
+        // Chuyển hướng đến trang Order
+        window.location.href = '/Home/Order'; // Điều chỉnh theo route của bạn
+    });
     });
 </script>
 
