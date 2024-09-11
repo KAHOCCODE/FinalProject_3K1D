@@ -228,14 +228,14 @@
 
         <div class="container mt-4">
             
-
+            <div class="section">
+                    <h3 class="section-title">Order</h3>
            
             @foreach (var item in ViewBag.foods as IEnumerable<Food>)
             {
 
                 <!-- Combo Section -->
-                <div class="section">
-                    <h3 class="section-title">Combo</h3>
+                
                 <div class="order-container">
                     <div class="food-item">
                             <img src="~/image/Order/@item.Apphich" alt="Apphich">
@@ -249,10 +249,10 @@
                     </div>
                     <!-- Thêm nhiều mục Combo ở đây -->
                 </div>
-            </div>
+           
             }
 
-            
+             </div>
         </div>
     </div>
 
