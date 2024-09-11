@@ -78,7 +78,7 @@
                 <div class="mb-3">
                     <label for="Diem" class="form-label">Mức độ hài lòng</label>
                     <div class="star-rating">
-                        @for (int i = 1; i <= 5; i++)
+                        @for (int i = 5; i >= 1; i--)
                         {
                             <input type="radio" id="star@i" name="Diem" value="@i" />
                             <label for="star@i" title="@i sao">&#9733;</label>
@@ -104,7 +104,16 @@
         <script>
             $(document).ready(function () {
                 $('#reviewForm').on('submit', function (e) {
-                    e.preventDefault(); // Prevent the form from submitting the default way
+                    e.preventDefault();
+
+                    if (!$('input[name="Diem"]:checked').val()) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Vui lòng chọn số sao để đánh giá.'
+                        });
+                        return; // Dừng không gửi form nếu không có số sao nào được chọn
+                    }
 
                     $.ajax({
                         type: 'POST',
@@ -117,7 +126,7 @@
                                     title: 'Thành công',
                                     text: response.message
                                 }).then(() => {
-                                    window.location.href = '@Url.Action("Index", "Home")'; // Redirect to home page or other page
+                                    window.location.href = '@Url.Action("Index", "Home")'; // Chuyển hướng về trang chủ
                                 });
                             } else {
                                 Swal.fire({

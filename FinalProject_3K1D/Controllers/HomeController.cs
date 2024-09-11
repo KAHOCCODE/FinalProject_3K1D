@@ -832,6 +832,11 @@ namespace FinalProject_3K1D.Controllers
                 return Json(new { success = false, message = "ID phim không hợp lệ." });
             }
 
+            if (danhGia.Diem < 1 || danhGia.Diem > 5)
+            {
+                return Json(new { success = false, message = "Điểm đánh giá không hợp lệ." });
+            }
+
             danhGia.NgayDanhGia = DateTime.Now;
             danhGia.IdKhachHang = userId;
 
