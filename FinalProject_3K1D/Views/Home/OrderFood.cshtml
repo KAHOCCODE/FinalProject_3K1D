@@ -228,14 +228,14 @@
 
         <div class="container mt-4">
             
-
+            <div class="section">
+                    <h3 class="section-title">Order</h3>
            
             @foreach (var item in ViewBag.foods as IEnumerable<Food>)
             {
 
                 <!-- Combo Section -->
-                <div class="section">
-                    <h3 class="section-title">Combo</h3>
+                
                 <div class="order-container">
                     <div class="food-item">
                             <img src="~/image/Order/@item.Apphich" alt="Apphich">
@@ -243,16 +243,16 @@
                             <p class="price">@item.Gia.ToString() VND</p>
                         <div class="quantity-buttons">
                             <button class="btn btn-danger">-</button>
-                            <input type="text" value="0" readonly>
+                                <input type="text" class="food-quantity" data-gia="@item.Gia" data-name="@item.TenSanPham" data-id="@item.IdSanPham" value="0" readonly>
                             <button class="btn btn-success">+</button>
                         </div>
                     </div>
                     <!-- Thêm nhiều mục Combo ở đây -->
                 </div>
-            </div>
+           
             }
 
-            
+             </div>
         </div>
     </div>
 
@@ -260,11 +260,8 @@
         <div class="footer-content">
             <div class="summary-panel">
                 <div class="summary-info">
-                    <p>Tên Rạp:</p>
-                    <p>Tên Sản Phẩm:</p>
-                    <p id="total-items">0</p>
-                    <p>Tổng tiền:</p>
-                    <p id="total-price">0 VND</p>
+                    <p>Tên Sản Phẩm:<span id="selected-orders"></span></p>
+                    <p>Tổng tiền:<span id="order-amount" class="highlight"></span></p>
                 </div>
             </div>
             <div class="btn-container">
@@ -282,7 +279,30 @@
             const name = foodItem.getAttribute('data-name');
             const price = parseInt(foodItem.getAttribute('data-price'));
 
-            function updateFooter() {
+             const quantityInputs = document.querySelectorAll('.food-quantity'); // Order item quantity inputs
+              const selectedOrdersContainer = document.getElementById('selected-orders'); // Selected orders display
+            // Function to update selected orders and total amount
+        const updateSelectedOrders = debounce(() => {
+            let orderAmount = 0;
+            const selectedOrders = [];
+
+            quantityInputs.forEach(input => {
+                const id = input.getAttribute('data-id');
+                const name = input.getAttribute('data-name');
+                const quantity = parseInt(input.value, 10);
+                const price = parseInt(input.getAttribute('data-gia'), 10);
+
+                if (quantity > 0) {
+                    const itemTotal = quantity * price;
+                    orderAmount += itemTotal;
+                    selectedOrders.push(`Tên sản phẩm: ${name} (Số lượng: ${quantity}, Giá: ${price.toLocaleString()} VND)`);
+                }
+            });
+
+            document.getElementById("order-amount").textContent = `${orderAmount.toLocaleString()} VND`;
+            selectedOrdersContainer.textContent = selectedOrders.join(', ');
+        });
+              function updateFooter() {
                 let totalItems = 0;
                 let totalPrice = 0;
 

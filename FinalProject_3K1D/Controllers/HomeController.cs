@@ -69,6 +69,7 @@ namespace FinalProject_3K1D.Controllers
                         .ThenInclude(l => l.IdPhongChieuNavigation)
                     .Include(p => p.LichChieus)
                         .ThenInclude(l => l.IdRapNavigation)
+                    .Include(p => p.DanhGias)
                     .FirstOrDefault(p => p.IdPhim == id);
 
                 if (phim == null)
@@ -76,9 +77,17 @@ namespace FinalProject_3K1D.Controllers
                     return NotFound(); // Handle case where movie is not found
                 }
 
+                // Calculate average rating
+                var averageRating = phim.DanhGias.Any()
+                    ? phim.DanhGias.Average(dg => dg.Diem)
+                    : 0;
+
+                ViewBag.AverageRating = averageRating;
+
                 return View(phim);
             }
         }
+
 
         [HttpGet]
         public IActionResult GetShowtimes(string cinemaId)
@@ -830,6 +839,11 @@ namespace FinalProject_3K1D.Controllers
             if (string.IsNullOrEmpty(danhGia.IdPhim))
             {
                 return Json(new { success = false, message = "ID phim không hợp lệ." });
+            }
+
+            if (danhGia.Diem < 1 || danhGia.Diem > 5)
+            {
+                return Json(new { success = false, message = "Điểm đánh giá không hợp lệ." });
             }
 
             danhGia.NgayDanhGia = DateTime.Now;

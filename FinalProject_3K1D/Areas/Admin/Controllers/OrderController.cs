@@ -139,14 +139,13 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var Food = await _context.Foods.FirstOrDefaultAsync(m => m.IdSanPham == id);
-
-            if (Food == null)
+            var food = await _context.Foods.FirstOrDefaultAsync(m => m.IdSanPham == id);
+            if (food == null)
             {
                 return NotFound();
             }
 
-            return View(Food);
+            return View(food);
         }
 
         [Route("Admin/FoodManagement/Delete/{id}")]
@@ -154,12 +153,17 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var Food = await _context.Foods.FindAsync(id);
-            if (Food != null)
+            var food = await _context.Foods.FindAsync(id);
+            if (food != null)
             {
-                _context.Foods.Remove(Food);
+                _context.Foods.Remove(food);
                 await _context.SaveChangesAsync();
             }
+            else
+            {
+                return NotFound();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -168,6 +172,7 @@ namespace FinalProject_3K1D.Areas.Admin.Controllers
             return _context.Foods.Any(e => e.IdSanPham == id);
         }
         #endregion
+
     }
 
 }
