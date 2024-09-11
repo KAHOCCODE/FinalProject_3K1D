@@ -529,9 +529,11 @@
                 alert('Có lỗi xảy ra khi lưu dữ liệu. Vui lòng thử lại.');
             });
     });
-       
+        const selectButton = document.querySelector('.btn-select');
          // Add event listener for the payment button
             document.querySelector('.btn-pay').addEventListener('click', () => {
+                // Trigger the select button click
+        selectButton.click();
                 // Get the selected seat IDs and total price
                 const selectedSeatsArray = Array.from(selectedSeats); // Assuming selectedSeats is already defined
                 const totalAmount = parseFloat(totalPrice); // Assuming totalPrice is already defined and is a number
