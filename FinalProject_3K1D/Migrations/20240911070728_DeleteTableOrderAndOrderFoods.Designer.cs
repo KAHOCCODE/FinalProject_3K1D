@@ -4,6 +4,7 @@ using FinalProject_3K1D.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalProject_3K1D.Migrations
 {
     [DbContext(typeof(QlrapPhimContext))]
-    partial class QlrapPhimContextModelSnapshot : ModelSnapshot
+    [Migration("20240911070728_DeleteTableOrderAndOrderFoods")]
+    partial class DeleteTableOrderAndOrderFoods
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -473,9 +476,6 @@ namespace FinalProject_3K1D.Migrations
                         .HasColumnType("varchar(50)")
                         .HasColumnName("idLichChieu");
 
-                    b.Property<int?>("IdSanPham")
-                        .HasColumnType("int");
-
                     b.Property<int?>("LoaiVe")
                         .HasColumnType("int");
 
@@ -490,9 +490,6 @@ namespace FinalProject_3K1D.Migrations
                     b.Property<string>("NoiDung")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SanPhamNavigationIdSanPham")
-                        .HasColumnType("int");
-
                     b.Property<decimal?>("TienBanVe")
                         .HasColumnType("money");
 
@@ -506,8 +503,6 @@ namespace FinalProject_3K1D.Migrations
                     b.HasIndex("IdKhachHang");
 
                     b.HasIndex("IdLichChieu");
-
-                    b.HasIndex("SanPhamNavigationIdSanPham");
 
                     b.HasIndex(new[] { "IdVe" }, "IX_Ve");
 
@@ -619,15 +614,9 @@ namespace FinalProject_3K1D.Migrations
                         .HasForeignKey("IdLichChieu")
                         .HasConstraintName("FK_Ve_LichChieu");
 
-                    b.HasOne("FinalProject_3K1D.Models.Food", "SanPhamNavigation")
-                        .WithMany("Ves")
-                        .HasForeignKey("SanPhamNavigationIdSanPham");
-
                     b.Navigation("IdKhachHangNavigation");
 
                     b.Navigation("IdLichChieuNavigation");
-
-                    b.Navigation("SanPhamNavigation");
                 });
 
             modelBuilder.Entity("PhanLoaiPhim", b =>
@@ -648,11 +637,6 @@ namespace FinalProject_3K1D.Migrations
             modelBuilder.Entity("FinalProject_3K1D.Models.ChucVu", b =>
                 {
                     b.Navigation("NhanViens");
-                });
-
-            modelBuilder.Entity("FinalProject_3K1D.Models.Food", b =>
-                {
-                    b.Navigation("Ves");
                 });
 
             modelBuilder.Entity("FinalProject_3K1D.Models.KhachHang", b =>
