@@ -37,7 +37,18 @@
             @Html.DisplayNameFor(model => model.Apphich)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Apphich)
+             <div class="col-md-4 text-center mb-4">
+                @if (Model.Apphich != null)
+                {
+                                <img src="~/image/Order/@Model.Apphich" alt="Profile Picture"  style="max-width: 150px;" />
+                }
+                else
+                {
+                            <div class="p-4 border border-secondary rounded bg-warning text-center text-dark">
+                                <span class="fw-bold">No image available</span>
+                            </div>
+                }
+                </div>
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.PLoai)
