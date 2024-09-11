@@ -32,8 +32,9 @@
                         <tr>
                             <th class="text-center">ID Sản Phẩm</th>
                             <th class="text-center">Tên Sản Phẩm</th>
+                             <th class="text-center">Giá</th>
                             <th class="text-center">Mô Tả</th>
-                            <th class="text-center">Phí Áp Dụng</th>
+                            <th class="text-center">Hình</th>
                             <th class="text-center">Phân Loại</th>
                             <th class="text-center">Hành Động</th>
                         </tr>
@@ -44,8 +45,18 @@
                             <tr class="table-row">
                                 <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.IdSanPham)</td>
                                 <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.TenSanPham)</td>
+                                 <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.Gia)</td>
                                 <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.MoTa)</td>
-                                <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.Apphich)</td>
+                                 <td class="align-middle text-center">
+                                    @if (!string.IsNullOrEmpty(item.Apphich))
+                                    {
+                                                <img src="@Url.Content("~/image/Order/" + item.Apphich)" alt="Poster" class="img-thumbnail" style="max-height: 100px; max-width: 100px;" />
+                                    }
+                                    else
+                                    {
+                                                <span class="text-muted">Chưa có ảnh</span>
+                                    }
+                                    </td>
                                 <td class="align-middle text-center">@Html.DisplayFor(modelItem => item.PLoai)</td>
                                 <td class="align-middle text-center">
                                     <div class="btn-group" role="group">
