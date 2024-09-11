@@ -47,52 +47,38 @@ namespace FinalProject_3K1D.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra xem tên người dùng đã tồn tại chưa
-                var existingUser = await _context.KhachHangs
-                    .FirstOrDefaultAsync(kh => kh.UserKh == model.UserKH);
-
+                // Kiểm tra các điều kiện tồn tại như bạn đã làm
+                var existingUser = await _context.KhachHangs.FirstOrDefaultAsync(kh => kh.UserKh == model.UserKH);
                 if (existingUser != null)
                 {
-                    ModelState.AddModelError("UserKH", "Username already exists.");
+                    ModelState.AddModelError("UserKH", "Tên người dùng đã tồn tại.");
                     return View(model);
                 }
 
-                // Kiểm tra xem SDT đã tồn tại chưa
-                var existingSdt = await _context.KhachHangs
-                    .FirstOrDefaultAsync(kh => kh.Sdt == model.SDT);
-
+                var existingSdt = await _context.KhachHangs.FirstOrDefaultAsync(kh => kh.Sdt == model.SDT);
                 if (existingSdt != null)
                 {
-                    ModelState.AddModelError("SDT", "Phone number already exists.");
+                    ModelState.AddModelError("SDT", "Số điện thoại đã tồn tại.");
                     return View(model);
                 }
 
-                // Kiểm tra xem CCCD đã tồn tại chưa
-                var existingCccd = await _context.KhachHangs
-                    .FirstOrDefaultAsync(kh => kh.Cccd == model.CCCD);
-
+                var existingCccd = await _context.KhachHangs.FirstOrDefaultAsync(kh => kh.Cccd == model.CCCD);
                 if (existingCccd != null)
                 {
-                    ModelState.AddModelError("CCCD", "Identity card number already exists.");
+                    ModelState.AddModelError("CCCD", "Số chứng minh nhân dân đã tồn tại.");
                     return View(model);
                 }
 
-                // Kiểm tra xem Email đã tồn tại chưa
-                var existingEmail = await _context.KhachHangs
-                    .FirstOrDefaultAsync(kh => kh.Email == model.Email);
-
+                var existingEmail = await _context.KhachHangs.FirstOrDefaultAsync(kh => kh.Email == model.Email);
                 if (existingEmail != null)
                 {
-                    ModelState.AddModelError("Email", "Email already exists.");
+                    ModelState.AddModelError("Email", "Email đã tồn tại.");
                     return View(model);
                 }
 
-                // Tạo người dùng mới và thêm vào cơ sở dữ liệu
-                string newId = "KH01"; // Default ID if no users exist
-                var lastUser = await _context.KhachHangs
-                    .OrderByDescending(kh => kh.IdKhachHang)
-                    .FirstOrDefaultAsync();
-
+                // Tạo IdKhachHang mới
+                string newId = "KH01";
+                var lastUser = await _context.KhachHangs.OrderByDescending(kh => kh.IdKhachHang).FirstOrDefaultAsync();
                 if (lastUser != null)
                 {
                     string lastId = lastUser.IdKhachHang;
@@ -116,9 +102,10 @@ namespace FinalProject_3K1D.Controllers
                     }
                 }
 
-                // Mã hóa mật khẩu trước khi lưu
+                // Mã hóa mật khẩu
                 var hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.PassKH);
 
+                // Tạo người dùng mới
                 var newUser = new KhachHang
                 {
                     IdKhachHang = newId,
@@ -128,26 +115,44 @@ namespace FinalProject_3K1D.Controllers
                     Cccd = model.CCCD,
                     Email = model.Email,
                     UserKh = model.UserKH,
-                    PassKh = hashedPassword // Lưu mật khẩu đã mã hóa
+                    PassKh = hashedPassword
                 };
 
                 try
                 {
                     await _context.KhachHangs.AddAsync(newUser);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Registration successful! Please log in.";
+
+                    // Gửi email thông báo đăng ký thành công
+                    string emailMessage = $@"
+            <p>Xin chào {newUser.HoTen},</p>
+            <p>Cảm ơn bạn đã đăng ký tài khoản thành công tại hệ thống của chúng tôi.</p>
+            <p>Thông tin tài khoản của bạn là:</p>
+            <ul>
+                <li>Tên đăng nhập: <strong>{newUser.UserKh}</strong></li>
+                <li>Email: <strong>{newUser.Email}</strong></li>
+            </ul>
+            <p>Vui lòng đăng nhập để sử dụng các dịch vụ của chúng tôi.</p>
+            <p>Trân trọng,</p>
+            <p>Đội ngũ hỗ trợ khách hàng.</p>";
+
+                    await SendEmail(newUser.Email, "Đăng ký tài khoản thành công", emailMessage);
+
+                    // Thông báo thành công và chuyển hướng
+                    TempData["SuccessMessage"] = "Đăng ký thành công! Vui lòng đăng nhập.";
                     return RedirectToAction("Login", "AccountKH");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error: {ex.Message}");
-                    ModelState.AddModelError("", "An error occurred while saving the user. Please try again.");
+                    ModelState.AddModelError("", "Đã xảy ra lỗi khi lưu người dùng. Vui lòng thử lại.");
                     return View(model);
                 }
             }
 
             return View(model);
         }
+
 
 
 
